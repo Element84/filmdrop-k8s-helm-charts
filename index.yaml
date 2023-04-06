@@ -1,0 +1,17 @@
+apiVersion: v1
+entries:
+  titiler:
+  - apiVersion: v1
+    appVersion: 0.11.5
+    created: "2023-04-06T13:20:55.309183-04:00"
+    description: A dynamic Web Map tile server
+    digest: 2dc040a591167e4f063eee0708b44d35b960d23826fa2ad76a14dc0fc35817cd
+    icon: https://raw.githubusercontent.com/developmentseed/titiler/main/docs/logos/TiTiler_logo_small.png
+    maintainers:
+    - name: emmanuelmathot
+      url: https://github.com/emmanuelmathot
+    name: titiler
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/titiler-1.1.0.tgz
+    version: 1.1.0
+generated: "2023-04-06T13:20:55.308223-04:00"
