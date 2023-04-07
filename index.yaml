@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  stac-fastapi:
+  - apiVersion: v1
+    created: "2023-04-07T11:41:51.46481-05:00"
+    description: A Helm Chart for STAC-FastAPI (https://github.com/stac-utils/stac-fastapi)
+    digest: c1414cb0ae946d7e15f21d39e8c729d95d9fda9e0c7239b3aec0a0fad881a853
+    keywords:
+    - stac-fastapi
+    name: stac-fastapi
+    urls:
+    - https://element84.github.io/filmdrop-k8s-helm-charts/stac-fastapi-0.0.1.tgz
+    version: 0.0.1
+generated: "2023-04-07T11:41:51.464034-05:00"
