@@ -25,3 +25,5 @@ Once the chart has been deployed, port-forward the `pgstac` service onto the loc
 Navigate to `http://localhost:8080/` in a web browser, where you will then see the STAC Fast-API landing page.
 <br></br>
 You can view the database along with all of its schemas, functions, and tables in PgAdmin (make sure to use the port `5439` in the database server connection parameters).
+
+To uninstall the release, do `helm delete stac`.
