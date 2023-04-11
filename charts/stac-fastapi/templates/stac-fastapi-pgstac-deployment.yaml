@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+     {{- include "stac-fastapi.labels" . | nindent 6 }}
+  name: stac-fastapi-pgstac
+spec:
+  replicas: {{ .Values.stacFastApi.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "stac-fastapi.labels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: stac-fastapi-pgstac
+    spec:
+      containers:
+        - env:
+            - name: APP_HOST
+              value: 0.0.0.0
+            - name: DB_MAX_CONN_SIZE
+              value: "1"
+            - name: DB_MIN_CONN_SIZE
+              value: "1"
+            - name: ENVIRONMENT
+              value: local
+            - name: GDAL_DISABLE_READDIR_ON_OPEN
+              value: EMPTY_DIR
+            - name: GDAL_HTTP_MERGE_CONSECUTIVE_RANGES
+              value: "YES"
+            - name: POSTGRES_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_dbname
+            - name: POSTGRES_HOST_READER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_hostrw
+            - name: POSTGRES_HOST_WRITER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_hostrw
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_password
+            - name: POSTGRES_PORT
+              value: "5439"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_username
+            - name: USE_API_HYDRATE
+              value: "FALSE"
+            - name: VSI_CACHE
+              value: "TRUE"
+            - name: WEB_CONCURRENCY
+              value: "10"
+          image:  "{{ .Values.stacFastApi.image.repository }}:{{ .Values.stacFastApi.image.tag }}"
+          name: {{ .Values.stacFastApi.deployment.name }}
+          ports:
+            - containerPort: {{ .Values.stacFastApi.container.port }}
+          resources: {}
+      restartPolicy: Always
+status: {}

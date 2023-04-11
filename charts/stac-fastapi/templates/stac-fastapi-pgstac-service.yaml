@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+     {{- include "stac-fastapi.labels" . | nindent 6 }}
+  name: {{ .Values.stacFastApi.service.name }}
+spec:
+  ports:
+    - name: "8080"
+      port: {{ .Values.stacFastApi.service.port }}
+      targetPort: {{ .Values.stacFastApi.service.targetPort }}
+  selector:
+    {{- include "stac-fastapi.labels" . | nindent 6 }}
+status:
+  loadBalancer: {}

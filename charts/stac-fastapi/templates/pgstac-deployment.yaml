@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "pgstac.labels" . | nindent 6 }}
+  name: pgstac
+spec:
+  replicas: {{ .Values.pgStac.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pgstac.labels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: pgstac
+    spec:
+      containers:
+        - args:
+            - postgres
+            - -N
+            - "500"
+          env:
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: pg_dbname
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: pg_password
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: pg_username
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_dbname
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-fastapi-secret
+                  key: img_username
+          image: "{{ .Values.pgStac.image.repository }}:{{ .Values.pgStac.image.tag }}"
+          name: {{ .Values.pgStac.deployment.name }}
+          ports:
+            - containerPort: {{ .Values.pgStac.container.port }}
+          resources: {}
+      restartPolicy: Always
+status: {}
