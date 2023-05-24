@@ -1,0 +1,52 @@
+{{- if .Values.postgres.create -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "postgres.labels" . | nindent 6 }}
+  name: postgres
+spec:
+  replicas: {{ .Values.postgres.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "postgres.labels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.service.dbName }}
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: {{ .Values.postgres.service.authMethod }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: pg_password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: pg_user
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          name: {{ .Values.postgres.deployment.name }}
+          ports:
+            - containerPort: {{ .Values.postgres.container.port }}
+          resources: {}
+          volumeMounts:
+            - mountPath: /swoop
+              name: postgres-claim0
+          workingDir: /swoop
+      restartPolicy: Always
+      volumes:
+        - name: postgres-claim0
+          persistentVolumeClaim:
+            claimName: postgres-claim0
+status: {}
+{{- end }}

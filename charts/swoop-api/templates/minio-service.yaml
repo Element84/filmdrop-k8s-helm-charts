@@ -1,0 +1,21 @@
+{{- if .Values.minio.create -}}
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "minio.labels" . | nindent 6 }}
+  name: {{ .Values.minio.service.name }}
+spec:
+  ports:
+    - name: "9000"
+      port: {{ .Values.minio.service.port }}
+      targetPort: {{ .Values.minio.service.targetPort }}
+    - name: "9001"
+      port: {{ .Values.minio.service.servicePort }}
+      targetPort: {{ .Values.minio.service.serviceTargetPort }}
+  selector:
+    {{- include "minio.labels" . | nindent 6 }}
+status:
+  loadBalancer: {}
+{{- end }}

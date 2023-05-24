@@ -1,0 +1,18 @@
+{{- if .Values.postgres.create -}}
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "postgres.labels" . | nindent 6 }}
+  name: {{ .Values.postgres.service.name }}
+spec:
+  ports:
+    - name: "5439"
+      port: {{ .Values.postgres.service.port }}
+      targetPort: {{ .Values.postgres.service.targetPort }}
+  selector:
+    {{- include "postgres.labels" . | nindent 6 }}
+status:
+  loadBalancer: {}
+{{- end }}

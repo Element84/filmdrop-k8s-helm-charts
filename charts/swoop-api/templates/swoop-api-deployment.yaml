@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+     {{- include "swoop-api.labels" . | nindent 6 }}
+  name: swoop-api
+spec:
+  replicas: {{ .Values.swoopApi.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "swoop-api.labels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: swoop-api
+    spec:
+      containers:
+        - env:
+            - name: PGDATABASE
+              value: {{ .Values.swoopApi.service.dbName }}
+            - name: PGHOST
+              value: {{ .Values.swoopApi.service.dbHost }}
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: pg_user
+            - name: SWOOP_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: swoop_access_key_id
+            - name: SWOOP_BUCKET_NAME
+              value: {{ .Values.minio.service.bucketName }}
+            - name: SWOOP_EXECUTION_DIR
+              value: {{ .Values.swoopApi.service.swoopExecutionDir }}
+            - name: SWOOP_S3_ENDPOINT
+              value: {{ .Values.swoopApi.service.swoopS3Endpoint }}
+            - name: SWOOP_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: swoop_secret_access_key
+            - name: SWOOP_WORKFLOW_CONFIG_FILE
+              value: {{ .Values.swoopApi.service.swoopWorkflowConfigFile }}
+          image:  "{{ .Values.swoopApi.image.repository }}:{{ .Values.swoopApi.image.tag }}"
+          name: {{ .Values.swoopApi.deployment.name }}
+          ports:
+            - containerPort: {{ .Values.swoopApi.container.port }}
+          resources: {}
+      restartPolicy: Always
+status: {}
