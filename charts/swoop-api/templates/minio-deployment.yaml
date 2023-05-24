@@ -1,0 +1,49 @@
+{{- if .Values.minio.create -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "minio.labels" . | nindent 6 }}
+  name: minio
+spec:
+  replicas: {{ .Values.minio.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "minio.labels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: minio
+    spec:
+      containers:
+        - command:
+            - bash
+            - -c
+            - mkdir -p "$${1}/{{ .Values.minio.service.bucketName }}" && exec minio server --console-address ":9001" "$${1}"
+            - --
+            - /tmp/minio
+          env:
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: swoop_secret_access_key
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: swoop-api-secret
+                  key: swoop_access_key_id
+            - name: SWOOP_BUCKET_NAME
+              value: {{ .Values.minio.service.bucketName }}
+          image: "{{ .Values.minio.image.repository }}:{{ .Values.minio.image.tag }}"
+          name: {{ .Values.minio.deployment.name }}
+          ports:
+            - containerPort: {{ .Values.minio.container.port }}
+            - containerPort: {{ .Values.minio.container.servicePort }}
+          resources: {}
+      restartPolicy: Always
+status: {}
+{{- end }}

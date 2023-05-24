@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "swoop-api.labels" . | nindent 6 }}
+  name: {{ .Values.swoopApi.service.name }}
+spec:
+  ports:
+    - name: "8000"
+      port: {{ .Values.swoopApi.service.port }}
+      targetPort: {{ .Values.swoopApi.service.targetPort }}
+  selector:
+    {{- include "swoop-api.labels" . | nindent 6 }}
+status:
+  loadBalancer: {}
