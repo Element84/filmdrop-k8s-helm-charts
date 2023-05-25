@@ -43,5 +43,5 @@ app: minio
 {{- end }}
 
 {{- define "swoop-api.labels" -}}
-app: swoop-api-pgstac
+app: swoop-api
 {{- end }}
