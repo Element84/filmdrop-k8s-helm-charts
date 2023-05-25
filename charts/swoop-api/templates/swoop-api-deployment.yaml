@@ -10,7 +10,8 @@ spec:
   selector:
     matchLabels:
       {{- include "swoop-api.labels" . | nindent 6 }}
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       creationTimestamp: null
