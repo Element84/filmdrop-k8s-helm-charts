@@ -21,9 +21,9 @@ spec:
       containers:
         - env:
             - name: PGDATABASE
-              value: {{ .Values.swoopApi.service.dbName }}
+              value: {{ .Values.postgres.service.dbName }}
             - name: PGHOST
-              value: {{ .Values.swoopApi.service.dbHost }}
+              value: {{ .Values.postgres.service.name }}
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
