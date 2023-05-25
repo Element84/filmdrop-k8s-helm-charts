@@ -13,7 +13,7 @@ postgres:
   container:
     port: 5432
   service:
-    port: 5439
+    port: 5432
     targetPort: 5432
     name: postgres
     dbName: swoop
