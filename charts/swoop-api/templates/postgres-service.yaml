@@ -7,8 +7,9 @@ metadata:
     {{- include "postgres.labels" . | nindent 6 }}
   name: {{ .Values.postgres.service.name }}
 spec:
+  type: {{ .Values.postgres.service.type }}
   ports:
-    - name: "5439"
+    - name: "{{ .Values.postgres.service.targetPort }}"
       port: {{ .Values.postgres.service.port }}
       targetPort: {{ .Values.postgres.service.targetPort }}
   selector:

@@ -6,7 +6,6 @@ metadata:
      {{- include "swoop-api.labels" . | nindent 6 }}
   name: swoop-api
 spec:
-  type: {{ .Values.swoopApi.service.type }}
   replicas: {{ .Values.swoopApi.replicaCount }}
   selector:
     matchLabels:
