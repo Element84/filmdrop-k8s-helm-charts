@@ -13,6 +13,7 @@ postgres:
   container:
     port: 5432
   service:
+    type: ClusterIP
     port: 5432
     targetPort: 5432
     name: postgres
@@ -31,6 +32,7 @@ minio:
     port: 9000
     servicePort: 9001
   service:
+    type: ClusterIP
     port: 9000
     targetPort: 9000
     servicePort: 9001
@@ -48,6 +50,7 @@ swoopApi:
   container:
     port: 8000
   service:
+    type: ClusterIP
     port: 8000
     targetPort: 8000
     swoopExecutionDir: s3://swoop/execution

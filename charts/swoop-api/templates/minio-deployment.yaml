@@ -7,6 +7,7 @@ metadata:
     {{- include "minio.labels" . | nindent 6 }}
   name: minio
 spec:
+  type: {{ .Values.minio.service.type }}
   replicas: {{ .Values.minio.replicaCount }}
   selector:
     matchLabels:
