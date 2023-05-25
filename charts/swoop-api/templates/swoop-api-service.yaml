@@ -6,8 +6,9 @@ metadata:
     {{- include "swoop-api.labels" . | nindent 6 }}
   name: {{ .Values.swoopApi.service.name }}
 spec:
+  type: {{ .Values.swoopApi.service.type }}
   ports:
-    - name: "8000"
+    - name: "{{ .Values.swoopApi.service.targetPort }}"
       port: {{ .Values.swoopApi.service.port }}
       targetPort: {{ .Values.swoopApi.service.targetPort }}
   selector:

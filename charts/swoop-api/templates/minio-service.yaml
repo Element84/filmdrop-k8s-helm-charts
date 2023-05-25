@@ -7,11 +7,12 @@ metadata:
     {{- include "minio.labels" . | nindent 6 }}
   name: {{ .Values.minio.service.name }}
 spec:
+  type: {{ .Values.minio.service.type }}
   ports:
-    - name: "9000"
+    - name: "{{ .Values.minio.service.targetPort }}"
       port: {{ .Values.minio.service.port }}
       targetPort: {{ .Values.minio.service.targetPort }}
-    - name: "9001"
+    - name: "{{ .Values.minio.service.serviceTargetPort }}"
       port: {{ .Values.minio.service.servicePort }}
       targetPort: {{ .Values.minio.service.serviceTargetPort }}
   selector:

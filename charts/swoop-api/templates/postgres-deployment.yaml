@@ -7,7 +7,6 @@ metadata:
     {{- include "postgres.labels" . | nindent 6 }}
   name: postgres
 spec:
-  type: {{ .Values.postgres.service.type }}
   replicas: {{ .Values.postgres.replicaCount }}
   selector:
     matchLabels:
