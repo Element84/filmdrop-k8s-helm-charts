@@ -11,7 +11,8 @@ spec:
   selector:
     matchLabels:
       {{- include "postgres.labels" . | nindent 6 }}
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       creationTimestamp: null
