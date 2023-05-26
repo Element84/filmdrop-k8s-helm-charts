@@ -76,7 +76,9 @@ brew install minio/stable/mc
 
 ### Then set the MinIO alias, replace the ACCESS_KEY and SECRET_KEY
 ```
-mc alias set swoopminio http://127.0.0.1:9000 ACCESS_KEY SECRET_KEY
+export MINIO_ACCESS_KEY=`helm get values swoop-api -a -o json | jq .minio.service.accessKeyId | base64 --decode`
+export MINIO_SECRET_KEY=`helm get values swoop-api -a -o json | jq .minio.service.secretAccessKey | base64 --decode`
+mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
 ### Test MinIO connection by running:

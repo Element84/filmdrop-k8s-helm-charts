@@ -19,6 +19,8 @@ postgres:
     name: postgres
     dbName: swoop
     authMethod: trust
+    dbUser: cG9zdGdyZXM=
+    dbPassword: cGFzc3dvcmQ=
   deployment:
     name: postgres
   replicaCount: 1
@@ -39,6 +41,8 @@ minio:
     serviceTargetPort: 9001
     name: minio
     bucketName: swoop
+    accessKeyId: bWluaW8=
+    secretAccessKey: cGFzc3dvcmQ=
   deployment:
     name: minio
   replicaCount: 1
