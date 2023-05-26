@@ -74,7 +74,7 @@ In order to load data into MinIO, follow these steps:
 brew install minio/stable/mc
 ```
 
-### Then set the MinIO alias, replace the ACCESS_KEY and SECRET_KEY
+### Then set the MinIO alias, find the ACCESS_KEY and SECRET_KEY by quering the Helm values
 ```
 export MINIO_ACCESS_KEY=`helm get values swoop-api -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
 export MINIO_SECRET_KEY=`helm get values swoop-api -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
