@@ -17,7 +17,7 @@ Once the chart has been deployed, you should see at least 1 deployment for postg
 </p>
 <br></br>
 
-In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `6543`.
+In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`.
 <br></br>
 <p align="center">
   <img src="../../images/postgres-port-forwarding.png" alt="Port forwarding Postgres" width="1776">
@@ -41,7 +41,7 @@ $ pip install swoop.db
 $ export PGHOST="127.0.0.1"
 $ export PGUSER="`helm get values postgres -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
 $ export PGPASSWORD="`helm get values postgres -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
-$ export PGPORT="6543"
+$ export PGPORT="5432"
 $ export PGDATABASE="swoop"
 $ export SWOOP_DB_SCHEMA_VERSION_TABLE="swoop.schema_version"
 $ swoop-db up
