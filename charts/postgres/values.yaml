@@ -1,0 +1,25 @@
+# Default values for postgres swoop-db helm chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+postgres:
+  image:
+    repository: quay.io/element84/swoop-db
+    tag: latest
+  container:
+    port: 5432
+  service:
+    type: ClusterIP
+    port: 5432
+    targetPort: 5432
+    name: postgres
+    dbName: swoop
+    authMethod: trust
+    dbUser: cG9zdGdyZXM=
+    dbPassword: cGFzc3dvcmQ=
+  deployment:
+    name: postgres
+  replicaCount: 1

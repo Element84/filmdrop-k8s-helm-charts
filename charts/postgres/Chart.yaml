@@ -1,0 +1,9 @@
+name: postgres
+description: A Helm Chart for Postgres as a state database for SWOOP API (https://github.com/Element84/swoop)
+version: 0.1.0
+apiVersion: v1
+appVersion: "0.1.0"
+keywords:
+  - postgres
+sources:
+home:
