@@ -1,0 +1,9 @@
+name: minio
+description: A Helm Chart for MinIO as an object storage for SWOOP API (https://github.com/Element84/swoop)
+version: 0.1.0
+apiVersion: v1
+appVersion: "0.1.0"
+keywords:
+  - minio
+sources:
+home:
