@@ -26,6 +26,7 @@ In order to start using the services used by this helm chart, you will need to p
 
 ## Setting up MinIO CLI
 
+
 ### Install First the MinIO client by running:
 ```
 brew install minio/stable/mc
