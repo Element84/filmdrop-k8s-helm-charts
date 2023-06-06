@@ -24,8 +24,6 @@ spec:
               value: {{ .Values.postgres.service.dbName }}
             - name: PGHOST
               value: {{ .Values.postgres.service.name }}
-            - name: PGPORT
-              value: {{ .Values.postgres.service.port }}
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
@@ -55,8 +53,6 @@ spec:
                   key: swoop_secret_access_key
             - name: SWOOP_WORKFLOW_CONFIG_FILE
               value: {{ .Values.swoopApi.service.swoopWorkflowConfigFile }}
-            - name: SWOOP_API_PORT
-              value: {{ .Values.swoopApi.service.port }}
           image:  "{{ .Values.swoopApi.image.repository }}:{{ .Values.swoopApi.image.tag }}"
           name: {{ .Values.swoopApi.deployment.name }}
           ports:

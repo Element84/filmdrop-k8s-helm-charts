@@ -2,12 +2,24 @@
 
 This helm chart will deploy [SWOOP API](https://github.com/Element84/swoop) onto a Kubernetes cluster.
 
-To install the chart, do:
+## Adding FilmDrop Helm Chart Repository
+To add the FilmDrop Helm Chart repository, do:
 
 `helm repo add e84 https://element84.github.io/filmdrop-k8s-helm-charts`
 
-and
 
+## Installing SWOOP API and its dependencies
+The [SWOOP API](https://github.com/Element84/swoop) will need an object storage for workflow artifacts and a postgres state database present.
+
+You can either choose to install the MinIO and Postgres Helm Chart available on the FilmDrop Helm Chart Repository or you will need to have an existing MinIO/S3 backend with a Postgres installed and reachable to your SWOOP API.
+
+To install the MinIO dependency run:
+`helm install minio e84/minio`
+
+To install the Postgres dependency run:
+`helm install postgres e84/postgres`
+
+To install SWOOP API run:
 `helm install swoop-api e84/swoop-api`
 
 Once the chart has been deployed, you should see at least 3 deployments: postgres, minio and swoop-api.
@@ -17,7 +29,7 @@ Once the chart has been deployed, you should see at least 3 deployments: postgre
 </p>
 <br></br>
 
-In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`, port-forward `minio` onto localhost port `9001` and port-forward `swoop-api` onto localhost port `8000`.
+In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`, port-forward `minio` onto localhost ports `9000` & `9001` and port-forward `swoop-api` onto localhost port `8000`.
 <br></br>
 <p align="center">
   <img src="../../images/swoop-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
