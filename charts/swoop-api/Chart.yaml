@@ -7,13 +7,3 @@ keywords:
   - swoop-api
 sources:
 home:
-dependencies:
-  - name: postgres
-    repository: https://element84.github.io/filmdrop-k8s-helm-charts
-    version: 0.1.0
-    condition: postgres.create
-
-  - name: minio
-    repository: https://element84.github.io/filmdrop-k8s-helm-charts
-    version: 0.1.0
-    condition: minio.create
