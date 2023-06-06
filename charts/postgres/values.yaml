@@ -13,7 +13,7 @@ postgres:
     port: 6543
   service:
     type: ClusterIP
-    port: 5432
+    port: 6543
     targetPort: 6543
     name: postgres
     dbName: swoop

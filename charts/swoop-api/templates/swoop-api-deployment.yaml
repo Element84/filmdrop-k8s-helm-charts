@@ -24,6 +24,8 @@ spec:
               value: {{ .Values.postgres.service.dbName }}
             - name: PGHOST
               value: {{ .Values.postgres.service.name }}
+            - name: PGPORT
+              value: {{ .Values.postgres.service.port }}
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
