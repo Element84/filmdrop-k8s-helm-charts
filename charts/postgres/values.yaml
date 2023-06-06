@@ -20,6 +20,8 @@ postgres:
     authMethod: trust
     dbUser: cG9zdGdyZXM=
     dbPassword: cGFzc3dvcmQ=
+    sslMode: disable
+    schemaVersionTable: swoop.schema_version
   deployment:
     name: postgres
   replicaCount: 1

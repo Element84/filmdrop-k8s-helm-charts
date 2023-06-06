@@ -12,6 +12,9 @@ postgres:
     dbName: swoop
     dbUser: cG9zdGdyZXM=
     dbPassword: cGFzc3dvcmQ=
+    sslMode: disable
+    authMethod: trust
+    schemaVersionTable: swoop.schema_version
 
 minio:
   service:

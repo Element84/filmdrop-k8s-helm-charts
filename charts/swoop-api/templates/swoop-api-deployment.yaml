@@ -31,6 +31,12 @@ spec:
                 secretKeyRef:
                   name: swoop-api-secret
                   key: pg_user
+            - name: PGSSLMODE
+              value: {{ .Values.postgres.service.sslMode }}
+            - name: PGAUTHMETHOD
+              value: {{ .Values.postgres.service.authMethod }}
+            - name: SWOOP_DB_SCHEMA_VERSION_TABLE
+              value: {{ .Values.postgres.service.schemaVersionTable }}
             - name: SWOOP_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -49,6 +55,8 @@ spec:
                   key: swoop_secret_access_key
             - name: SWOOP_WORKFLOW_CONFIG_FILE
               value: {{ .Values.swoopApi.service.swoopWorkflowConfigFile }}
+            - name: SWOOP_API_PORT
+              value: {{ .Values.swoopApi.service.port }}
           image:  "{{ .Values.swoopApi.image.repository }}:{{ .Values.swoopApi.image.tag }}"
           name: {{ .Values.swoopApi.deployment.name }}
           ports:

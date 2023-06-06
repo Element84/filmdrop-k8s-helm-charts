@@ -20,20 +20,26 @@ spec:
     spec:
       containers:
         - env:
-            - name: POSTGRES_DB
+            - name: PGDATABASE
               value: {{ .Values.postgres.service.dbName }}
-            - name: POSTGRES_HOST_AUTH_METHOD
+            - name: PGAUTHMETHOD
               value: {{ .Values.postgres.service.authMethod }}
-            - name: POSTGRES_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
                   key: pg_password
-            - name: POSTGRES_USER
+            - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
                   key: pg_user
+            - name: PGSSLMODE
+              value: {{ .Values.postgres.service.sslMode }}
+            - name: PGAUTHMETHOD
+              value: {{ .Values.postgres.service.authMethod }}
+            - name: SWOOP_DB_SCHEMA_VERSION_TABLE
+              value: {{ .Values.postgres.service.schemaVersionTable }}
           image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
           name: {{ .Values.postgres.deployment.name }}
           ports:

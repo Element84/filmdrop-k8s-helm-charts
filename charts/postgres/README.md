@@ -24,28 +24,33 @@ In order to start using the services used by this helm chart, you will need to p
 </p>
 <br></br>
 
-## Initializing SWOOP Database and running migrations
+## Test connection to postgres database
 
 For a comprehensive set of steps initialize and use the postgres database, please refer to the swoop-db repo [https://github.com/Element84/swoop-db](https://github.com/Element84/swoop-db).
 
-If you want sample data to test the API, first install swoop-db from pip, export environment variables, and then run the migrations and import the fixtures like the following:
-
-helm get values postgres -a -o json | jq -r .postgres.service.dbUser | base64 --decode
-
-helm get values postgres -a -o json | jq -r .postgres.service.dbPassword | base64 --decode
-
-swoop-db
-After clonning the swoop repo, execute the following commands from the top level contents of the repo in your local terminal:
+To test the connection to the postgres database, export the following postgres environment variables:
 ```
-$ pip install swoop.db
-$ export PGHOST="127.0.0.1"
-$ export PGUSER="`helm get values postgres -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
-$ export PGPASSWORD="`helm get values postgres -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
-$ export PGPORT="5432"
-$ export PGDATABASE="swoop"
-$ export SWOOP_DB_SCHEMA_VERSION_TABLE="swoop.schema_version"
-$ swoop-db up
+export PGHOST="127.0.0.1"
+export PGUSER="`helm get values postgres -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
+export PGPASSWORD="`helm get values postgres -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
+export PGPORT="`helm get values postgres -a -o json | jq -r .postgres.service.port`"
+export PGDATABASE="`helm get values postgres -a -o json | jq -r .postgres.service.dbName`"
+export PGAUTHMETHOD="trust"
+
 ```
+
+Then connect to the postgres database by running a psql command:
+```
+$ psql -p $PGPORT -U $PGUSER $PGDATABASE
+
+psql (14.7 (Homebrew), server 15.3 (Debian 15.3-1.pgdg110+1))
+WARNING: psql major version 14, server major version 15.
+         Some psql features might not work.
+Type "help" for help.
+
+swoop=#
+```
+
 
 ## Uninstall postgres
 
