@@ -6,7 +6,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 postgres:
-  create: false
   service:
     name: postgres
     port: 5432
@@ -18,7 +17,6 @@ postgres:
     schemaVersionTable: swoop.schema_version
 
 minio:
-  create: false
   service:
     name: minio
     bucketName: swoop
