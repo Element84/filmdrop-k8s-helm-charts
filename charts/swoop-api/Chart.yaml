@@ -1,9 +1,19 @@
 name: swoop-api
 description: A Helm Chart for SWOOP API (https://github.com/Element84/swoop)
-version: 0.1.0
+version: 0.0.1
 apiVersion: v1
-appVersion: "0.1.0"
+appVersion: "0.0.1"
 keywords:
   - swoop-api
 sources:
 home:
+dependencies:
+  - name: postgres
+    repository: https://element84.github.io/filmdrop-k8s-helm-charts
+    version: 0.1.0
+    condition: postgres.create
+
+  - name: minio
+    repository: https://element84.github.io/filmdrop-k8s-helm-charts
+    version: 0.1.0
+    condition: minio.create
