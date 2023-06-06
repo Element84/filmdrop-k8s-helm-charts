@@ -8,6 +8,7 @@ fullnameOverride: ""
 postgres:
   service:
     name: postgres
+    port: 6543
     dbName: swoop
     dbUser: cG9zdGdyZXM=
     dbPassword: cGFzc3dvcmQ=
