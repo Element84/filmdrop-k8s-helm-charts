@@ -25,14 +25,14 @@ To install SWOOP API run:
 Once the chart has been deployed, you should see at least 3 deployments: postgres, minio and swoop-api.
 <br></br>
 <p align="center">
-  <img src="../../images/swoop-deployment-services.png" alt="SWOOP Deployment" width="1776">
+  <img src="../../images/swoop-api-deployment-services.png" alt="SWOOP Deployment" width="1776">
 </p>
 <br></br>
 
 In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`, port-forward `minio` onto localhost ports `9000` & `9001` and port-forward `swoop-api` onto localhost port `8000`.
 <br></br>
 <p align="center">
-  <img src="../../images/swoop-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
+  <img src="../../images/swoop-api-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
 </p>
 <br></br>
 
@@ -46,29 +46,103 @@ $ curl http://localhost:8000/
 
 ## API tests with Database
 
-To test the API endpoints that make use of data in the postgres database, you will need to load data into the postgres state database and the minio datastore. For steps, as well as test examples, please refer to the swoop repo [https://github.com/Element84/swoop](https://github.com/Element84/swoop).
+To test the API endpoints that make use of data in the postgres database, you will need to load data into the postgres state database or use [swoop-db](https://github.com/Element84/swoop-db) to initialize the schema and load test migrations.
 
-If you want sample data to test the API, first clone the [https://github.com/Element84/swoop](https://github.com/Element84/swoop) repository locally, source the environment variables to your terminal, and then run the migrations and import the fixtures like the following:
+If you want database sample data to test the API, first clone the [https://github.com/Element84/swoop-db](https://github.com/Element84/swoop-db) repository locally, source the environment variables to your terminal, and then run the migrations and import the fixtures like the following:
 
-After clonning the swoop repo, execute the following commands from the top level contents of the repo in your local terminal:
+After clonning the swoop repo, export the following postgres environment variables:
 ```
-[swoop]$ source .env                                                       (main)
+export PGHOST="127.0.0.1"
+export PGUSER="`helm get values postgres -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
+export PGPASSWORD="`helm get values postgres -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
+export PGPORT="`helm get values postgres -a -o json | jq -r .postgres.service.port`"
+export PGDATABASE="`helm get values postgres -a -o json | jq -r .postgres.service.dbName`"
+export PGAUTHMETHOD="trust"
 
-[swoop]$ dbmate up                                                         (main)
-Creating schema: swoop
-Applying: 20230412000000_base.sql
-Applying: 20230501205418_cache.sql
-
-[swoop]$ psql -p 5432 -U postgres swoop < db/fixtures/base_01.sql          (main)
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
 ```
+
+Then run the following command from the top level of the your local clone of the [swoop-db](https://github.com/Element84/swoop-db) repository in your local terminal to initialize the schema:
+
+```
+[swoop-db]$ psql -p $PGPORT -U $PGUSER $PGDATABASE  < src/swoop/db/migrations/00000_base_schema.up.sql        (main)
+
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE EXTENSION
+CREATE TABLE
+INSERT 0 12
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+ALTER TABLE
+ create_parent
+---------------
+ t
+(1 row)
+
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+ALTER TABLE
+ create_parent
+---------------
+ t
+(1 row)
+
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+ALTER TABLE
+ create_parent
+---------------
+ t
+(1 row)
+
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+```
+
+Next run the following command from the top level of the your local clone of the [swoop-db](https://github.com/Element84/swoop-db) repository in your local terminal to initialize the migrations:
+````
+[swoop-db]$ psql -p $PGPORT -U $PGUSER $PGDATABASE  < src/swoop/db/fixtures/base_01.sql        (main)
+
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+
+````
+
 
 After loading the database, you should be able to see the jobs in the swoop api jobs endpoint [http://localhost:8000/jobs/](http://localhost:8000/jobs/):
 ```
@@ -78,7 +152,6 @@ $ curl http://localhost:8000/jobs/
 ```
 
 ## API tests with Object Storage
-
 In order to load data into MinIO, follow these steps:
 
 ### Install First the MinIO client by running:
@@ -98,8 +171,8 @@ mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KE
 $ mc admin info swoopminio
 
 ●  127.0.0.1:9000
-   Uptime: 2 hours
-   Version: 2023-05-18T00:05:36Z
+   Uptime: 23 minutes
+   Version: 2023-06-02T23:17:26Z
    Network: 1/1 OK
    Drives: 1/1 OK
    Pool: 1
@@ -112,6 +185,8 @@ Pools:
 ```
 
 ### Load data into MinIO by running:
+First clone the [https://github.com/Element84/swoop](https://github.com/Element84/swoop) repository locally, and then run the following from the top level of the your local swoop clone:
+
 ```
 $ mc cp --recursive tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
 

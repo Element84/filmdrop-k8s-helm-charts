@@ -56,8 +56,6 @@ spec:
               value: {{ .Values.postgres.service.sslMode }}
             - name: PGAUTHMETHOD
               value: {{ .Values.postgres.service.authMethod }}
-            - name: POSTGRES_HOST_AUTH_METHOD
-              value: {{ .Values.postgres.service.authMethod }}
             - name: SWOOP_DB_SCHEMA_VERSION_TABLE
               value: {{ .Values.postgres.service.schemaVersionTable }}
           image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
