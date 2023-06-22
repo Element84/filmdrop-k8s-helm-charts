@@ -43,11 +43,11 @@ jobs:
         run: helm install minio ./charts/minio/ --create-namespace io
 
       - name: Install Postgres Helm Chart
-        id: minio_install
+        id: postgres_install
         run: helm install minio ./charts/postgres/ --create-namespace db
 
       - name: Install SWOOP API Helm Chart
-        id: minio_install
+        id: swoop_install
         run: helm install minio ./charts/swoop-api/ --create-namespace swoop
 
       - name: Waiting for SWOOP pods
