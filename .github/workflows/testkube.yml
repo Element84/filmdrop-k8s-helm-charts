@@ -40,21 +40,21 @@ jobs:
 
       - name: Install MinIO Helm Chart
         id: minio_install
-        run: helm install --namespace io minio ./charts/minio/ --create-namespace
+        run: helm install minio ./charts/minio/
 
       - name: Install Postgres Helm Chart
         id: postgres_install
-        run: helm install --namespace db postgres ./charts/postgres/ --create-namespace
+        run: helm install postgres ./charts/postgres/
 
       - name: Install SWOOP API Helm Chart
         id: swoop_install
-        run: helm install --namespace swoop swoop-api ./charts/swoop-api/ --create-namespace
+        run: helm install swoop-api ./charts/swoop-api/
 
       - name: Waiting for SWOOP pods
         run: |
-          kubectl wait --for=condition=ready --timeout=30m pod -n db -l app=postgres
-          kubectl wait --for=condition=ready --timeout=30m pod -n io -l app=minio
-          kubectl wait --for=condition=ready --timeout=30m pod -n swoop -l app=swoop-api
+          kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
+          kubectl wait --for=condition=ready --timeout=30m pod -l app=minio
+          kubectl wait --for=condition=ready --timeout=30m pod -l app=swoop-api
 
       - name: Checkout swoop repo
         uses: actions/checkout@master
@@ -64,14 +64,14 @@ jobs:
 
       - name: Setup MinIO
         run: |
-          kubectl port-forward -n io svc/minio 9000:9000 &
+          kubectl port-forward svc/minio 9000:9000 &
           curl https://dl.min.io/client/mc/release/linux-amd64/mc \
             --create-dirs \
             -o $HOME/minio-binaries/mc
           chmod +x $HOME/minio-binaries/mc
           export PATH=$PATH:$HOME/minio-binaries/
-          export MINIO_ACCESS_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
-          export MINIO_SECRET_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
+          export MINIO_ACCESS_KEY=`helm get values minio -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
+          export MINIO_SECRET_KEY=`helm get values minio -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
           mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
 
@@ -83,14 +83,14 @@ jobs:
 
       - name: Setup Postgres
         run: |
-          kubectl port-forward -n db svc/postgres 5432:5432 &
+          kubectl port-forward svc/postgres 5432:5432 &
           sudo apt update
           sudo apt install postgresql postgresql-contrib
           export PGHOST="127.0.0.1"
-          export PGUSER="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
-          export PGPASSWORD="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
-          export PGPORT="`helm get values postgres -n db -a -o json | jq -r .postgres.service.port`"
-          export PGDATABASE="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbName`"
+          export PGUSER="`helm get values postgres -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
+          export PGPASSWORD="`helm get values postgres -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
+          export PGPORT="`helm get values postgres -a -o json | jq -r .postgres.service.port`"
+          export PGDATABASE="`helm get values postgres -a -o json | jq -r .postgres.service.dbName`"
           export PGAUTHMETHOD="trust"
           psql -p $PGPORT -U $PGUSER $PGDATABASE  < swoop-db/src/swoop/db/migrations/00000_base_schema.up.sql
           psql -p $PGPORT -U $PGUSER $PGDATABASE  < swoop-db/src/swoop/db/fixtures/base_01.sql
@@ -108,10 +108,10 @@ jobs:
 
       - name: Create Testkube Tests
         run: |
-          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-root-test.json --variable apiHost=swoop-api.swoop:8000
-          testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.swoop:8000
-          testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.swoop:8000
-          testkube create test --namespace testkube --name swoop-api-simple-k6-load-test --type k6/script --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/k6/swoop-api-simple-k6-load-test.js --variable API_HOST=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-root-test.json --variable apiHost=swoop-api.default:8000
+          testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.default:8000
+          testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.default:8000
+          testkube create test --namespace testkube --name swoop-api-simple-k6-load-test --type k6/script --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/k6/swoop-api-simple-k6-load-test.js --variable API_HOST=swoop-api.default:8000
 
       - name: Running Testkube Tests
         run: |
