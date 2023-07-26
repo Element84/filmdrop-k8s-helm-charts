@@ -1,6 +1,0 @@
-dependencies:
-- name: swoop-api
-  repository: https://element84.github.io/filmdrop-k8s-helm-charts/
-  version: 0.1.0
-digest: sha256:d13ec90ce0b8de66144c4a58fe78a68e724dafdacc7d25a89b9e4fcaee461f6e
-generated: "2023-07-26T09:36:23.04324-04:00"
