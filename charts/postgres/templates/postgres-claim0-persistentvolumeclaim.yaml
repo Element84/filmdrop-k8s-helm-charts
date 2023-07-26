@@ -6,9 +6,10 @@ metadata:
     {{- include "postgres.labels" . | nindent 6 }}
   name: postgres-claim0
 spec:
+  storageClassName: postgres-retain
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: {{ .Values.postgres.storage.size }}
 status: {}

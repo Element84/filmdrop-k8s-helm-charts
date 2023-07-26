@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    {{- include "postgres.labels" . | nindent 6 }}
+  name: postgres-retain
+provisioner: {{ .Values.postgres.storage.provisioner }}
+reclaimPolicy: Retain
+volumeBindingMode: {{ .Values.postgres.storage.volumeBindingMode }}

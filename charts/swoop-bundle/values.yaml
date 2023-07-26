@@ -1,0 +1,45 @@
+# Default values for swoop-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+nameOverride: ""
+fullnameOverride: ""
+
+swoop-api:
+  enabled: true
+  nameOverride: ""
+  fullnameOverride: ""
+
+  postgres:
+    service:
+      name: postgres
+      dbName: swoop
+      dbUser: cG9zdGdyZXM=
+      dbPassword: cGFzc3dvcmQ=
+      sslMode: disable
+      authMethod: trust
+      schemaVersionTable: swoop.schema_version
+
+  minio:
+    service:
+      name: minio
+      bucketName: swoop
+      accessKeyId: bWluaW8=
+      secretAccessKey: cGFzc3dvcmQ=
+
+  swoopApi:
+    image:
+      repository: quay.io/element84/swoop
+      tag: latest
+    container:
+      port: 8000
+    service:
+      type: ClusterIP
+      port: 8000
+      targetPort: 8000
+      swoopExecutionDir: s3://swoop/execution
+      swoopS3Endpoint: http://minio:9000
+      swoopWorkflowConfigFile: workflow-config.yml
+      name: swoop-api
+    deployment:
+      name: swoop-api
+    replicaCount: 1
