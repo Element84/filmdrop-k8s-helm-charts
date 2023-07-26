@@ -1,5 +1,22 @@
 apiVersion: v1
 entries:
+  local-path-provisioner:
+  - apiVersion: v1
+    appVersion: v0.0.25
+    created: "2023-07-26T17:25:29.262050478Z"
+    description: Use HostPath for persistent local storage with Kubernetes
+    digest: 16a6d6bfa0b1106eef6401e8a5ea59af8c2569f489996ce5d60aa6c9d735cdcb
+    home: https://github.com/rancher/local-path-provisioner
+    keywords:
+    - storage
+    - hostpath
+    kubeVersion: '>=1.12.0-r0'
+    name: local-path-provisioner
+    sources:
+    - https://github.com/rancher/local-path-provisioner.git
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/local-path-provisioner-0.0.25/local-path-provisioner-0.0.25.tgz
+    version: 0.0.25
   minio:
   - apiVersion: v1
     appVersion: 0.1.0
@@ -48,4 +65,4 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-bundle-0.1.0/swoop-bundle-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-26T15:13:30.69979425Z"
+generated: "2023-07-26T17:25:29.72867813Z"
