@@ -78,11 +78,6 @@ jobs:
           mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
 
-      - name: Apply migrations and load swoop-db fixtures
-        run: |
-          kubectl exec -it --namespace=default $(kubectl get pods -o=name --namespace=default | grep postgres) -- /bin/sh -c "swoop-db up"
-          kubectl exec -it --namespace=default $(kubectl get pods -o=name --namespace=default | grep postgres) -- /bin/sh -c "swoop-db load-fixture base_01"
-
       - name: Installing Testkube
         run: |
           wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
