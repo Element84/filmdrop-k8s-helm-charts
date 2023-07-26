@@ -22,6 +22,10 @@ postgres:
     dbPassword: cGFzc3dvcmQ=
     sslMode: disable
     schemaVersionTable: swoop.schema_version
+  storage:
+    size: 1Gi
+    volumeBindingMode: WaitForFirstConsumer
+    provisioner: kubernetes.io/no-provisioner
   deployment:
     name: postgres
   replicaCount: 1
