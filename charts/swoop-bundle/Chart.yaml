@@ -1,0 +1,22 @@
+name: swoop-bundle
+description: A Helm Chart for SWOOP Components (https://github.com/Element84/swoop)
+version: 0.1.0
+apiVersion: v1
+appVersion: "0.1.0"
+keywords:
+  - swoop-bundle
+sources:
+home:
+dependencies:
+- name: swoop-api
+  condition: swoop-api.enabled
+  version: "0.1.0"
+  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+# - name: swoop-caboose
+#   condition: swoop-caboose.enabled
+#   version: "0.1.0"
+#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+# - name: swoop-conductor
+#   condition: swoop-conductor.enabled
+#   version: "0.1.0"
+#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
