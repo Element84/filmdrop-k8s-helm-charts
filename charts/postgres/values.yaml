@@ -24,7 +24,7 @@ postgres:
     schemaVersionTable: swoop.schema_version
   storage:
     size: 1Gi
-    volumeBindingMode: WaitForFirstConsumer
+    volumeBindingMode: Immediate
     provisioner: kubernetes.io/no-provisioner
   deployment:
     name: postgres
