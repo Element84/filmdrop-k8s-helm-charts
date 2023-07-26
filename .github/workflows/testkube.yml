@@ -40,20 +40,23 @@ jobs:
 
       - name: Install MinIO Helm Chart
         id: minio_install
-        run: helm install minio ./charts/minio/
+        run: |
+          helm install minio ./charts/minio/
+          kubectl wait --for=condition=ready --timeout=30m pod -l app=minio
 
       - name: Install Postgres Helm Chart
         id: postgres_install
-        run: helm install postgres ./charts/postgres/
+        run: |
+          helm dep up charts/postgres
+          helm install postgres ./charts/postgres/
+          kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
+          kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db up"
+          kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 
       - name: Install SWOOP API Helm Chart
         id: swoop_install
-        run: helm install swoop-api ./charts/swoop-api/
-
-      - name: Waiting for SWOOP pods
         run: |
-          kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
-          kubectl wait --for=condition=ready --timeout=30m pod -l app=minio
+          helm install swoop-api ./charts/swoop-api/
           kubectl wait --for=condition=ready --timeout=30m pod -l app=swoop-api
 
       - name: Checkout swoop repo
