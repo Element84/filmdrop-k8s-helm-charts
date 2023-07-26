@@ -24,7 +24,6 @@ To install the Postgres dependency run:
 `helm install postgres e84/postgres`
 
 To install SWOOP components:
-`helm dep up e84/swoop-bundle`
 `helm install swoop-bundle e84/swoop-bundle`
 
 Once the chart has been deployed, you should see at least 3 deployments: postgres, minio and swoop-api.
