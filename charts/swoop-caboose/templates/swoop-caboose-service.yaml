@@ -1,0 +1,19 @@
+{{- if .Values.swoopCaboose.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "swoop-caboose.labels" . | nindent 6 }}
+  name: {{ .Values.swoopCaboose.service.name }}
+spec:
+  type: {{ .Values.swoopCaboose.service.type }}
+  ports:
+    - name: "{{ .Values.swoopCaboose.service.targetPort }}"
+      port: {{ .Values.swoopCaboose.service.port }}
+      targetPort: {{ .Values.swoopCaboose.service.targetPort }}
+  selector:
+    {{- include "swoop-caboose.labels" . | nindent 6 }}
+status:
+  loadBalancer: {}
+{{- end }}
