@@ -1,0 +1,76 @@
+# Default values for swoop-caboose.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+postgres:
+  service:
+    name: postgres.default
+    dbName: swoop
+    port: 5432
+    dbUser: cG9zdGdyZXM=
+    dbPassword: cGFzc3dvcmQ=
+    sslMode: disable
+    authMethod: trust
+
+minio:
+  service:
+    name: minio.default
+    bucketName: swoop
+    accessKeyId: bWluaW8=
+    secretAccessKey: cGFzc3dvcmQ=
+
+swoopCaboose:
+  enabled: true
+  namespace: default
+  serviceAccount: argo
+  image:
+    repository: quay.io/element84/swoop-go
+    tag: latest
+  container:
+    port: 8000
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+    swoopS3Endpoint: http://minio.default:9000
+    swoopConfigFile: "/opt/swoop-go/fixtures/swoop-config.yml"
+    name: swoop-caboose
+  deployment:
+    name: swoop-caboose
+  argoWorkflows:
+    enabled: true
+    objectCounts: 5
+    crds:
+      install: true
+  replicaCount: 1
+
+argo-workflows:
+  enabled: true
+  crds:
+    install: false
+  artifactRepository:
+    s3:
+      accessKeySecret:
+        name: swoop-caboose-secret
+        key: minio_access_key_id
+      secretKeySecret:
+        name: swoop-caboose-secret
+        key: minio_secret_access_key
+      insecure: true
+      bucket: swoop
+      endpoint: http://minio.default:9000
+      useSDKCreds: false
+      encryptionOptions:
+        enableEncryption: false
+      minio:
+        service:
+          bucketName: swoop
+          accessKeyId: bWluaW8=
+          secretAccessKey: cGFzc3dvcmQ=
+  server:
+    serviceType: ClusterIP
+    servicePort: 2746
+    replicas: 1
