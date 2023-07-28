@@ -65,4 +65,16 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-bundle-0.1.0/swoop-bundle-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-26T17:25:29.72867813Z"
+  swoop-caboose:
+  - apiVersion: v1
+    appVersion: 0.1.0
+    created: "2023-07-28T17:50:49.678743073Z"
+    description: A Helm Chart for SWOOP API (https://github.com/Element84/swoop)
+    digest: 6016d0c29b32c868e2f85f87def5d0555b2946ea17cdb05d518aba935657c428
+    keywords:
+    - swoop-caboose
+    name: swoop-caboose
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-caboose-0.1.0/swoop-caboose-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-07-28T17:50:49.678753873Z"
