@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-job
+  namespace: db
+spec:
+  template:
+    metadata:
+      name: migration-job
+    spec:
+      containers:
+      - name: swoop-db
+        image: quay.io/element84/swoop-db
+        command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
+        args: ['--action', {{.Values.migration.action}}, '--version', {{.Values.migration.version | quote}}]
+        env:
+        - name: PGHOST
+          value: "postgres"
+        - name: PGUSER
+          value: "postgres"
+        - name: PGPORT
+          value: "5432"
+        - name: PGDATABASE
+          value: "swoop"
+      restartPolicy: Never
+backoffLimit: 1

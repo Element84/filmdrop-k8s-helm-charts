@@ -37,3 +37,8 @@ postgres:
   deployment:
     name: postgres
   replicaCount: 1
+
+migration:
+  action: "migrate"
+  version: 7
+  wait_override: False
