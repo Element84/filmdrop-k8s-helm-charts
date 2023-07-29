@@ -74,3 +74,5 @@ argo-workflows:
     serviceType: ClusterIP
     servicePort: 2746
     replicas: 1
+    extraArgs:
+    - --auth-mode=server
