@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migration-job
-  namespace: db
 spec:
   template:
     metadata:
@@ -10,12 +9,12 @@ spec:
     spec:
       containers:
       - name: swoop-db
-        image: sirneeraj/dbtest:migjob40
+        image: quay.io/element84/swoop-db
         command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
         args: ['--action', {{.Values.migration.action}}, '--version', {{.Values.migration.version | quote}}]
         env:
         - name: PGHOST
-          value: "postgres"
+          value: "postgres.db.svc.cluster.local"
         - name: PGUSER
           value: "postgres"
         - name: PGPORT
