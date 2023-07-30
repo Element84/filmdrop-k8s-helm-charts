@@ -39,6 +39,6 @@ postgres:
   replicaCount: 1
 
 migration:
-  action: "migrate"
+  action: migrate
   version: 7
-  wait_override: "false"
+  wait_override: false
