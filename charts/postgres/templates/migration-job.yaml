@@ -11,7 +11,7 @@ spec:
       - name: swoop-db
         image: quay.io/element84/swoop-db
         command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
-        args: ['--action', {{.Values.migration.action}}, '--version', {{.Values.migration.version | quote}}]
+        args: ['--action', {{.Values.migration.action}}, '--version', {{.Values.migration.version | quote}}, '--wait_override', {{.Values.migration.wait_override | quote}}]
         env:
         - name: PGHOST
           value: "postgres.db.svc.cluster.local"

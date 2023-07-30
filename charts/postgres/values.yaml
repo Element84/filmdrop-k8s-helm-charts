@@ -41,4 +41,4 @@ postgres:
 migration:
   action: "migrate"
   version: 7
-  wait_override: False
+  wait_override: "false"
