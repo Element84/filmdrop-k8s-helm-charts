@@ -135,6 +135,33 @@ $ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/results
 {"process_id":"2595f2da-81a6-423c-84db-935e6791046e","payload":"test_output"}%
 ```
 <br></br>
-## Uninstall swoop-api
 
-To uninstall the release, do `helm uninstall swoop-api`.
+## Verifying SWOOP Caboose installation
+Check the logs of the swoop-caboose pod and check your workers have started via:
+```
+$ kubectl get pods
+
+NAME                                                              READY   STATUS    RESTARTS   AGE
+minio-7c94499969-vm5ck                                            1/1     Running   0          6m37s
+postgres-local-path-provisioner-6f78964c6d-ljpvm                  1/1     Running   0          6m16s
+postgres-5b69c5f5d-dq9bv                                          1/1     Running   0          6m16s
+swoop-bundle-argo-workflows-workflow-controller-6b64d7d9b-c4mbh   1/1     Running   0          2m37s
+swoop-api-5575bc957d-5bnnk                                        1/1     Running   0          2m37s
+swoop-caboose-77fc87775f-8lrl7                                    1/1     Running   0          2m37s
+swoop-bundle-argo-workflows-server-56cc4f47f9-bgqtg               1/1     Running   0          2m37s
+```
+
+```
+$ kubectl logs swoop-caboose-77fc87775f-8lrl7
+
+time="2023-07-31T14:40:28Z" level=info msg="index config" indexWorkflowSemaphoreKeys=true
+2023/07/31 14:40:28 starting worker 0
+2023/07/31 14:40:28 starting worker 1
+2023/07/31 14:40:28 starting worker 3
+2023/07/31 14:40:28 starting worker 2
+```
+<br></br>
+
+## Uninstall swoop-bundle
+
+To uninstall the release, do `helm uninstall swoop-bundle`.
