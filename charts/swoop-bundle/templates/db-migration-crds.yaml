@@ -1,0 +1,68 @@
+{{- if .Values.dbMigration.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.dbMigration.serviceAccount }}
+  namespace: {{ .Values.dbMigration.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.dbMigration.serviceAccount }}-migration-reader
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - statefulsets
+  - services
+  - replicationcontrollers
+  - replicasets
+  - podtemplates
+  - podsecuritypolicies
+  - pods
+  - pods/log
+  - pods/exec
+  - podpreset
+  - poddisruptionbudget
+  - persistentvolumes
+  - persistentvolumeclaims
+  - jobs
+  - endpoints
+  - deployments
+  - deployments/scale
+  - daemonsets
+  - cronjobs
+  - configmaps
+  - namespaces
+  - events
+  - secrets
+  verbs:
+  - create
+  - get
+  - watch
+  - delete
+  - list
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.dbMigration.serviceAccount }}-migration-reader
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.dbMigration.serviceAccount }}
+roleRef:
+  kind: Role
+  name: {{ .Values.dbMigration.serviceAccount }}-migration-reader
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

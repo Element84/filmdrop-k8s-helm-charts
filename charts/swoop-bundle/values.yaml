@@ -4,6 +4,15 @@
 nameOverride: ""
 fullnameOverride: ""
 
+dbMigration:
+  enabled: true
+  imagePullPolicy: Always
+  jobName: migration-job
+  version: v0
+  serviceAccount: swoop-bundle
+  namespace: default
+  replicaCount: 1
+
 swoop-api:
   enabled: true
   nameOverride: ""
