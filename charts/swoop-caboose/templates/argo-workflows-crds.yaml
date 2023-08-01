@@ -302,4 +302,25 @@ metadata:
 spec:
   hard:
     count/workflows.argoproj.io: "{{ .Values.swoopCaboose.argoWorkflows.objectCounts }}"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.swoopCaboose.serviceAccount }}-migration-reader
+rules:
+  - apiGroups: ["batch","extensions"]
+    resources: ["jobs"]
+    verbs: ["get","watch","list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.swoopCaboose.serviceAccount }}-migration-reader
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.swoopCaboose.serviceAccount }}
+roleRef:
+  kind: Role
+  name: {{ .Values.swoopCaboose.serviceAccount }}-migration-reader
+  apiGroup: rbac.authorization.k8s.io
 {{- end }}

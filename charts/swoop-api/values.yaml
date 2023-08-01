@@ -14,6 +14,11 @@ postgres:
     sslMode: disable
     authMethod: trust
     schemaVersionTable: swoop.schema_version
+  migration:
+    enabled: false
+    imagePullPolicy: Always
+    jobName: migration-job
+    version: v0
 
 minio:
   service:
@@ -38,4 +43,6 @@ swoopApi:
     name: swoop-api
   deployment:
     name: swoop-api
+  serviceAccount: swoop-api
+  namespace: default
   replicaCount: 1

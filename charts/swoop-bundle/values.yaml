@@ -4,6 +4,15 @@
 nameOverride: ""
 fullnameOverride: ""
 
+dbMigration:
+  enabled: true
+  imagePullPolicy: Always
+  jobName: migration-job
+  version: v0
+  serviceAccount: swoop-bundle
+  namespace: default
+  replicaCount: 1
+
 swoop-api:
   enabled: true
   nameOverride: ""
@@ -18,6 +27,11 @@ swoop-api:
       sslMode: disable
       authMethod: trust
       schemaVersionTable: swoop.schema_version
+    migration:
+      enabled: true
+      imagePullPolicy: Always
+      jobName: migration-job
+      version: v0
 
   minio:
     service:
@@ -27,6 +41,8 @@ swoop-api:
       secretAccessKey: cGFzc3dvcmQ=
 
   swoopApi:
+    namespace: default
+    serviceAccount: swoop-api
     image:
       repository: quay.io/element84/swoop
       tag: latest
@@ -55,6 +71,11 @@ swoop-caboose:
       dbPassword: cGFzc3dvcmQ=
       sslMode: disable
       authMethod: trust
+    migration:
+      enabled: true
+      imagePullPolicy: Always
+      jobName: migration-job
+      version: v0
 
   minio:
     service:
@@ -291,6 +312,7 @@ swoop-caboose:
       # be created. Only valid when singleNamespace is false.
       workflowNamespaces:
         - default
+
       instanceID:
         # -- Configures the controller to filter workflow submissions
         # to only those which have a matching instanceID attribute.

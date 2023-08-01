@@ -1,0 +1,32 @@
+{{- if .Values.dbMigration.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+     {{- include "swoop-bundle.labels" . | nindent 6 }}
+  name: swoop-bundle
+spec:
+  replicas: {{ .Values.dbMigration.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "swoop-bundle.labels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: swoop-bundle
+    spec:
+      serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
+      initContainers:
+        - name: wait-for-db-migration
+          image: ghcr.io/groundnuty/k8s-wait-for:v1.6
+          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
+          args:
+            - "job"
+            - "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
+      restartPolicy: Always
+status: {}
+{{- end }}
