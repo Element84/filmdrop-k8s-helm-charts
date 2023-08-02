@@ -29,11 +29,14 @@ spec:
             - "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
       containers:
         - name: wait-for-swoop-api-ready
-          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
-          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
-          args:
-            - "service"
-            - "-lapp=swoop-api"
+          image: bitnami/kubectl
+          command:
+            - kubectl
+            - wait
+            - --namespace={{.Values.dbMigration.namespace}}
+            - "svc/swoop-api"
+            - --for=condition=ready
+            - --timeout={{.Values.dbMigration.timeout}}
       restartPolicy: Always
 status: {}
 {{- end }}
