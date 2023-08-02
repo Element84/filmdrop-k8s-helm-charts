@@ -22,7 +22,7 @@ spec:
       serviceAccountName: {{ .Values.swoopApi.serviceAccount }}
       initContainers:
         - name: wait-for-db-migration
-          image: ghcr.io/groundnuty/k8s-wait-for:v1.6
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
           imagePullPolicy: {{ .Values.postgres.migration.imagePullPolicy }}
           args:
             - "job"
