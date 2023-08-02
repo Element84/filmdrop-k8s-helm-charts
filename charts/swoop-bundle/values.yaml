@@ -8,10 +8,20 @@ dbMigration:
   enabled: true
   imagePullPolicy: Always
   jobName: migration-job
-  version: v0
+  version: 1
   serviceAccount: swoop-bundle
   namespace: default
   replicaCount: 1
+  wait_override: false
+  action: migrate
+
+
+postgres:
+  service:
+    targetPort: 5432
+    name: postgres
+    dbName: swoop
+    dbUser: cG9zdGdyZXM=
 
 swoop-api:
   enabled: true

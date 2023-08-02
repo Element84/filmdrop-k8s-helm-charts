@@ -11,12 +11,27 @@ spec:
       name: "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
     spec:
       containers:
-      - name: db-migration-job # Replace with DB migration job
-        image: gcr.io/k8s-staging-perf-tests/sleep:latest
-        args: ["15s"]
-        resources:
-          requests:
-            cpu: 1
-            memory: "200Mi"
+      - name: db-migration-job
+        image: quay.io/element84/swoop-db # replace with test cont
+        command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
+        env:
+        - name: PGHOST
+          value: "{{.Values.postgres.service.name}}.{{.Values.dbMigration.namespace}}.svc.cluster.local"
+        - name: PGUSER
+          value: {{.Values.postgres.service.dbUser | b64dec}}
+        - name: PGPORT
+          value: {{.Values.postgres.service.targetPort}}
+        - name: PGDATABASE
+          value: {{.Values.postgres.service.dbName}}
+        - name: ACTION
+          value: {{.Values.dbMigration.action}}
+        - name: VERSION
+          value: {{.Values.dbMigration.version}}
+        - name: NO_WAIT
+          value: {{.Values.dbMigration.wait_override}}
+          resources:
+            requests:
+              cpu: 1
+              memory: "200Mi"
       restartPolicy: Never
 {{- end }}
