@@ -8,11 +8,11 @@ dbMigration:
   enabled: true
   imagePullPolicy: Always
   jobName: migration-job
-  version: 1
+  version: 8
   serviceAccount: swoop-bundle
-  namespace: default
+  namespace: db
   replicaCount: 1
-  wait_override: false
+  no_wait: false
   action: migrate
 
 

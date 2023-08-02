@@ -16,19 +16,19 @@ spec:
         command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
         env:
         - name: PGHOST
-          value: "{{.Values.postgres.service.name}}.{{.Values.dbMigration.namespace}}.svc.cluster.local"
+          value: "{{.Values.postgres.service.name}}.{{.Values.dbMigration.namespace}}"
         - name: PGUSER
           value: {{.Values.postgres.service.migrationRole}}
         - name: PGPORT
-          value: {{.Values.postgres.service.targetPort}}
+          value: {{.Values.postgres.service.targetPort | quote}}
         - name: PGDATABASE
           value: {{.Values.postgres.service.dbName}}
         - name: ACTION
           value: {{.Values.dbMigration.action}}
         - name: VERSION
-          value: {{.Values.dbMigration.version}}
+          value: {{.Values.dbMigration.version | quote}}
         - name: NO_WAIT
-          value: {{.Values.dbMigration.wait_override}}
+          value: {{.Values.dbMigration.no_wait | quote}}
           resources:
             requests:
               cpu: 1
