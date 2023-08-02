@@ -12,13 +12,13 @@ spec:
     spec:
       containers:
       - name: db-migration-job
-        image: quay.io/element84/swoop-db # replace with test cont
+        image:  quay.io/element84/swoop-db # replace with test cont
         command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
         env:
         - name: PGHOST
           value: "{{.Values.postgres.service.name}}.{{.Values.dbMigration.namespace}}.svc.cluster.local"
         - name: PGUSER
-          value: {{.Values.postgres.service.dbUser | b64dec}}
+          value: {{.Values.postgres.service.migrationRole}}
         - name: PGPORT
           value: {{.Values.postgres.service.targetPort}}
         - name: PGDATABASE

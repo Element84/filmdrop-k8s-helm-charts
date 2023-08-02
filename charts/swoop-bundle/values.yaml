@@ -21,7 +21,7 @@ postgres:
     targetPort: 5432
     name: postgres
     dbName: swoop
-    dbUser: cG9zdGdyZXM=
+    migrationRole: swoop
 
 swoop-api:
   enabled: true
