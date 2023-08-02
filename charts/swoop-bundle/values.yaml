@@ -45,7 +45,7 @@ swoop-api:
       enabled: true
       imagePullPolicy: Always
       jobName: migration-job
-      version: v0
+      version: 8
 
   minio:
     service:
@@ -89,7 +89,7 @@ swoop-caboose:
       enabled: true
       imagePullPolicy: Always
       jobName: migration-job
-      version: v0
+      version: 8
 
   minio:
     service:
