@@ -34,6 +34,6 @@ spec:
           args:
             - "service"
             - "-lapp=swoop-api"
-      restartPolicy: Always
+      restartPolicy: Never
 status: {}
 {{- end }}
