@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: db-migration-job
-        image:  quay.io/element84/swoop-db # replace with test cont
+        image:  "{{.Values.dbMigration.image.repository}}:{{.Values.dbMigration.image.tag}}"
         command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
         env:
         - name: PGHOST

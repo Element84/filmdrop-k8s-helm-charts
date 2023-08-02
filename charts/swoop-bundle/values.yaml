@@ -7,6 +7,9 @@ fullnameOverride: ""
 dbMigration:
   enabled: true
   imagePullPolicy: Always
+  image:
+    repository: quay.io/element84/swoop-db
+    tag: latest
   jobName: migration-job
   version: 8
   serviceAccount: swoop-bundle
