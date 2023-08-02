@@ -13,7 +13,7 @@ spec:
       containers:
       - name: db-migration-job # Replace with DB migration job
         image: gcr.io/k8s-staging-perf-tests/sleep:latest
-        args: ["10s"]
+        args: ["15s"]
         resources:
           requests:
             cpu: 1

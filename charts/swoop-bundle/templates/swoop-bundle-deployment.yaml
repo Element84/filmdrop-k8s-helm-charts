@@ -22,11 +22,18 @@ spec:
       serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
       initContainers:
         - name: wait-for-db-migration
-          image: ghcr.io/groundnuty/k8s-wait-for:v1.6
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
           imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
           args:
             - "job"
             - "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
+      containers:
+        - name: wait-for-swoop-api-ready
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
+          args:
+            - "service"
+            - "-lapp=swoop-api"
       restartPolicy: Always
 status: {}
 {{- end }}
