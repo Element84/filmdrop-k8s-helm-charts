@@ -77,4 +77,16 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-caboose-0.1.0/swoop-caboose-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-28T17:50:49.678753873Z"
+  swoop-db-init:
+  - apiVersion: v1
+    appVersion: 0.1.0
+    created: "2023-08-03T19:35:59.665806229Z"
+    description: A Helm Chart for initializing SWOOP DB (https://github.com/Element84/swoop-db)
+    digest: 0fab5da77309861a41440403227dfaf609109129cfb9099b9428569e1fdb3dd6
+    keywords:
+    - swoop-db-init
+    name: swoop-db-init
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-db-init-0.1.0/swoop-db-init-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-08-03T19:35:59.665815329Z"
