@@ -1,42 +1,64 @@
 {{- if .Values.dbMigration.enabled -}}
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  creationTimestamp: null
   labels:
      {{- include "swoop-bundle.labels" . | nindent 6 }}
-  name: swoop-bundle
+  name: "wait-for-{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
 spec:
-  replicas: {{ .Values.dbMigration.replicaCount }}
-  selector:
-    matchLabels:
-      {{- include "swoop-bundle.labels" . | nindent 6 }}
-  strategy:
-    type: Recreate
   template:
     metadata:
-      creationTimestamp: null
-      labels:
-        app: swoop-bundle
+      name: "wait-for-{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
     spec:
       serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
-      initContainers:
+      containers:
         - name: wait-for-db-migration
           image: ghcr.io/groundnuty/k8s-wait-for:v2.0
           imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
           args:
             - "job"
             - "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+     {{- include "swoop-bundle.labels" . | nindent 6 }}
+  name: "wait-for-swoop-api-{{ .Values.dbMigration.version }}"
+spec:
+  template:
+    metadata:
+      name: "wait-for-swoop-api-{{ .Values.dbMigration.version }}"
+    spec:
+      serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
       containers:
         - name: wait-for-swoop-api-ready
-          image: bitnami/kubectl
-          command:
-            - kubectl
-            - wait
-            - --namespace={{.Values.dbMigration.namespace}}
-            - "svc/swoop-api"
-            - --for=condition=ready
-            - --timeout={{.Values.dbMigration.timeout}}
-      restartPolicy: Always
-status: {}
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
+          args:
+            - "service"
+            - "-lapp=swoop-api"
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+     {{- include "swoop-bundle.labels" . | nindent 6 }}
+  name: "wait-for-swoop-caboose-{{ .Values.dbMigration.version }}"
+spec:
+  template:
+    metadata:
+      name: "wait-for-swoop-caboose-{{ .Values.dbMigration.version }}"
+    spec:
+      serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
+      containers:
+        - name: wait-for-swoop-caboose-ready
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
+          args:
+            - "service"
+            - "-lapp=swoop-caboose"
+      restartPolicy: Never
 {{- end }}
