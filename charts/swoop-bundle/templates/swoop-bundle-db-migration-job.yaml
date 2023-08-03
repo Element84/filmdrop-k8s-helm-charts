@@ -23,8 +23,8 @@ spec:
           value: {{.Values.postgres.service.targetPort | quote}}
         - name: PGDATABASE
           value: {{.Values.postgres.service.dbName}}
-        - name: ACTION
-          value: {{.Values.dbMigration.action}}
+        - name: ROLLBACK
+          value: {{.Values.dbMigration.rollback | quote}}
         - name: VERSION
           value: {{.Values.dbMigration.version | quote}}
         - name: NO_WAIT

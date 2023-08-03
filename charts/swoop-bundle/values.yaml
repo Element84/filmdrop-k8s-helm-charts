@@ -13,7 +13,7 @@ dbMigration:
   namespace: db
   replicaCount: 1
   no_wait: false
-  action: migrate
+  rollback: false
 
 
 postgres:
