@@ -13,7 +13,7 @@ dbMigration:
   jobName: migration-job
   version: 8
   serviceAccount: swoop-bundle
-  namespace: db
+  namespace: default
   timeout: -1s
   replicaCount: 1
   no_wait: false
