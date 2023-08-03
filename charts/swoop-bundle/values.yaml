@@ -22,10 +22,10 @@ dbMigration:
 
 postgres:
   service:
-    targetPort: 5432
+    port: 5432
     name: postgres
     dbName: swoop
-    migrationRole: swoop
+    migrationRole: user_owner
 
 swoop-api:
   enabled: true

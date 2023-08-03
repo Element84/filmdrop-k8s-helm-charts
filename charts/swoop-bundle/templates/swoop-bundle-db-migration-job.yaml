@@ -20,7 +20,7 @@ spec:
         - name: PGUSER
           value: {{.Values.postgres.service.migrationRole}}
         - name: PGPORT
-          value: {{.Values.postgres.service.targetPort | quote}}
+          value: {{.Values.postgres.service.port | quote}}
         - name: PGDATABASE
           value: {{.Values.postgres.service.dbName}}
         - name: ROLLBACK
@@ -29,9 +29,9 @@ spec:
           value: {{.Values.dbMigration.version | quote}}
         - name: NO_WAIT
           value: {{.Values.dbMigration.no_wait | quote}}
-          resources:
-            requests:
-              cpu: 1
-              memory: "200Mi"
+        resources:
+          requests:
+            cpu: 1
+            memory: "200Mi"
       restartPolicy: Never
 {{- end }}
