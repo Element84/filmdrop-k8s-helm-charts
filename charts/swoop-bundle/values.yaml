@@ -26,6 +26,7 @@ postgres:
     name: postgres
     dbName: swoop
     migrationRole: user_owner
+    dbNamespace: default
 
 swoop-api:
   enabled: true

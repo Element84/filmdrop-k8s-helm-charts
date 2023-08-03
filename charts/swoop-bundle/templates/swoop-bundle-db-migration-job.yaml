@@ -16,7 +16,7 @@ spec:
         command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
         env:
         - name: PGHOST
-          value: "{{.Values.postgres.service.name}}.{{.Values.dbMigration.namespace}}"
+          value: "{{.Values.postgres.service.name}}.{{.Values.postgres.service.dbNamespace}}"
         - name: PGUSER
           value: {{.Values.postgres.service.migrationRole}}
         - name: PGPORT
