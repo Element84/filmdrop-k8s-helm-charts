@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+     {{- include "swoop-db-init.labels" . | nindent 6 }}
+  name: "wait-for-{{ .Values.jobName }}-{{ .Values.version }}"
+spec:
+  template:
+    metadata:
+      name: "wait-for-{{ .Values.jobName }}-{{ .Values.version }}"
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount }}
+      containers:
+        - name: wait-for-db-init
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          args:
+            - "job"
+            - "{{ .Values.jobName }}-{{ .Values.version }}"
+      restartPolicy: Never

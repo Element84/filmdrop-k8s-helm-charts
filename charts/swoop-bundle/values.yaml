@@ -7,11 +7,25 @@ fullnameOverride: ""
 dbMigration:
   enabled: true
   imagePullPolicy: Always
+  image:
+    repository: quay.io/element84/swoop-db
+    tag: latest
   jobName: migration-job
-  version: v0
+  version: 8
   serviceAccount: swoop-bundle
   namespace: default
+  timeout: -1s
   replicaCount: 1
+  no_wait: false
+  rollback: false
+
+
+postgres:
+  service:
+    port: 5432
+    name: postgres
+    dbName: swoop
+    migrationRole: user_owner
 
 swoop-api:
   enabled: true
@@ -31,7 +45,7 @@ swoop-api:
       enabled: true
       imagePullPolicy: Always
       jobName: migration-job
-      version: v0
+      version: 8
 
   minio:
     service:
@@ -75,7 +89,7 @@ swoop-caboose:
       enabled: true
       imagePullPolicy: Always
       jobName: migration-job
-      version: v0
+      version: 8
 
   minio:
     service:

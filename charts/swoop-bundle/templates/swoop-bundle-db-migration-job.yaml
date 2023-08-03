@@ -11,9 +11,24 @@ spec:
       name: "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
     spec:
       containers:
-      - name: db-migration-job # Replace with DB migration job
-        image: gcr.io/k8s-staging-perf-tests/sleep:latest
-        args: ["15s"]
+      - name: db-migration-job
+        image:  "{{.Values.dbMigration.image.repository}}:{{.Values.dbMigration.image.tag}}"
+        command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
+        env:
+        - name: PGHOST
+          value: "{{.Values.postgres.service.name}}.{{.Values.dbMigration.namespace}}"
+        - name: PGUSER
+          value: {{.Values.postgres.service.migrationRole}}
+        - name: PGPORT
+          value: {{.Values.postgres.service.port | quote}}
+        - name: PGDATABASE
+          value: {{.Values.postgres.service.dbName}}
+        - name: ROLLBACK
+          value: {{.Values.dbMigration.rollback | quote}}
+        - name: VERSION
+          value: {{.Values.dbMigration.version | quote}}
+        - name: NO_WAIT
+          value: {{.Values.dbMigration.no_wait | quote}}
         resources:
           requests:
             cpu: 1

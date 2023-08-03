@@ -1,0 +1,72 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+     {{- include "swoop-db-init.labels" . | nindent 6 }}
+  name: "{{ .Values.jobName }}-{{ .Values.version }}"
+spec:
+  template:
+    metadata:
+      name: "{{ .Values.jobName }}-{{ .Values.version }}"
+    spec:
+      containers:
+      - name: db-init-job
+        image:  "{{.Values.postgres.image.repository}}:{{.Values.postgres.image.tag}}"
+        command: ["python", "/opt/swoop/db/scripts/db-initialization.py"]
+        env:
+        - name: PGHOST
+          value: "{{.Values.postgres.service.name}}.{{.Values.namespace}}"
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: pg-admin-role-secret
+              key: username
+        - name: PGPORT
+          value: {{.Values.postgres.service.port | quote}}
+        - name: PGDATABASE
+          value: {{.Values.postgres.service.dbName}}
+        - name: API_ROLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-api-role-secret
+              key: username
+        - name: API_ROLE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: pg-api-role-secret
+              key: password
+        - name: CABOOSE_ROLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-caboose-role-secret
+              key: username
+        - name: CABOOSE_ROLE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: pg-caboose-role-secret
+              key: password
+        - name: CONDUCTOR_ROLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-conductor-role-secret
+              key: username
+        - name: CONDUCTOR_ROLE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: pg-conductor-role-secret
+              key: password
+        - name: OWNER_ROLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-owner-role-secret
+              key: username
+        - name: OWNER_ROLE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: pg-owner-role-secret
+              key: password
+        resources:
+          requests:
+            cpu: 1
+            memory: "200Mi"
+      restartPolicy: Never
