@@ -1,0 +1,22 @@
+{{- if .Values.dbMigration.swoopCabooseEnabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+     {{- include "swoop-bundle.labels" . | nindent 6 }}
+  name: "wait-for-swoop-caboose-{{ .Values.dbMigration.version }}"
+spec:
+  template:
+    metadata:
+      name: "wait-for-swoop-caboose-{{ .Values.dbMigration.version }}"
+    spec:
+      serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
+      containers:
+        - name: wait-for-swoop-caboose-ready
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
+          args:
+            - "service"
+            - "-lapp=swoop-caboose"
+      restartPolicy: Never
+{{- end }}
