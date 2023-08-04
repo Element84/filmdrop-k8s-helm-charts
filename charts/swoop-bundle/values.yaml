@@ -18,14 +18,15 @@ dbMigration:
   replicaCount: 1
   no_wait: false
   rollback: false
-
+  swoopApiEnabled: true
+  swoopCabooseEnabled: true
 
 postgres:
   service:
     port: 5432
     name: postgres
     dbName: swoop
-    migrationRole: user_owner
+    migrationRole: swoop
     dbNamespace: default
 
 swoop-api:
