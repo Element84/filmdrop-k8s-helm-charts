@@ -58,3 +58,11 @@ postgres:
     conductorRolePasswordSecret:
       name: pg-conductor-role-secret
       key: password
+    rwRoleUsername: c3dvb3BfcmVhZHdyaXRl
+    rwRolePassword: cGFzc19yZWFkd3JpdGU=
+    rwRoleUsernameSecret:
+      name: pg-rw-role-secret
+      key: username
+    rwRolePasswordSecret:
+      name: pg-rw-role-secret
+      key: password

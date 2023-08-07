@@ -65,6 +65,16 @@ spec:
             secretKeyRef:
               name: pg-owner-role-secret
               key: password
+        - name: RW_ROLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-rw-role-secret
+              key: username
+        - name: RW_ROLE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: pg-rw-role-secret
+              key: password
         resources:
           requests:
             cpu: 1
