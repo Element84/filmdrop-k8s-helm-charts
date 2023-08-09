@@ -21,15 +21,15 @@ spec:
 # Start of variable mappings
 {{- $migrationEnabled := .Values.postgres.migration.enabled -}}
 {{- $migrationPullPolicy := .Values.postgres.migration.imagePullPolicy -}}
-{{- $migrationServiceAccount := .Values.postgres.migration.serviceAccount -}}
+{{- $migrationServiceAccount := .Values.service.serviceAccount -}}
 {{- $migrationjobName := .Values.postgres.migration.jobName  -}}
 {{- $migrationVersion := .Values.postgres.migration.version -}}
 {{- $dbName := .Values.postgres.service.dbName -}}
 {{- $dbHost := .Values.postgres.service.dbHost -}}
-{{- $dbPasswordSecretName := .Values.postgres.service.passwordSecret.name -}}
-{{- $dbPasswordSecretKey := .Values.postgres.service.passwordSecret.key -}}
-{{- $dbUsernameSecretName := .Values.postgres.service.userNameSecret.name -}}
-{{- $dbUsernameSecretKey := .Values.postgres.service.userNameSecret.key -}}
+{{- $dbPasswordSecretName := .Values.postgres.service.apiRolePasswordSecret.name -}}
+{{- $dbPasswordSecretKey := .Values.postgres.service.apiRolePasswordSecret.key -}}
+{{- $dbUsernameSecretName := .Values.postgres.service.apiRoleUsernameSecret.name -}}
+{{- $dbUsernameSecretKey := .Values.postgres.service.apiRoleUsernameSecret.key -}}
 {{- $dbSSLMode := .Values.postgres.service.sslMode -}}
 {{- $dbAuthMethod := .Values.postgres.service.authMethod -}}
 {{- $dbSchemaVersionTable := .Values.postgres.service.schemaVersionTable -}}
@@ -49,9 +49,6 @@ spec:
       {{- end -}}
       {{- if (hasKey .Values.global.postgres.migration "imagePullPolicy")  }}
         {{- $migrationPullPolicy = .Values.global.postgres.migration.imagePullPolicy -}}
-      {{- end -}}
-      {{- if (hasKey .Values.global.postgres.migration "apiServiceAccount")  }}
-        {{- $migrationServiceAccount = .Values.global.postgres.migration.apiServiceAccount -}}
       {{- end -}}
       {{- if (hasKey .Values.global.postgres.migration "jobName")  }}
         {{- $migrationjobName = .Values.global.postgres.migration.jobName -}}
@@ -121,11 +118,16 @@ spec:
     {{- end -}}
   {{- end -}}
   {{- if (hasKey .Values.global "swoop")  }}
-    {{- if (hasKey .Values.global.swoop "apiConfigFile")  }}
-      {{- $swoopConfigFile := .Values.global.swoop.apiConfigFile -}}
-    {{- end -}}
-    {{- if (hasKey .Values.global.swoop "executionDir")  }}
-      {{- $swoopExecutionDir := .Values.global.swoop.executionDir -}}
+    {{- if (hasKey .Values.global.swoop "api")  }}
+      {{- if (hasKey .Values.global.swoop.api "serviceAccount")  }}
+        {{- $migrationServiceAccount = .Values.global.swoop.api.serviceAccount -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.swoop.api "configFile")  }}
+        {{- $swoopConfigFile := .Values.global.swoop.api.configFile -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.swoop.api "executionDir")  }}
+        {{- $swoopExecutionDir := .Values.global.swoop.api.executionDir -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

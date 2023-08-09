@@ -1,4 +1,14 @@
-{{- if .Values.enabled -}}
+{{- $swoopCabooseEnabled := .Values.enabled -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "caboose")  }}
+      {{- if (hasKey .Values.global.swoop.caboose "enabled")  }}
+        {{- $swoopCabooseEnabled := .Values.global.swoop.caboose.enabled -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $swoopCabooseEnabled -}}
 apiVersion: v1
 kind: Service
 metadata:

@@ -4,12 +4,6 @@
 nameOverride: ""
 fullnameOverride: ""
 
-jobName: db-initialization
-version: 8
-namespace: default
-serviceAccount: swoop-db-init
-imagePullPolicy: Always
-
 postgres:
   image:
     repository: quay.io/element84/swoop-db
@@ -18,6 +12,7 @@ postgres:
     port: 5432
     name: postgres
     dbName: swoop
+    dbHost: postgres.default
     dbUser: cG9zdGdyZXM=
     dbPassword: cGFzc3dvcmQ=
     dbAdminUsernameSecret:
@@ -58,3 +53,17 @@ postgres:
     conductorRolePasswordSecret:
       name: pg-conductor-role-secret
       key: password
+  migration:
+    enabled: true
+    imagePullPolicy: Always
+    jobName: migration-job
+    version: 8
+    no_wait: false
+    rollback: false
+    image:
+      repository: quay.io/element84/swoop-db
+      tag: latest
+
+service:
+  serviceAccount: swoop-db-init
+  name: db-initialization

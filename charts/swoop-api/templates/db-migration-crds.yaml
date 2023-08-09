@@ -1,13 +1,17 @@
 {{- $migrationEnabled := .Values.postgres.migration.enabled -}}
-{{- $migrationServiceAccount := .Values.postgres.migration.serviceAccount -}}
+{{- $migrationServiceAccount := .Values.service.serviceAccount -}}
 {{- if (hasKey .Values "global")  }}
   {{- if (hasKey .Values.global "postgres")  }}
     {{- if (hasKey .Values.global.postgres "migration")  }}
       {{- if (hasKey .Values.global.postgres.migration "enabled")  }}
         {{- $migrationEnabled = .Values.global.postgres.migration.enabled -}}
       {{- end -}}
-      {{- if (hasKey .Values.global.postgres.migration "apiServiceAccount")  }}
-        {{- $migrationServiceAccount = .Values.global.postgres.migration.apiServiceAccount -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "api")  }}
+      {{- if (hasKey .Values.global.swoop.api "serviceAccount")  }}
+        {{- $migrationServiceAccount = .Values.global.swoop.api.serviceAccount -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

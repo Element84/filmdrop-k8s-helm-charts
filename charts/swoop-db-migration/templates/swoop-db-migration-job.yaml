@@ -1,0 +1,100 @@
+{{- $migrationEnabled := .Values.postgres.migration.enabled -}}
+{{- $migrationjobName := .Values.postgres.migration.jobName  -}}
+{{- $migrationVersion := .Values.postgres.migration.version -}}
+{{- $migrationNoWait := .Values.postgres.migration.no_wait -}}
+{{- $migrationRollback := .Values.postgres.migration.rollback -}}
+{{- $dbImageRepo := .Values.postgres.migration.image.repository -}}
+{{- $dbImageTag := .Values.postgres.migration.image.tag -}}
+{{- $dbName := .Values.postgres.service.dbName -}}
+{{- $dbHost := .Values.postgres.service.dbHost -}}
+{{- $dbUsernameSecretName := .Values.postgres.service.ownerRoleUsernameSecret.name -}}
+{{- $dbUsernameSecretKey := .Values.postgres.service.ownerRoleUsernameSecret.key -}}
+{{- $dbPort := .Values.postgres.service.port -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "postgres")  }}
+    {{- if (hasKey .Values.global.postgres "migration")  }}
+      {{- if (hasKey .Values.global.postgres.migration "enabled")  }}
+        {{- $migrationEnabled = .Values.global.postgres.migration.enabled -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "jobName")  }}
+        {{- $migrationjobName = .Values.global.postgres.migration.jobName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "version")  }}
+        {{- $migrationVersion = .Values.global.postgres.migration.version -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "no_wait")  }}
+        {{- $migrationNoWait = .Values.global.postgres.migration.no_wait -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "rollback")  }}
+        {{- $migrationRollback = .Values.global.postgres.migration.rollback -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "image")  }}
+        {{- if (hasKey .Values.global.postgres.migration.image "repository")  }}
+          {{- $dbImageRepo = .Values.global.postgres.migration.image.repository -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.postgres.migration.image "tag")  }}
+          {{- $dbImageTag = .Values.global.postgres.migration.image.tag -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if (hasKey .Values.global.postgres "service")  }}
+      {{- if (hasKey .Values.global.postgres.service "dbName")  }}
+        {{- $dbName = .Values.global.postgres.service.dbName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "dbHost")  }}
+        {{- $dbHost = .Values.global.postgres.service.dbHost -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "port")  }}
+        {{- $dbPort = .Values.global.postgres.service.port -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "ownerRoleUsernameSecret")  }}
+        {{- if (hasKey .Values.global.postgres.service.ownerRoleUsernameSecret "name")  }}
+          {{- $dbUsernameSecretName = .Values.global.postgres.service.ownerRoleUsernameSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.postgres.service.apiRoleUsernameSecret "key")  }}
+          {{- $dbUsernameSecretKey = .Values.global.postgres.service.apiRoleUsernameSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $migrationEnabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+     {{- include "swoop-db-migration.labels" . | nindent 6 }}
+  name: "{{ $migrationjobName }}-{{ $migrationVersion }}"
+spec:
+  template:
+    metadata:
+      name: "{{ $migrationjobName }}-{{ $migrationVersion }}"
+    spec:
+      containers:
+      - name: db-migration-job
+        image:  "{{$dbImageRepo}}:{{$dbImageTag}}"
+        command: ["python", "/opt/swoop/db/scripts/run-migration-job.py"]
+        env:
+        - name: PGHOST
+          value: {{$dbHost}}
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: {{ $dbUsernameSecretName }}
+              key: {{ $dbUsernameSecretKey }}
+        - name: PGPORT
+          value: {{$dbPort | quote}}
+        - name: PGDATABASE
+          value: {{$dbName}}
+        - name: ROLLBACK
+          value: {{$migrationRollback | quote}}
+        - name: VERSION
+          value: {{$migrationVersion | quote}}
+        - name: NO_WAIT
+          value: {{$migrationNoWait | quote}}
+        resources:
+          requests:
+            cpu: 1
+            memory: "200Mi"
+      restartPolicy: Never
+{{- end }}

@@ -4,42 +4,45 @@
 nameOverride: ""
 fullnameOverride: ""
 
-dbMigration:
-  enabled: true
-  imagePullPolicy: Always
-  image:
-    repository: quay.io/element84/swoop-db
-    tag: latest
-  jobName: migration-job
-  version: 8
-  serviceAccount: swoop-bundle
-  namespace: default
-  timeout: -1s
-  replicaCount: 1
-  no_wait: false
-  rollback: false
-  swoopApiEnabled: true
-  swoopCabooseEnabled: true
-
-postgres:
-  service:
-    port: 5432
-    name: postgres
-    dbName: swoop
-    migrationRole: swoop
-    dbNamespace: default
-
-swoop-api:
-  enabled: true
-  nameOverride: ""
-  fullnameOverride: ""
-
+global:
   postgres:
     service:
+      port: 5432
       name: postgres
       dbName: swoop
-      dbUser: cG9zdGdyZXM=
-      dbPassword: cGFzc3dvcmQ=
+      dbHost: postgres.default
+      ownerRoleUsername: c3dvb3A=
+      ownerRolePassword: cGFzc19vd25lcg==
+      ownerRoleUsernameSecret:
+        name: swoop-owner-pg-secret
+        key: username
+      ownerRolePasswordSecret:
+        name: swoop-owner-pg-secret
+        key: password
+      apiRoleUsername: c3dvb3BfYXBp
+      apiRolePassword: cGFzc19hcGk=
+      apiRoleUsernameSecret:
+        name: swoop-api-pg-secret
+        key: username
+      apiRolePasswordSecret:
+        name: swoop-api-pg-secret
+        key: password
+      cabooseRoleUsername: c3dvb3BfY2Fib29zZQ==
+      cabooseRolePassword: cGFzc19jYWJvb3Nl
+      cabooseRoleUsernameSecret:
+        name: swoop-caboose-pg-secret
+        key: username
+      cabooseRolePasswordSecret:
+        name: swoop-caboose-pg-secret
+        key: password
+      conductorRoleUsername: c3dvb3BfY29uZHVjdG9y
+      conductorRolePassword: cGFzc19jb25kdWN0b3I=
+      conductorRoleUsernameSecret:
+        name: swoop-conductor-pg-secret
+        key: username
+      conductorRolePasswordSecret:
+        name: swoop-conductor-pg-secret
+        key: password
       sslMode: disable
       authMethod: trust
       schemaVersionTable: swoop.schema_version
@@ -48,83 +51,48 @@ swoop-api:
       imagePullPolicy: Always
       jobName: migration-job
       version: 8
+      no_wait: false
+      rollback: false
+      image:
+        repository: quay.io/element84/swoop-db
+        tag: latest
 
   minio:
     service:
+      port: 9000
       name: minio
       bucketName: swoop
       accessKeyId: bWluaW8=
       secretAccessKey: cGFzc3dvcmQ=
+      endpoint: http://minio.default:9000
+      accessKeyIdSecret:
+        name: swoop-bundle-minio-secret
+        key: access_key_id
+      secretAccessKeySecret:
+        name: swoop-bundle-minio-secret
+        key: secret_access_key
 
-  swoopApi:
-    namespace: default
-    serviceAccount: swoop-api
-    image:
-      repository: quay.io/element84/swoop
-      tag: latest
-    container:
-      port: 8000
-    service:
-      type: ClusterIP
-      port: 8000
-      targetPort: 8000
-      swoopExecutionDir: s3://swoop/execution
-      swoopS3Endpoint: http://minio:9000
-      swoopWorkflowConfigFile: workflow-config.yml
-      name: swoop-api
-    deployment:
-      name: swoop-api
-    replicaCount: 1
+  swoop:
+    api:
+      enabled: true
+      executionDir: s3://swoop/execution
+      configFile: workflow-config.yml
+      serviceAccount: swoop-api
+    caboose:
+      enabled: true
+      configFile: "/opt/swoop-go/fixtures/swoop-config.yml"
+      serviceAccount: argo
+    argo:
+      enabled: true
+      crdsInstall: true
+      objectCounts: 5
+    conductor:
+      enabled: true
+    bundle:
+      serviceAccount: swoop-bundle
+
 
 swoop-caboose:
-  enabled: true
-  postgres:
-    service:
-      name: postgres.default
-      dbName: swoop
-      port: 5432
-      dbUser: cG9zdGdyZXM=
-      dbPassword: cGFzc3dvcmQ=
-      sslMode: disable
-      authMethod: trust
-    migration:
-      enabled: true
-      imagePullPolicy: Always
-      jobName: migration-job
-      version: 8
-
-  minio:
-    service:
-      name: minio.default
-      bucketName: swoop
-      accessKeyId: bWluaW8=
-      secretAccessKey: cGFzc3dvcmQ=
-
-  swoopCaboose:
-    enabled: true
-    namespace: default
-    serviceAccount: argo
-    image:
-      repository: quay.io/element84/swoop-go
-      tag: latest
-    container:
-      port: 8000
-    service:
-      type: ClusterIP
-      port: 8000
-      targetPort: 8000
-      swoopS3Endpoint: http://minio.default:9000
-      swoopConfigFile: "/opt/swoop-go/fixtures/swoop-config.yml"
-      name: swoop-caboose
-    deployment:
-      name: swoop-caboose
-    argoWorkflows:
-      enabled: true
-      objectCounts: 5
-      crds:
-        install: true
-    replicaCount: 1
-
   argo-workflows:
     enabled: true
     images:

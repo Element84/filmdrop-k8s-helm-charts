@@ -1,0 +1,33 @@
+# Default values for swoop-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+nameOverride: ""
+fullnameOverride: ""
+
+postgres:
+  image:
+    repository: quay.io/element84/swoop-db
+    tag: latest
+  service:
+    port: 5432
+    name: postgres
+    dbName: swoop
+    dbHost: postgres.default
+    ownerRoleUsername: c3dvb3A=
+    ownerRolePassword: cGFzc19vd25lcg==
+    ownerRoleUsernameSecret:
+      name: pg-migration-role-secret
+      key: username
+    ownerRolePasswordSecret:
+      name: pg-migration-role-secret
+      key: password
+  migration:
+    enabled: true
+    imagePullPolicy: Always
+    jobName: migration-job
+    version: 8
+    no_wait: false
+    rollback: false
+    image:
+      repository: quay.io/element84/swoop-db
+      tag: latest

@@ -7,35 +7,40 @@ fullnameOverride: ""
 
 postgres:
   service:
+    port: 5432
     name: postgres
     dbName: swoop
     dbHost: postgres.default
-    dbUser: dXNlcl9hcGk=
-    dbPassword: cGFzc19hcGk=
-    apiRoleUsername: dXNlcl9hcGk=
+    apiRoleUsername: c3dvb3BfYXBp
     apiRolePassword: cGFzc19hcGk=
-    userNameSecret:
+    apiRoleUsernameSecret:
       name: swoop-api-pg-secret
       key: username
-    passwordSecret:
+    apiRolePasswordSecret:
       name: swoop-api-pg-secret
       key: password
     sslMode: disable
     authMethod: trust
     schemaVersionTable: swoop.schema_version
   migration:
-    enabled: false
+    enabled: true
     imagePullPolicy: Always
     jobName: migration-job
     version: 8
+    no_wait: false
+    rollback: false
+    image:
+      repository: quay.io/element84/swoop-db
+      tag: latest
 
 minio:
   service:
+    port: 9000
     name: minio
     bucketName: swoop
     accessKeyId: bWluaW8=
     secretAccessKey: cGFzc3dvcmQ=
-    endpoint: http://minio:9000
+    endpoint: http://minio.default:9000
     accessKeyIdSecret:
       name: swoop-api-minio-secret
       key: access_key_id
@@ -55,7 +60,7 @@ service:
   executionDir: s3://swoop/execution
   configFile: workflow-config.yml
   name: swoop-api
+  serviceAccount: swoop-api
 deployment:
   name: swoop-api
-serviceAccount: swoop-api
 replicaCount: 1

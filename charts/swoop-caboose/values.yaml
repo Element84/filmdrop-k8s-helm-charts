@@ -7,26 +7,46 @@ fullnameOverride: ""
 
 postgres:
   service:
-    name: postgres.default
-    dbName: swoop
     port: 5432
-    dbUser: cG9zdGdyZXM=
-    dbPassword: cGFzc3dvcmQ=
+    name: postgres
+    dbName: swoop
+    dbHost: postgres.default
+    cabooseRoleUsername: c3dvb3BfY2Fib29zZQ==
+    cabooseRolePassword: cGFzc19jYWJvb3Nl
+    cabooseRoleUsernameSecret:
+      name: swoop-caboose-pg-secret
+      key: username
+    cabooseRolePasswordSecret:
+      name: swoop-caboose-pg-secret
+      key: password
     sslMode: disable
     authMethod: trust
+    schemaVersionTable: swoop.schema_version
   migration:
-    enabled: false
+    enabled: true
     imagePullPolicy: Always
     jobName: migration-job
     version: 8
-    serviceAccount: argo
+    no_wait: false
+    rollback: false
+    image:
+      repository: quay.io/element84/swoop-db
+      tag: latest
 
 minio:
   service:
-    name: minio.default
+    port: 9000
+    name: minio
     bucketName: swoop
     accessKeyId: bWluaW8=
     secretAccessKey: cGFzc3dvcmQ=
+    endpoint: http://minio.default:9000
+    accessKeyIdSecret:
+      name: swoop-caboose-minio-secret
+      key: access_key_id
+    secretAccessKeySecret:
+      name: swoop-caboose-minio-secret
+      key: secret_access_key
 
 enabled: true
 namespace: default
@@ -39,16 +59,15 @@ service:
   type: ClusterIP
   port: 8000
   targetPort: 8000
-  swoopS3Endpoint: http://minio.default:9000
-  swoopConfigFile: "/opt/swoop-go/fixtures/swoop-config.yml"
+  configFile: "/opt/swoop-go/fixtures/swoop-config.yml"
   name: swoop-caboose
+  serviceAccount: argo
 deployment:
   name: swoop-caboose
 argoWorkflows:
   enabled: true
   objectCounts: 5
-  crds:
-    install: true
+  crdsInstall: true
 replicaCount: 1
 
 argo-workflows:
@@ -186,12 +205,11 @@ argo-workflows:
         tableName: argo_workflows
         # the database secrets must be in the same namespace of the controller
         userNameSecret:
-          name: swoop-caboose-secret
-          key: pg_user
+          name: swoop-caboose-pg-secret
+          key: username
         passwordSecret:
-          name: swoop-caboose-secret
-          key: pg_password
-
+          name: swoop-caboose-pg-secret
+          key: password
     # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
     # Only valid for 2.7+
     ## See more: https://argoproj.github.io/argo-workflows/default-workflow-specs/
@@ -664,11 +682,11 @@ argo-workflows:
       # Note the `key` attribute is not the actual secret, it's the PATH to
       # the contents in the associated secret, as defined by the `name` attribute.
       accessKeySecret:
-        name: swoop-caboose-secret
-        key: minio_access_key_id
+        name: swoop-caboose-minio-secret
+        key: access_key_id
       secretKeySecret:
-        name: swoop-caboose-secret
-        key: minio_secret_access_key
+        name: swoop-caboose-minio-secret
+        key: secret_access_key
       # insecure will disable TLS. Primarily used for minio installs not configured with TLS
       insecure: true
       bucket: swoop

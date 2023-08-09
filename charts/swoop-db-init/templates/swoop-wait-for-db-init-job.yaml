@@ -3,18 +3,18 @@ kind: Job
 metadata:
   labels:
      {{- include "swoop-db-init.labels" . | nindent 6 }}
-  name: "wait-for-{{ .Values.jobName }}-{{ .Values.version }}"
+  name: "wait-for-{{ .Values.service.name }}-{{ .Values.postgres.migration.version }}"
 spec:
   template:
     metadata:
-      name: "wait-for-{{ .Values.jobName }}-{{ .Values.version }}"
+      name: "wait-for-{{ .Values.service.name }}-{{ .Values.postgres.migration.version }}"
     spec:
-      serviceAccountName: {{ .Values.serviceAccount }}
+      serviceAccountName: {{ .Values.service.serviceAccount }}
       containers:
         - name: wait-for-db-init
           image: ghcr.io/groundnuty/k8s-wait-for:v2.0
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.postgres.migration.imagePullPolicy }}
           args:
             - "job"
-            - "{{ .Values.jobName }}-{{ .Values.version }}"
+            - "{{ .Values.service.name }}-{{ .Values.postgres.migration.version }}"
       restartPolicy: Never
