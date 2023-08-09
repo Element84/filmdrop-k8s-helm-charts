@@ -9,8 +9,17 @@ postgres:
   service:
     name: postgres
     dbName: swoop
-    dbUser: cG9zdGdyZXM=
-    dbPassword: cGFzc3dvcmQ=
+    dbHost: postgres.default
+    dbUser: dXNlcl9hcGk=
+    dbPassword: cGFzc19hcGk=
+    apiRoleUsername: dXNlcl9hcGk=
+    apiRolePassword: cGFzc19hcGk=
+    userNameSecret:
+      name: swoop-api-pg-secret
+      key: username
+    passwordSecret:
+      name: swoop-api-pg-secret
+      key: password
     sslMode: disable
     authMethod: trust
     schemaVersionTable: swoop.schema_version
@@ -26,23 +35,27 @@ minio:
     bucketName: swoop
     accessKeyId: bWluaW8=
     secretAccessKey: cGFzc3dvcmQ=
+    endpoint: http://minio:9000
+    accessKeyIdSecret:
+      name: swoop-api-minio-secret
+      key: access_key_id
+    secretAccessKeySecret:
+      name: swoop-api-minio-secret
+      key: secret_access_key
 
-swoopApi:
-  image:
-    repository: quay.io/element84/swoop
-    tag: latest
-  container:
-    port: 8000
-  service:
-    type: ClusterIP
-    port: 8000
-    targetPort: 8000
-    swoopExecutionDir: s3://swoop/execution
-    swoopS3Endpoint: http://minio:9000
-    swoopWorkflowConfigFile: workflow-config.yml
-    name: swoop-api
-  deployment:
-    name: swoop-api
-  serviceAccount: swoop-api
-  namespace: default
-  replicaCount: 1
+image:
+  repository: quay.io/element84/swoop
+  tag: latest
+container:
+  port: 8000
+service:
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+  executionDir: s3://swoop/execution
+  configFile: workflow-config.yml
+  name: swoop-api
+deployment:
+  name: swoop-api
+serviceAccount: swoop-api
+replicaCount: 1

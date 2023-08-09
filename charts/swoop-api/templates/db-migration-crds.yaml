@@ -1,14 +1,28 @@
-{{- if .Values.postgres.migration.enabled }}
+{{- $migrationEnabled := .Values.postgres.migration.enabled -}}
+{{- $migrationServiceAccount := .Values.postgres.migration.serviceAccount -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "postgres")  }}
+    {{- if (hasKey .Values.global.postgres "migration")  }}
+      {{- if (hasKey .Values.global.postgres.migration "enabled")  }}
+        {{- $migrationEnabled = .Values.global.postgres.migration.enabled -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "apiServiceAccount")  }}
+        {{- $migrationServiceAccount = .Values.global.postgres.migration.apiServiceAccount -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $migrationEnabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.swoopApi.serviceAccount }}
-  namespace: {{ .Values.swoopApi.namespace }}
+  name: {{ $migrationServiceAccount }}
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Values.swoopApi.serviceAccount }}-migration-reader
+  name: {{ $migrationServiceAccount }}-migration-reader
 rules:
 rules:
 - apiGroups:
@@ -58,13 +72,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ .Values.swoopApi.serviceAccount }}-migration-reader
+  name: {{ $migrationServiceAccount }}-migration-reader
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.swoopApi.serviceAccount }}
+  name: {{ $migrationServiceAccount }}
 roleRef:
   kind: Role
-  name: {{ .Values.swoopApi.serviceAccount }}-migration-reader
+  name: {{ $migrationServiceAccount }}-migration-reader
   apiGroup: rbac.authorization.k8s.io
 apiVersion: rbac.authorization.k8s.io/v1
 {{- end }}

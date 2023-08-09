@@ -19,6 +19,7 @@ postgres:
     imagePullPolicy: Always
     jobName: migration-job
     version: 8
+    serviceAccount: argo
 
 minio:
   service:
@@ -27,30 +28,28 @@ minio:
     accessKeyId: bWluaW8=
     secretAccessKey: cGFzc3dvcmQ=
 
-swoopCaboose:
+enabled: true
+namespace: default
+image:
+  repository: quay.io/element84/swoop-go
+  tag: latest
+container:
+  port: 8000
+service:
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+  swoopS3Endpoint: http://minio.default:9000
+  swoopConfigFile: "/opt/swoop-go/fixtures/swoop-config.yml"
+  name: swoop-caboose
+deployment:
+  name: swoop-caboose
+argoWorkflows:
   enabled: true
-  namespace: default
-  serviceAccount: argo
-  image:
-    repository: quay.io/element84/swoop-go
-    tag: latest
-  container:
-    port: 8000
-  service:
-    type: ClusterIP
-    port: 8000
-    targetPort: 8000
-    swoopS3Endpoint: http://minio.default:9000
-    swoopConfigFile: "/opt/swoop-go/fixtures/swoop-config.yml"
-    name: swoop-caboose
-  deployment:
-    name: swoop-caboose
-  argoWorkflows:
-    enabled: true
-    objectCounts: 5
-    crds:
-      install: true
-  replicaCount: 1
+  objectCounts: 5
+  crds:
+    install: true
+replicaCount: 1
 
 argo-workflows:
   enabled: true

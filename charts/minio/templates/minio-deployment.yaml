@@ -6,7 +6,7 @@ metadata:
     {{- include "minio.labels" . | nindent 6 }}
   name: minio
 spec:
-  replicas: {{ .Values.minio.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "minio.labels" . | nindent 6 }}
@@ -21,27 +21,27 @@ spec:
         - command:
             - bash
             - -c
-            - mkdir -p "$${1}/{{ .Values.minio.service.bucketName }}" && exec minio server --console-address ":9001" "$${1}"
+            - mkdir -p "$${1}/{{ .Values.service.bucketName }}" && exec minio server --console-address ":9001" "$${1}"
             - --
             - /tmp/minio
           env:
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: minio-secret
-                  key: swoop_secret_access_key
+                  name: {{ .Values.service.secretAccessKeySecret.name }}
+                  key: {{ .Values.service.secretAccessKeySecret.key }}
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: minio-secret
-                  key: swoop_access_key_id
+                  name: {{ .Values.service.accessKeyIdSecret.name }}
+                  key: {{ .Values.service.accessKeyIdSecret.key }}
             - name: SWOOP_BUCKET_NAME
-              value: {{ .Values.minio.service.bucketName }}
-          image: "{{ .Values.minio.image.repository }}:{{ .Values.minio.image.tag }}"
-          name: {{ .Values.minio.deployment.name }}
+              value: {{ .Values.service.bucketName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Values.deployment.name }}
           ports:
-            - containerPort: {{ .Values.minio.container.port }}
-            - containerPort: {{ .Values.minio.container.servicePort }}
+            - containerPort: {{ .Values.container.port }}
+            - containerPort: {{ .Values.container.servicePort }}
           resources: {}
       restartPolicy: Always
 status: {}

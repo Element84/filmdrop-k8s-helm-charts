@@ -4,16 +4,16 @@ metadata:
   creationTimestamp: null
   labels:
     {{- include "minio.labels" . | nindent 6 }}
-  name: {{ .Values.minio.service.name }}
+  name: {{ .Values.service.name }}
 spec:
-  type: {{ .Values.minio.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - name: "{{ .Values.minio.service.targetPort }}"
-      port: {{ .Values.minio.service.port }}
-      targetPort: {{ .Values.minio.service.targetPort }}
-    - name: "{{ .Values.minio.service.serviceTargetPort }}"
-      port: {{ .Values.minio.service.servicePort }}
-      targetPort: {{ .Values.minio.service.serviceTargetPort }}
+    - name: "{{ .Values.service.targetPort }}"
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+    - name: "{{ .Values.service.serviceTargetPort }}"
+      port: {{ .Values.service.servicePort }}
+      targetPort: {{ .Values.service.serviceTargetPort }}
   selector:
     {{- include "minio.labels" . | nindent 6 }}
 status:

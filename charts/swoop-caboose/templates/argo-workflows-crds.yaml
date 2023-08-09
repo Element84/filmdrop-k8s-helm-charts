@@ -1,4 +1,4 @@
-{{- if or .Values.swoopCaboose.argoWorkflows.enabled .Values.swoopCaboose.crds.install }}
+{{- if or .Values.argoWorkflows.enabled .Values.crds.install }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -268,15 +268,15 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: argo-binding
-  namespace: {{ .Values.swoopCaboose.namespace }}
+  namespace: {{ .Values.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: argo-role
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.swoopCaboose.serviceAccount }}
-  namespace: {{ .Values.swoopCaboose.namespace }}
+  name: {{ .Values.serviceAccount }}
+  namespace: {{ .Values.namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -288,8 +288,8 @@ roleRef:
   name: argo-cluster-role
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.swoopCaboose.serviceAccount }}
-  namespace: {{ .Values.swoopCaboose.namespace }}
+  name: {{ .Values.serviceAccount }}
+  namespace: {{ .Values.namespace }}
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -298,15 +298,15 @@ metadata:
   labels:
     {{- include "swoop-caboose.labels" . | nindent 6 }}
   name: "object-counts"
-  namespace: {{ .Values.swoopCaboose.namespace }}
+  namespace: {{ .Values.namespace }}
 spec:
   hard:
-    count/workflows.argoproj.io: "{{ .Values.swoopCaboose.argoWorkflows.objectCounts }}"
+    count/workflows.argoproj.io: "{{ .Values.argoWorkflows.objectCounts }}"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Values.swoopCaboose.serviceAccount }}-migration-reader
+  name: {{ .Values.serviceAccount }}-migration-reader
 rules:
   - apiGroups: ["batch","extensions"]
     resources: ["jobs"]
@@ -315,12 +315,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ .Values.swoopCaboose.serviceAccount }}-migration-reader
+  name: {{ .Values.serviceAccount }}-migration-reader
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.swoopCaboose.serviceAccount }}
+  name: {{ .Values.serviceAccount }}
 roleRef:
   kind: Role
-  name: {{ .Values.swoopCaboose.serviceAccount }}-migration-reader
+  name: {{ .Values.serviceAccount }}-migration-reader
   apiGroup: rbac.authorization.k8s.io
 {{- end }}

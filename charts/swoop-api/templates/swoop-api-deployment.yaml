@@ -6,7 +6,7 @@ metadata:
      {{- include "swoop-api.labels" . | nindent 6 }}
   name: swoop-api
 spec:
-  replicas: {{ .Values.swoopApi.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "swoop-api.labels" . | nindent 6 }}
@@ -18,55 +18,172 @@ spec:
       labels:
         app: swoop-api
     spec:
-    {{ if .Values.postgres.migration.enabled }}
-      serviceAccountName: {{ .Values.swoopApi.serviceAccount }}
+# Start of variable mappings
+{{- $migrationEnabled := .Values.postgres.migration.enabled -}}
+{{- $migrationPullPolicy := .Values.postgres.migration.imagePullPolicy -}}
+{{- $migrationServiceAccount := .Values.postgres.migration.serviceAccount -}}
+{{- $migrationjobName := .Values.postgres.migration.jobName  -}}
+{{- $migrationVersion := .Values.postgres.migration.version -}}
+{{- $dbName := .Values.postgres.service.dbName -}}
+{{- $dbHost := .Values.postgres.service.dbHost -}}
+{{- $dbPasswordSecretName := .Values.postgres.service.passwordSecret.name -}}
+{{- $dbPasswordSecretKey := .Values.postgres.service.passwordSecret.key -}}
+{{- $dbUsernameSecretName := .Values.postgres.service.userNameSecret.name -}}
+{{- $dbUsernameSecretKey := .Values.postgres.service.userNameSecret.key -}}
+{{- $dbSSLMode := .Values.postgres.service.sslMode -}}
+{{- $dbAuthMethod := .Values.postgres.service.authMethod -}}
+{{- $dbSchemaVersionTable := .Values.postgres.service.schemaVersionTable -}}
+{{- $s3BucketName := .Values.minio.service.bucketName -}}
+{{- $s3Endpoint := .Values.minio.service.endpoint -}}
+{{- $s3AccessKeyIdSecretName := .Values.minio.service.accessKeyIdSecret.name -}}
+{{- $s3AccessKeyIdSecretKey := .Values.minio.service.accessKeyIdSecret.key -}}
+{{- $s3SecretAccessKeySecretName := .Values.minio.service.secretAccessKeySecret.name -}}
+{{- $s3SecretAccessKeySecretKey := .Values.minio.service.secretAccessKeySecret.key -}}
+{{- $swoopConfigFile := .Values.service.configFile -}}
+{{- $swoopExecutionDir := .Values.service.executionDir -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "postgres")  }}
+    {{- if (hasKey .Values.global.postgres "migration")  }}
+      {{- if (hasKey .Values.global.postgres.migration "enabled")  }}
+        {{- $migrationEnabled = .Values.global.postgres.migration.enabled -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "imagePullPolicy")  }}
+        {{- $migrationPullPolicy = .Values.global.postgres.migration.imagePullPolicy -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "apiServiceAccount")  }}
+        {{- $migrationServiceAccount = .Values.global.postgres.migration.apiServiceAccount -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "jobName")  }}
+        {{- $migrationjobName = .Values.global.postgres.migration.jobName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "version")  }}
+        {{- $migrationVersion = .Values.global.postgres.migration.version -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if (hasKey .Values.global.postgres "service")  }}
+      {{- if (hasKey .Values.global.postgres.service "dbName")  }}
+        {{- $dbName = .Values.global.postgres.service.dbName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "dbHost")  }}
+        {{- $dbHost = .Values.global.postgres.service.dbHost -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "apiRolePasswordSecret")  }}
+        {{- if (hasKey .Values.global.postgres.service.apiRolePasswordSecret "name")  }}
+          {{- $dbPasswordSecretName = .Values.global.postgres.service.apiRolePasswordSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.postgres.service.apiRolePasswordSecret "key")  }}
+          {{- $dbPasswordSecretKey = .Values.global.postgres.service.apiRolePasswordSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "apiRoleUsernameSecret")  }}
+        {{- if (hasKey .Values.global.postgres.service.apiRoleUsernameSecret "name")  }}
+          {{- $dbUsernameSecretName = .Values.global.postgres.service.apiRoleUsernameSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.postgres.service.apiRoleUsernameSecret "key")  }}
+          {{- $dbUsernameSecretKey = .Values.global.postgres.service.apiRoleUsernameSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "sslMode")  }}
+        {{- $dbSSLMode = .Values.global.postgres.service.sslMode -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "authMethod")  }}
+        {{- $dbAuthMethod = .Values.global.postgres.service.authMethod -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "schemaVersionTable")  }}
+        {{- $dbSchemaVersionTable = .Values.global.postgres.service.schemaVersionTable -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if (hasKey .Values.global "minio")  }}
+    {{- if (hasKey .Values.global.minio "service")  }}
+      {{- if (hasKey .Values.global.minio.service "bucketName")  }}
+        {{- $s3BucketName = .Values.global.minio.service.bucketName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.minio.service "endpoint")  }}
+        {{- $s3Endpoint = .Values.global.minio.service.endpoint -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.minio.service "accessKeyIdSecret")  }}
+        {{- if (hasKey .Values.global.minio.service.accessKeyIdSecret "name")  }}
+          {{- $s3AccessKeyIdSecretName = .Values.global.minio.service.accessKeyIdSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.minio.service.accessKeyIdSecret "key")  }}
+          {{- $s3AccessKeyIdSecretKey = .Values.global.minio.service.accessKeyIdSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.minio.service "secretAccessKeySecret")  }}
+        {{- if (hasKey .Values.global.minio.service.secretAccessKeySecret "name")  }}
+          {{- $s3SecretAccessKeySecretName = .Values.global.minio.service.secretAccessKeySecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.minio.service.secretAccessKeySecret "key")  }}
+          {{- $s3SecretAccessKeySecretKey = .Values.global.minio.service.secretAccessKeySecret.key -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "apiConfigFile")  }}
+      {{- $swoopConfigFile := .Values.global.swoop.apiConfigFile -}}
+    {{- end -}}
+    {{- if (hasKey .Values.global.swoop "executionDir")  }}
+      {{- $swoopExecutionDir := .Values.global.swoop.executionDir -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+# End of global variable mappings
+    {{ if $migrationEnabled }}
+      serviceAccountName: {{ $migrationServiceAccount }}
       initContainers:
         - name: wait-for-db-migration
           image: ghcr.io/groundnuty/k8s-wait-for:v2.0
-          imagePullPolicy: {{ .Values.postgres.migration.imagePullPolicy }}
+          imagePullPolicy: {{ $migrationPullPolicy }}
           args:
             - "job"
-            - "{{ .Values.postgres.migration.jobName }}-{{ .Values.postgres.migration.version }}"
+            - "{{ $migrationjobName }}-{{ $migrationVersion }}"
     {{ end }}
       containers:
         - env:
             - name: PGDATABASE
-              value: {{ .Values.postgres.service.dbName }}
+              value: {{ $dbName }}
             - name: PGHOST
-              value: {{ .Values.postgres.service.name }}
+              value:  {{ $dbHost }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $dbPasswordSecretName }}
+                  key: {{ $dbPasswordSecretKey }}
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
-                  name: swoop-api-secret
-                  key: pg_user
+                  name: {{ $dbUsernameSecretName }}
+                  key: {{ $dbUsernameSecretKey }}
             - name: PGSSLMODE
-              value: {{ .Values.postgres.service.sslMode }}
+              value: {{ $dbSSLMode }}
             - name: PGAUTHMETHOD
-              value: {{ .Values.postgres.service.authMethod }}
+              value: {{ $dbAuthMethod }}
             - name: SWOOP_DB_SCHEMA_VERSION_TABLE
-              value: {{ .Values.postgres.service.schemaVersionTable }}
+              value: {{ $dbSchemaVersionTable }}
             - name: SWOOP_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: swoop-api-secret
-                  key: swoop_access_key_id
-            - name: SWOOP_BUCKET_NAME
-              value: {{ .Values.minio.service.bucketName }}
-            - name: SWOOP_EXECUTION_DIR
-              value: {{ .Values.swoopApi.service.swoopExecutionDir }}
-            - name: SWOOP_S3_ENDPOINT
-              value: {{ .Values.swoopApi.service.swoopS3Endpoint }}
+                  name: {{ $s3AccessKeyIdSecretName }}
+                  key: {{ $s3AccessKeyIdSecretKey }}
             - name: SWOOP_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: swoop-api-secret
-                  key: swoop_secret_access_key
+                  name: {{ $s3SecretAccessKeySecretName }}
+                  key: {{ $s3SecretAccessKeySecretKey }}
+            - name: SWOOP_BUCKET_NAME
+              value: {{ $s3BucketName }}
+            - name: SWOOP_EXECUTION_DIR
+              value: {{ $swoopExecutionDir }}
+            - name: SWOOP_S3_ENDPOINT
+              value: {{ $s3Endpoint }}
             - name: SWOOP_WORKFLOW_CONFIG_FILE
-              value: {{ .Values.swoopApi.service.swoopWorkflowConfigFile }}
-          image:  "{{ .Values.swoopApi.image.repository }}:{{ .Values.swoopApi.image.tag }}"
-          name: {{ .Values.swoopApi.deployment.name }}
+              value: {{ $swoopConfigFile }}
+          image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Values.deployment.name }}
           ports:
-            - containerPort: {{ .Values.swoopApi.container.port }}
+            - containerPort: {{ .Values.container.port }}
           resources: {}
       restartPolicy: Always
 status: {}

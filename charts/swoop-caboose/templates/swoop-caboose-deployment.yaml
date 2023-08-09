@@ -1,4 +1,4 @@
-{{- if .Values.swoopCaboose.enabled -}}
+{{- if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,7 +7,7 @@ metadata:
      {{- include "swoop-caboose.labels" . | nindent 6 }}
   name: swoop-caboose
 spec:
-  replicas: {{ .Values.swoopCaboose.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "swoop-caboose.labels" . | nindent 6 }}
@@ -19,7 +19,7 @@ spec:
       labels:
         app: swoop-caboose
     spec:
-      serviceAccountName: {{ .Values.swoopCaboose.serviceAccount }}
+      serviceAccountName: {{ .Values.serviceAccount }}
     {{ if .Values.postgres.migration.enabled }}
       initContainers:
         - name: wait-for-db-migration
@@ -64,14 +64,14 @@ spec:
             - name: SWOOP_S3_BUCKET
               value: {{ .Values.minio.service.bucketName }}
             - name: SWOOP_S3_ENDPOINT
-              value: {{ .Values.swoopCaboose.service.swoopS3Endpoint }}
+              value: {{ .Values.service.swoopS3Endpoint }}
             - name: SWOOP_CONFIG_FILE
-              value: {{ .Values.swoopCaboose.service.swoopConfigFile }}
-          image:  "{{ .Values.swoopCaboose.image.repository }}:{{ .Values.swoopCaboose.image.tag }}"
-          name: {{ .Values.swoopCaboose.deployment.name }}
+              value: {{ .Values.service.swoopConfigFile }}
+          image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Values.deployment.name }}
           command: ["swoop", "caboose", "argo"]
           ports:
-            - containerPort: {{ .Values.swoopCaboose.container.port }}
+            - containerPort: {{ .Values.container.port }}
           resources: {}
       restartPolicy: Always
 status: {}
