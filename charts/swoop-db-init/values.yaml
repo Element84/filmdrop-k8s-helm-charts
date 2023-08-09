@@ -26,7 +26,7 @@ postgres:
     dbAdminPasswordSecret:
       name: pg-admin-role-secret
       key: password
-    ownerRoleUsername: dXNlcl9vd25lcg==
+    ownerRoleUsername: c3dvb3A=
     ownerRolePassword: cGFzc19vd25lcg==
     ownerRoleUsernameSecret:
       name: pg-owner-role-secret
@@ -34,7 +34,7 @@ postgres:
     ownerRolePasswordSecret:
       name: pg-owner-role-secret
       key: password
-    apiRoleUsername: dXNlcl9hcGk=
+    apiRoleUsername: c3dvb3BfYXBp
     apiRolePassword: cGFzc19hcGk=
     apiRoleUsernameSecret:
       name: pg-api-role-secret
@@ -42,7 +42,7 @@ postgres:
     apiRolePasswordSecret:
       name: pg-api-role-secret
       key: password
-    cabooseRoleUsername: dXNlcl9jYWJvb3Nl
+    cabooseRoleUsername: c3dvb3BfY2Fib29zZQ==
     cabooseRolePassword: cGFzc19jYWJvb3Nl
     cabooseRoleUsernameSecret:
       name: pg-caboose-role-secret
@@ -50,7 +50,7 @@ postgres:
     cabooseRolePasswordSecret:
       name: pg-caboose-role-secret
       key: password
-    conductorRoleUsername: dXNlcl9jb25kdWN0b3I=
+    conductorRoleUsername: c3dvb3BfY29uZHVjdG9y
     conductorRolePassword: cGFzc19jb25kdWN0b3I=
     conductorRoleUsernameSecret:
       name: pg-conductor-role-secret
