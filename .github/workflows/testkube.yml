@@ -50,7 +50,18 @@ jobs:
           helm dep up charts/postgres
           helm install postgres ./charts/postgres/
           kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
-          kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db up"
+
+      - name: Install SWOOP DB Initialization Helm Chart
+        id: swoop_db_init
+        run: |
+          helm install swoop-db-init ./charts/swoop-db-init/
+          kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
+
+      - name: Install SWOOP DB Migration Helm Chart
+        id: swoop_db_migration
+        run: |
+          helm install swoop-db-migration ./charts/swoop-db-migration/
+          kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
           kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 
       - name: Install SWOOP API Helm Chart

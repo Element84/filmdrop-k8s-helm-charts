@@ -32,6 +32,11 @@ default       db-initialization-8-q4wnp                          0/1     Complet
 default       wait-for-db-initialization-8-zcvfc                 0/1     Completed   0          2m16s
 ```
 
+Wait for SWOOP DB initialization to complete with:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
+```
+
 And looking the logs in the db-initialization job, you should see that the swoop roles were created:
 ```
 $ kubectl logs db-initialization-8-q4wnp
@@ -47,8 +52,12 @@ Creating database 'swoop'...
 To apply migration on SWOOP DB run:
 `helm install swoop-db-migration e84/swoop-db-migration`
 
-Once the chart has been deployed, you should see the postgres pods and the migration job completed:
+Wait for SWOOP DB migration to complete with:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
+```
 
+Once the chart has been deployed, you should see the postgres pods and the migration job completed:
 ```
 $ kubectl get pods
 

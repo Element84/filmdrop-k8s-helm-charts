@@ -32,6 +32,11 @@ db-initialization-8-dp9rp                          0/1     Completed   0        
 wait-for-db-initialization-8-6zfdt                 0/1     Completed   0          3m50s
 ```
 
+Wait for SWOOP DB initialization to complete with:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
+```
+
 And looking the logs in the db-initialization job, you should see that the swoop roles were created:
 ```
 $ kubectl logs db-initialization-8-dp9rp
