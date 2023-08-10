@@ -34,8 +34,8 @@ brew install minio/stable/mc
 
 ### Then set the MinIO alias, find the ACCESS_KEY and SECRET_KEY by quering the Helm values
 ```
-export MINIO_ACCESS_KEY=`helm get values minio -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
-export MINIO_SECRET_KEY=`helm get values minio -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
+export MINIO_ACCESS_KEY=`helm get values minio -a -o json | jq -r .service.accessKeyId | base64 --decode`
+export MINIO_SECRET_KEY=`helm get values minio -a -o json | jq -r .service.secretAccessKey | base64 --decode`
 mc alias set minio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
@@ -60,12 +60,12 @@ Pools:
 ## Log into MinIO Dashboard
 Retrieve username by running:
 ```
-helm get values minio -a -o json | jq -r .minio.service.accessKeyId | base64 --decode
+helm get values minio -a -o json | jq -r .service.accessKeyId | base64 --decode
 ```
 
 Retrieve password by running:
 ```
-helm get values minio -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode
+helm get values minio -a -o json | jq -r .service.secretAccessKey | base64 --decode
 ```
 
 Open MinIO dashboard by opening your browser on [http://localhost:9001/](http://localhost:9001/) and logging into MinIO using the credentials above:
