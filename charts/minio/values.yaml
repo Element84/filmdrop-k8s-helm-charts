@@ -19,6 +19,7 @@ service:
   serviceTargetPort: 9001
   name: minio
   bucketName: swoop
+  createSecret: true
   accessKeyIdSecret:
     name: minio-secret
     key: access_key_id

@@ -13,35 +13,39 @@ global:
       dbHost: postgres.default
       ownerRoleUsername: c3dvb3A=
       ownerRolePassword: cGFzc19vd25lcg==
+      createOwnerRoleSecret: true
       ownerRoleUsernameSecret:
-        name: swoop-owner-pg-secret
+        name: swoop-bundle-pg-owner-secret
         key: username
       ownerRolePasswordSecret:
-        name: swoop-owner-pg-secret
+        name: swoop-bundle-pg-owner-secret
         key: password
       apiRoleUsername: c3dvb3BfYXBp
       apiRolePassword: cGFzc19hcGk=
+      createApiRoleSecret: true
       apiRoleUsernameSecret:
-        name: swoop-api-pg-secret
+        name: swoop-bundle-pg-api-secret
         key: username
       apiRolePasswordSecret:
-        name: swoop-api-pg-secret
+        name: swoop-bundle-pg-api-secret
         key: password
       cabooseRoleUsername: c3dvb3BfY2Fib29zZQ==
       cabooseRolePassword: cGFzc19jYWJvb3Nl
+      createCabooseRoleSecret: true
       cabooseRoleUsernameSecret:
-        name: swoop-caboose-pg-secret
+        name: swoop-bundle-pg-caboose-secret
         key: username
       cabooseRolePasswordSecret:
-        name: swoop-caboose-pg-secret
+        name: swoop-bundle-pg-caboose-secret
         key: password
       conductorRoleUsername: c3dvb3BfY29uZHVjdG9y
       conductorRolePassword: cGFzc19jb25kdWN0b3I=
+      createConductorRoleSecret: true
       conductorRoleUsernameSecret:
-        name: swoop-conductor-pg-secret
+        name: swoop-bundle-pg-conductor-secret
         key: username
       conductorRolePasswordSecret:
-        name: swoop-conductor-pg-secret
+        name: swoop-bundle-pg-conductor-secret
         key: password
       sslMode: disable
       authMethod: trust
@@ -64,6 +68,7 @@ global:
       bucketName: swoop
       accessKeyId: bWluaW8=
       secretAccessKey: cGFzc3dvcmQ=
+      createSecret: true
       endpoint: http://minio.default:9000
       accessKeyIdSecret:
         name: swoop-bundle-minio-secret
@@ -91,10 +96,38 @@ global:
     bundle:
       serviceAccount: swoop-bundle
 
+swoop-api:
+  image:
+    repository: quay.io/element84/swoop
+    tag: latest
+  container:
+    port: 8000
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+    name: swoop-api
+  deployment:
+    name: swoop-api
+  replicaCount: 1
 
 swoop-caboose:
+  enabled: true
+  image:
+    repository: quay.io/element84/swoop-go
+    tag: latest
+  container:
+    port: 8000
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+    name: swoop-caboose
+  deployment:
+    name: swoop-caboose
+  replicaCount: 1
+
   argo-workflows:
-    enabled: true
     images:
       # -- Common tag for Argo Workflows images. Defaults to `.Chart.AppVersion`.
       tag: ""
@@ -228,12 +261,11 @@ swoop-caboose:
           tableName: argo_workflows
           # the database secrets must be in the same namespace of the controller
           userNameSecret:
-            name: swoop-caboose-secret
-            key: pg_user
+            name: swoop-bundle-pg-caboose-secret
+            key: username
           passwordSecret:
-            name: swoop-caboose-secret
-            key: pg_password
-
+            name: swoop-bundle-pg-caboose-secret
+            key: password
       # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
       # Only valid for 2.7+
       ## See more: https://argoproj.github.io/argo-workflows/default-workflow-specs/
@@ -296,7 +328,6 @@ swoop-caboose:
       # be created. Only valid when singleNamespace is false.
       workflowNamespaces:
         - default
-
       instanceID:
         # -- Configures the controller to filter workflow submissions
         # to only those which have a matching instanceID attribute.
@@ -707,11 +738,11 @@ swoop-caboose:
         # Note the `key` attribute is not the actual secret, it's the PATH to
         # the contents in the associated secret, as defined by the `name` attribute.
         accessKeySecret:
-          name: swoop-caboose-secret
-          key: minio_access_key_id
+          name: swoop-bundle-minio-secret
+          key: access_key_id
         secretKeySecret:
-          name: swoop-caboose-secret
-          key: minio_secret_access_key
+          name: swoop-bundle-minio-secret
+          key: secret_access_key
         # insecure will disable TLS. Primarily used for minio installs not configured with TLS
         insecure: true
         bucket: swoop

@@ -13,6 +13,7 @@ postgres:
     dbHost: postgres.default
     cabooseRoleUsername: c3dvb3BfY2Fib29zZQ==
     cabooseRolePassword: cGFzc19jYWJvb3Nl
+    createCabooseRoleSecret: true
     cabooseRoleUsernameSecret:
       name: swoop-caboose-pg-secret
       key: username
@@ -40,6 +41,7 @@ minio:
     bucketName: swoop
     accessKeyId: bWluaW8=
     secretAccessKey: cGFzc3dvcmQ=
+    createSecret: true
     endpoint: http://minio.default:9000
     accessKeyIdSecret:
       name: swoop-caboose-minio-secret
@@ -49,7 +51,6 @@ minio:
       key: secret_access_key
 
 enabled: true
-namespace: default
 image:
   repository: quay.io/element84/swoop-go
   tag: latest
@@ -71,7 +72,6 @@ argoWorkflows:
 replicaCount: 1
 
 argo-workflows:
-  enabled: true
   images:
     # -- Common tag for Argo Workflows images. Defaults to `.Chart.AppVersion`.
     tag: ""

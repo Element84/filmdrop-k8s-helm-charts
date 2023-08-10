@@ -24,6 +24,7 @@ service:
   dbName: swoop
   dbHost: postgres.default
   authMethod: trust
+  createDBAdminSecret: true
   userNameSecret:
     name: postgres-secret
     key: username

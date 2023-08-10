@@ -15,6 +15,7 @@ postgres:
     dbHost: postgres.default
     ownerRoleUsername: c3dvb3A=
     ownerRolePassword: cGFzc19vd25lcg==
+    createOwnerRoleSecret: true
     ownerRoleUsernameSecret:
       name: pg-migration-role-secret
       key: username

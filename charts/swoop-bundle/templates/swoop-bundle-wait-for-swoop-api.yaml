@@ -10,7 +10,7 @@ spec:
     metadata:
       name: "wait-for-swoop-api-{{ .Values.global.postgres.migration.version }}"
     spec:
-      serviceAccountName: {{ .Values.global.swoop.api.serviceAccount }}
+      serviceAccountName: {{ .Values.global.swoop.bundle.serviceAccount }}
       containers:
         - name: wait-for-swoop-api-ready
           image: ghcr.io/groundnuty/k8s-wait-for:v2.0

@@ -13,6 +13,7 @@ postgres:
     dbHost: postgres.default
     apiRoleUsername: c3dvb3BfYXBp
     apiRolePassword: cGFzc19hcGk=
+    createApiRoleSecret: true
     apiRoleUsernameSecret:
       name: swoop-api-pg-secret
       key: username
@@ -40,12 +41,13 @@ minio:
     bucketName: swoop
     accessKeyId: bWluaW8=
     secretAccessKey: cGFzc3dvcmQ=
+    createSecret: true
     endpoint: http://minio.default:9000
     accessKeyIdSecret:
-      name: swoop-api-minio-secret
+      name: swoop-caboose-minio-secret
       key: access_key_id
     secretAccessKeySecret:
-      name: swoop-api-minio-secret
+      name: swoop-caboose-minio-secret
       key: secret_access_key
 
 image:
