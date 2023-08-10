@@ -89,4 +89,16 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-db-init-0.1.0/swoop-db-init-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-03T19:35:59.665815329Z"
+  swoop-db-migration:
+  - apiVersion: v1
+    appVersion: 0.1.0
+    created: "2023-08-10T02:52:21.075591044Z"
+    description: A Helm Chart for performing migrations on SWOOP DB (https://github.com/Element84/swoop-db)
+    digest: 823078f17e2ebcc4ba5b529f14b3c13f86d5738ce35c41adbb01748c5556d8c4
+    keywords:
+    - swoop-db-migration
+    name: swoop-db-migration
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-db-migration-0.1.0/swoop-db-migration-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-08-10T02:52:21.075604944Z"
