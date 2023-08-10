@@ -6,7 +6,7 @@ metadata:
     {{- include "postgres.labels" . | nindent 6 }}
   name: postgres
 spec:
-  replicas: {{ .Values.postgres.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "postgres.labels" . | nindent 6 }}
@@ -21,43 +21,43 @@ spec:
       containers:
         - env:
             - name: POSTGRES_HOST_AUTH_METHOD
-              value: {{ .Values.postgres.service.authMethod }}
+              value: {{ .Values.service.authMethod }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: pg_password
+                  name: {{ .Values.service.passwordSecret.name }}
+                  key: {{ .Values.service.passwordSecret.key }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: pg_user
-            - name: POSTGRES_PORT
-              value: "{{ .Values.postgres.service.port }}"
-            - name: PGDATABASE
-              value: {{ .Values.postgres.service.dbName }}
-            - name: PGPORT
-              value: "{{ .Values.postgres.service.port }}"
-            - name: PGAUTHMETHOD
-              value: {{ .Values.postgres.service.authMethod }}
+                  name: {{ .Values.service.userNameSecret.name }}
+                  key: {{ .Values.service.userNameSecret.key }}
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: pg_password
+                  name: {{ .Values.service.passwordSecret.name }}
+                  key: {{ .Values.service.passwordSecret.key }}
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: pg_user
+                  name: {{ .Values.service.userNameSecret.name }}
+                  key: {{ .Values.service.userNameSecret.key }}
+            - name: POSTGRES_PORT
+              value: "{{ .Values.service.port }}"
+            - name: PGDATABASE
+              value: {{ .Values.service.dbName }}
+            - name: PGPORT
+              value: "{{ .Values.service.port }}"
+            - name: PGAUTHMETHOD
+              value: {{ .Values.service.authMethod }}
             - name: PGSSLMODE
-              value: {{ .Values.postgres.service.sslMode }}
+              value: {{ .Values.service.sslMode }}
             - name: SWOOP_DB_SCHEMA_VERSION_TABLE
-              value: {{ .Values.postgres.service.schemaVersionTable }}
-          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
-          name: {{ .Values.postgres.deployment.name }}
+              value: {{ .Values.service.schemaVersionTable }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Values.deployment.name }}
           ports:
-            - containerPort: {{ .Values.postgres.container.port }}
+            - containerPort: {{ .Values.container.port }}
           resources: {}
           volumeMounts:
             - mountPath: /swoop

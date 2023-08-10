@@ -1,22 +1,22 @@
-{{- if .Values.dbMigration.enabled -}}
+{{- if .Values.global.postgres.migration.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
      {{- include "swoop-bundle.labels" . | nindent 6 }}
-  name: "wait-for-{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
+  name: "wait-for-{{ .Values.global.postgres.migration.jobName }}-{{ .Values.global.postgres.migration.version }}"
 spec:
   template:
     metadata:
-      name: "wait-for-{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
+      name: "wait-for-{{ .Values.global.postgres.migration.jobName }}-{{ .Values.global.postgres.migration.version }}"
     spec:
-      serviceAccountName: {{ .Values.dbMigration.serviceAccount }}
+      serviceAccountName: {{ .Values.global.postgres.migration.bundleServiceAccount }}
       containers:
         - name: wait-for-db-migration
           image: ghcr.io/groundnuty/k8s-wait-for:v2.0
-          imagePullPolicy: {{ .Values.dbMigration.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.global.postgres.migration.imagePullPolicy }}
           args:
             - "job"
-            - "{{ .Values.dbMigration.jobName }}-{{ .Values.dbMigration.version }}"
+            - "{{ .Values.global.postgres.migration.jobName }}-{{ .Values.global.postgres.migration.version }}"
       restartPolicy: Never
 {{- end }}

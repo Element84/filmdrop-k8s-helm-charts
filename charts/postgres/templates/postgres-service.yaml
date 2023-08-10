@@ -4,13 +4,13 @@ metadata:
   creationTimestamp: null
   labels:
     {{- include "postgres.labels" . | nindent 6 }}
-  name: {{ .Values.postgres.service.name }}
+  name: {{ .Values.service.name }}
 spec:
-  type: {{ .Values.postgres.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - name: "{{ .Values.postgres.service.targetPort }}"
-      port: {{ .Values.postgres.service.port }}
-      targetPort: {{ .Values.postgres.service.targetPort }}
+    - name: "{{ .Values.service.targetPort }}"
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
   selector:
     {{- include "postgres.labels" . | nindent 6 }}
 status:

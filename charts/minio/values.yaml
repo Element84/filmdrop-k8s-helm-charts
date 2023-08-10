@@ -5,23 +5,30 @@
 nameOverride: ""
 fullnameOverride: ""
 
-minio:
-  image:
-    repository: quay.io/minio/minio
-    tag: latest
-  container:
-    port: 9000
-    servicePort: 9001
-  service:
-    type: ClusterIP
-    port: 9000
-    targetPort: 9000
-    servicePort: 9001
-    serviceTargetPort: 9001
-    name: minio
-    bucketName: swoop
-    accessKeyId: bWluaW8=
-    secretAccessKey: cGFzc3dvcmQ=
-  deployment:
-    name: minio
-  replicaCount: 1
+image:
+  repository: quay.io/minio/minio
+  tag: latest
+container:
+  port: 9000
+  servicePort: 9001
+service:
+  type: ClusterIP
+  port: 9000
+  targetPort: 9000
+  servicePort: 9001
+  serviceTargetPort: 9001
+  name: minio
+  bucketName: swoop
+  createSecret: true
+  accessKeyIdSecret:
+    name: minio-secret
+    key: access_key_id
+  secretAccessKeySecret:
+    name: minio-secret
+    key: secret_access_key
+  accessKeyId: bWluaW8=
+  secretAccessKey: cGFzc3dvcmQ=
+  endpoint: http://minio.default:9000
+deployment:
+  name: minio
+replicaCount: 1

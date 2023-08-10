@@ -1,17 +1,27 @@
-{{- if .Values.swoopCaboose.enabled -}}
+{{- $swoopCabooseEnabled := .Values.enabled -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "caboose")  }}
+      {{- if (hasKey .Values.global.swoop.caboose "enabled")  }}
+        {{- $swoopCabooseEnabled := .Values.global.swoop.caboose.enabled -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $swoopCabooseEnabled -}}
 apiVersion: v1
 kind: Service
 metadata:
   creationTimestamp: null
   labels:
     {{- include "swoop-caboose.labels" . | nindent 6 }}
-  name: {{ .Values.swoopCaboose.service.name }}
+  name: {{ .Values.service.name }}
 spec:
-  type: {{ .Values.swoopCaboose.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - name: "{{ .Values.swoopCaboose.service.targetPort }}"
-      port: {{ .Values.swoopCaboose.service.port }}
-      targetPort: {{ .Values.swoopCaboose.service.targetPort }}
+    - name: "{{ .Values.service.targetPort }}"
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
   selector:
     {{- include "swoop-caboose.labels" . | nindent 6 }}
 status:

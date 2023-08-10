@@ -9,6 +9,6 @@ sources:
 home:
 dependencies:
 - name: argo-workflows
-  condition: argo-workflows.enabled
+  condition: argoWorkflows.enabled, global.swoop.argo.enabled
   version: "0.32.1"
   repository: "https://argoproj.github.io/argo-helm"

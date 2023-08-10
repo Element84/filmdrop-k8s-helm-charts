@@ -4,13 +4,13 @@ metadata:
   creationTimestamp: null
   labels:
     {{- include "swoop-api.labels" . | nindent 6 }}
-  name: {{ .Values.swoopApi.service.name }}
+  name: {{ .Values.service.name }}
 spec:
-  type: {{ .Values.swoopApi.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - name: "{{ .Values.swoopApi.service.targetPort }}"
-      port: {{ .Values.swoopApi.service.port }}
-      targetPort: {{ .Values.swoopApi.service.targetPort }}
+    - name: "{{ .Values.service.targetPort }}"
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
   selector:
     {{- include "swoop-api.labels" . | nindent 6 }}
 status:

@@ -1,14 +1,14 @@
-{{- if .Values.dbMigration.enabled }}
+{{- if .Values.global.postgres.migration.enabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.dbMigration.serviceAccount }}
-  namespace: {{ .Values.dbMigration.namespace }}
+  name: {{ .Values.global.swoop.bundle.serviceAccount }}
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Values.dbMigration.serviceAccount }}-migration-reader
+  name: {{ .Values.global.swoop.bundle.serviceAccount }}-migration-reader
 rules:
 - apiGroups:
   - '*'
@@ -57,12 +57,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ .Values.dbMigration.serviceAccount }}-migration-reader
+  name: {{ .Values.global.swoop.bundle.serviceAccount }}-migration-reader
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.dbMigration.serviceAccount }}
+  name: {{ .Values.global.swoop.bundle.serviceAccount }}
 roleRef:
   kind: Role
-  name: {{ .Values.dbMigration.serviceAccount }}-migration-reader
+  name: {{ .Values.global.swoop.bundle.serviceAccount }}-migration-reader
   apiGroup: rbac.authorization.k8s.io
 {{- end }}

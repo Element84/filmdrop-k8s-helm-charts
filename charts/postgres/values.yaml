@@ -11,29 +11,36 @@ local-path-provisioner:
     provisionerName: filmdrop.io/local-path-provisioner
     name: local-path-class
 
-postgres:
-  image:
-    repository: quay.io/element84/swoop-db
-    tag: latest
-  container:
-    port: 5432
-  service:
-    type: ClusterIP
-    port: 5432
-    targetPort: 5432
-    name: postgres
-    dbName: swoop
-    authMethod: trust
-    dbUser: cG9zdGdyZXM=
-    dbPassword: cGFzc3dvcmQ=
-    sslMode: disable
-    schemaVersionTable: swoop.schema_version
-  storage:
-    size: 1Gi
-    volumeBindingMode: WaitForFirstConsumer
-    provisioner: filmdrop.io/local-path-provisioner
-    retainPersistentVolume: true
-    storageClassName: postgres-retain
-  deployment:
-    name: postgres
-  replicaCount: 1
+image:
+  repository: quay.io/element84/swoop-db
+  tag: latest
+container:
+  port: 5432
+service:
+  type: ClusterIP
+  port: 5432
+  targetPort: 5432
+  name: postgres
+  dbName: swoop
+  dbHost: postgres.default
+  authMethod: trust
+  createDBAdminSecret: true
+  userNameSecret:
+    name: postgres-secret
+    key: username
+  passwordSecret:
+    name: postgres-secret
+    key: password
+  dbUser: cG9zdGdyZXM=
+  dbPassword: cGFzc3dvcmQ=
+  sslMode: disable
+  schemaVersionTable: swoop.schema_version
+storage:
+  size: 1Gi
+  volumeBindingMode: WaitForFirstConsumer
+  provisioner: filmdrop.io/local-path-provisioner
+  retainPersistentVolume: true
+  storageClassName: postgres-retain
+deployment:
+  name: postgres
+replicaCount: 1
