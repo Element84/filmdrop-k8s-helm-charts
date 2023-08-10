@@ -10,7 +10,7 @@ spec:
     metadata:
       name: "wait-for-{{ .Values.global.postgres.migration.jobName }}-{{ .Values.global.postgres.migration.version }}"
     spec:
-      serviceAccountName: {{ .Values.global.postgres.migration.bundleServiceAccount }}
+      serviceAccountName: {{ .Values.global.swoop.bundle.serviceAccount }}
       containers:
         - name: wait-for-db-migration
           image: ghcr.io/groundnuty/k8s-wait-for:v2.0
