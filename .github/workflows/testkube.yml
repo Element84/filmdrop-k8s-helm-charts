@@ -62,6 +62,10 @@ jobs:
         run: |
           helm install swoop-db-migration ./charts/swoop-db-migration/
           kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
+
+      - name: Load SWOOP DB Test Fixtures
+        id: swoop_db_migration
+        run: |
           kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 
       - name: Install SWOOP API Helm Chart

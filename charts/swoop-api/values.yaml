@@ -44,10 +44,10 @@ minio:
     createSecret: true
     endpoint: http://minio.default:9000
     accessKeyIdSecret:
-      name: swoop-caboose-minio-secret
+      name: swoop-api-minio-secret
       key: access_key_id
     secretAccessKeySecret:
-      name: swoop-caboose-minio-secret
+      name: swoop-api-minio-secret
       key: secret_access_key
 
 image:
