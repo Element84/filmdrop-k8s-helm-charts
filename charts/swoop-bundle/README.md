@@ -23,11 +23,26 @@ To install the MinIO dependency run:
 To install the Postgres dependency run:
 `helm install postgres e84/postgres`
 
-For waiting for the Postgres pods to be ready and initialize them prior installing SWOOP API:
+For waiting for the Postgres pods to be ready and initialize them prior initializing SWOOP DB:
 ```
 kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
-kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db up"
-kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
+```
+
+To initialize SWOOP DB run:
+`helm install swoop-db-init e84/swoop-db-init`
+
+
+For waiting for the SWOOP DB initialization to complete run:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
+```
+
+To apply migration on SWOOP DB run:
+`helm install swoop-db-migration e84/swoop-db-migration`
+
+For waiting for the SWOOP DB migration to complete run:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
 ```
 
 To install SWOOP components:
@@ -59,11 +74,8 @@ $ curl http://localhost:8000/
 
 To test the API endpoints that make use of data in the postgres database, you will need to load data into the postgres state database or use [swoop-db](https://github.com/Element84/swoop-db) to initialize the schema and load test migrations.
 
-****SKIP if you already ran the initialization in the install phase****
-
-If you want database sample data to test the API, run the following swoop-db commands on the postgres pods to apply the migrations and load the fixtures:
+If you want database sample data to test the API, run the following swoop-db command on the postgres pods to load test fixtures:
 ```
-kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db up"
 kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 ```
 

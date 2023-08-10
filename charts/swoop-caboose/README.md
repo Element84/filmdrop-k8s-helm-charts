@@ -19,11 +19,29 @@ To install the MinIO dependency run:
 To install the Postgres dependency:
 `helm install postgres e84/postgres`
 
-
-For waiting for the Postgres pods to be ready and initialize them prior installing SWOOP Caboose:
+For waiting for the Postgres pods to be ready and initialize them prior initializing SWOOP DB:
 ```
 kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
-kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db up"
+```
+
+To initialize SWOOP DB run:
+`helm install swoop-db-init e84/swoop-db-init`
+
+For waiting for the SWOOP DB initialization to complete run:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
+```
+
+To apply migration on SWOOP DB run:
+`helm install swoop-db-migration e84/swoop-db-migration`
+
+For waiting for the SWOOP DB migration to complete run:
+```
+kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
+```
+
+If you want database sample data to test with SWOOP Caboose, run the following swoop-db command on the postgres pods to load test fixtures:
+```
 kubectl exec -it --namespace=default svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 ```
 
@@ -88,6 +106,7 @@ Once the chart has been deployed, you should see at least 3 deployments: postgre
   <img src="../../images/swoop-caboose-deployment-services.png" alt="SWOOP Deployment" width="1776">
 </p>
 <br></br>
+
 
 Check the logs of the swoop-caboose pod and check your workers have started via:
 ```
