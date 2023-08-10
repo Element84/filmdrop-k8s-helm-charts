@@ -19,8 +19,13 @@ spec:
         - name: PGUSER
           valueFrom:
             secretKeyRef:
-              name: pg-admin-role-secret
-              key: username
+              name: {{.Values.postgres.service.dbAdminUsernameSecret.name}}
+              key: {{.Values.postgres.service.dbAdminUsernameSecret.key}}
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.postgres.service.dbAdminPasswordSecret.name}}
+              key: {{.Values.postgres.service.dbAdminPasswordSecret.key}}
         - name: PGPORT
           value: {{.Values.postgres.service.port | quote}}
         - name: PGDATABASE
@@ -28,43 +33,43 @@ spec:
         - name: API_ROLE_USER
           valueFrom:
             secretKeyRef:
-              name: pg-api-role-secret
-              key: username
+              name: {{.Values.postgres.service.apiRoleUsernameSecret.name}}
+              key: {{.Values.postgres.service.apiRoleUsernameSecret.key}}
         - name: API_ROLE_PASS
           valueFrom:
             secretKeyRef:
-              name: pg-api-role-secret
-              key: password
+              name: {{.Values.postgres.service.apiRolePasswordSecret.name}}
+              key: {{.Values.postgres.service.apiRolePasswordSecret.key}}
         - name: CABOOSE_ROLE_USER
           valueFrom:
             secretKeyRef:
-              name: pg-caboose-role-secret
-              key: username
+              name: {{.Values.postgres.service.cabooseRoleUsernameSecret.name}}
+              key: {{.Values.postgres.service.cabooseRoleUsernameSecret.key}}
         - name: CABOOSE_ROLE_PASS
           valueFrom:
             secretKeyRef:
-              name: pg-caboose-role-secret
-              key: password
+              name: {{.Values.postgres.service.cabooseRolePasswordSecret.name}}
+              key: {{.Values.postgres.service.cabooseRolePasswordSecret.key}}
         - name: CONDUCTOR_ROLE_USER
           valueFrom:
             secretKeyRef:
-              name: pg-conductor-role-secret
-              key: username
+              name: {{.Values.postgres.service.conductorRoleUsernameSecret.name}}
+              key: {{.Values.postgres.service.conductorRoleUsernameSecret.key}}
         - name: CONDUCTOR_ROLE_PASS
           valueFrom:
             secretKeyRef:
-              name: pg-conductor-role-secret
-              key: password
+              name: {{.Values.postgres.service.conductorRolePasswordSecret.name}}
+              key: {{.Values.postgres.service.conductorRolePasswordSecret.key}}
         - name: OWNER_ROLE_USER
           valueFrom:
             secretKeyRef:
-              name: pg-owner-role-secret
-              key: username
+              name: {{.Values.postgres.service.ownerRoleUsernameSecret.name}}
+              key: {{.Values.postgres.service.ownerRoleUsernameSecret.key}}
         - name: OWNER_ROLE_PASS
           valueFrom:
             secretKeyRef:
-              name: pg-owner-role-secret
-              key: password
+              name: {{.Values.postgres.service.ownerRolePasswordSecret.name}}
+              key: {{.Values.postgres.service.ownerRolePasswordSecret.key}}
         resources:
           requests:
             cpu: 1
