@@ -12,14 +12,14 @@ dependencies:
   condition: global.postgres.migration.enabled
   version: "0.1.0"
   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
-# - name: swoop-api
-#   condition: global.swoop.api.enabled
-#   version: "0.1.0"
-#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
-# - name: swoop-caboose
-#   condition: global.swoop.caboose.enabled, global.swoop.argo.enabled
-#   version: "0.1.0"
-#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+- name: swoop-api
+  condition: global.swoop.api.enabled
+  version: "0.1.0"
+  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+- name: swoop-caboose
+  condition: global.swoop.caboose.enabled, global.swoop.argo.enabled
+  version: "0.1.0"
+  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
 # - name: swoop-conductor
 #   condition: global.swoop.conductor.enabled
 #   version: "0.1.0"
