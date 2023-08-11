@@ -1,7 +1,7 @@
 name: swoop-db-migration
 description: A Helm Chart for performing migrations on SWOOP DB (https://github.com/Element84/swoop-db)
 version: 0.1.0
-apiVersion: v1
+apiVersion: v2
 appVersion: "0.1.0"
 keywords:
   - swoop-db-migration
