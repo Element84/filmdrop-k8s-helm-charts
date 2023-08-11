@@ -128,6 +128,7 @@ swoop-caboose:
   replicaCount: 1
 
   argo-workflows:
+    enabled: true
     images:
       # -- Common tag for Argo Workflows images. Defaults to `.Chart.AppVersion`.
       tag: ""
