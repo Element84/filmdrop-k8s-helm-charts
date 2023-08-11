@@ -8,7 +8,7 @@ keywords:
 sources:
 home:
 dependencies:
-# - name: argo-workflows
-#   condition: argo-workflows.enabled
-#   version: "0.32.1"
-#   repository: "https://argoproj.github.io/argo-helm"
+- name: argo-workflows
+  condition: argo-workflows.enabled
+  version: "0.32.1"
+  repository: "https://argoproj.github.io/argo-helm"
