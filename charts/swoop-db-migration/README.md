@@ -1,82 +1,57 @@
-# Deployment
+## Database Migrations on K8s
 
-This helm chart will apply a migration version to [swoop-db](https://github.com/Element84/swoop-db).
+Each individual helm chart is contained within a separate folder in the `charts` directory. Key helm charts for the database migrations are:
 
-## Adding FilmDrop Helm Chart Repository
-To add the FilmDrop Helm Chart repository, do:
+* `postgres`: this will deploy the `swoop-db` image from quay.io, which brings up a Postgres database server which is used to host the state database of SWOOP
+* `swoop-bundle`: this is a 'bundled' helm chart that contains the three SWOOP components (API, Caboose, and Conductor) and the `swoop-db-migration` job as helm dependencies. Each of the three SWOOP components are their own helm chart as well.
+* `swoop-db-init`: a helm chart for initializing Swoop-DB, this will run the database initialization script inside the Swoop-DB container
+* `swoop-db-migration`: a helm chart for performing migrations in Swoop-DB, this will run the migration script inside a Swoop-DB container that has already been initialized by the database initialization script
+
+The `swoop-db-init` chart will initialize a new database named `swoop` inside the database server with appropriate roles for database owner, read/write, and for the SWOOP components to interact with the database. The `swoop-db-migration` chart will then apply the migrations inside the initialized `swoop` database.
+
+### Deployment
+
+First, make sure that the `e84` repo has been added:
 
 `helm repo add e84 https://element84.github.io/filmdrop-k8s-helm-charts`
 
+Update the contents of the helm repo to get the latest versions of all charts:
 
-## Installing and Initializing SWOOP DB
-To install the Postgres dependency run:
-`helm install postgres e84/postgres`
+`helm repo update e84`
 
-For waiting for the Postgres pods to be ready and initialize them prior initializing SWOOP DB:
-```
-kubectl wait --for=condition=ready --timeout=30m pod -l app=postgres
-```
+You can list the contents of the repo (a list of all of its charts) by running:
 
-To initialize SWOOP DB run:
-`helm install swoop-db-init e84/swoop-db-init`
+`helm search repo e84`
 
-Once the chart has been deployed, you should see the postgres pods and the initialization job completed:
+Then, install the required helm charts, in this order:
 
-```
-$ kubectl get pods
+`helm install swoopdb e84/postgres`
 
-NAME                                               READY   STATUS      RESTARTS   AGE
-default       postgres-local-path-provisioner-6f78964c6d-bpdg7   1/1     Running     0          16h
-default       postgres-7b6b9ff76-64l9m                           1/1     Running     0          16h
-default       db-initialization-8-q4wnp                          0/1     Completed   0          2m16s
-default       wait-for-db-initialization-8-zcvfc                 0/1     Completed   0          2m16s
-```
+`helm install dbinit e84/swoop-db-init`
 
-Wait for SWOOP DB initialization to complete with:
-```
-kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
-```
+`helm install migration e84/swoop-db-migration`
 
-And looking the logs in the db-initialization job, you should see that the swoop roles were created:
-```
-$ kubectl logs db-initialization-8-q4wnp
+This will create three helm releases named `swoopdb`, `dbinit`, and `migration`, respectively, which can be verified using `helm list`.
 
-Creating owner role 'swoop'...
-Creating application role API_ROLE...
-Creating application role CABOOSE_ROLE...
-Creating application role CONDUCTOR_ROLE...
-Creating database 'swoop'...
-```
+Note: the order in which these are installed is important. The `swoop-db-init` chart needs to have a running database server first, which is installed using the `postgres` chart, and the `swoop-db-migration` chart needs to have an initialized database first, which is installed by the `swoop-db-init` chart.
 
-## Apply migration on SWOOP DB
-To apply migration on SWOOP DB run:
-`helm install swoop-db-migration e84/swoop-db-migration`
+You can then do `kubectl get all` to view a list of all resources that were deployed onto the cluster with the above commands. The logs of the
 
-Wait for SWOOP DB migration to complete with:
-```
-kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
-```
+You can then port-forward the `postgres` service onto a localhost port through Rancher Desktop or kubectl to view the migrated database in pgAdmin.
 
-Once the chart has been deployed, you should see the postgres pods and the migration job completed:
-```
-$ kubectl get pods
+### Customization of deployment
 
-NAME                                               READY   STATUS      RESTARTS   AGE
-default       postgres-local-path-provisioner-6f78964c6d-bpdg7   1/1     Running     0          16h
-default       postgres-7b6b9ff76-64l9m                           1/1     Running     0          16h
-default       db-initialization-8-q4wnp                          0/1     Completed   0          4m33s
-default       wait-for-db-initialization-8-zcvfc                 0/1     Completed   0          4m33s
-default       migration-job-8-mdpx6                              0/1     Completed   0          23s
-```
+The configuration of the K8s resources deployed by these helm charts can be changed by modifiying each chart's `values.yaml` file, which populates the values in the chart's templates.
 
-And looking the logs in the db-initialization job, you should see that the swoop roles were created:
-```
-$ kubectl logs migration-job-8-mdpx6 
+The `values.yaml` files are located in the root folder of each chart, for example at `swoop-db-migration/values.yaml`, `swoop-db-init/values.yaml`, and `postgres/values.yaml`.
 
-Migrating database to version 8
-```
+#### Values for migration helm chart
 
-<br></br>
+Three key values that need to be set in order to run the migration job are:
+
+* `postgres.migration.rollback`: a boolean value indicating whether or not to rollback the database; if `true`, the database is rolled back; if `false`, the database is migrated
+* `postgres.migration.version`: the migration version to which to migrate/rollback the database
+* `postgres.migration.no_wait`: override option to skip waiting for active connections from application roles to close
 
 ## Uninstall swoop-db-migration
 
