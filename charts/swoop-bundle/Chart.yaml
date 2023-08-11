@@ -8,18 +8,18 @@ keywords:
 sources:
 home:
 dependencies:
-# - name: swoop-db-migration
-#   condition: swoop-db-migration.enabled
-#   version: "0.1.0"
-#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
-# - name: swoop-api
-#   condition: swoop-api.enabled
-#   version: "0.1.0"
-#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
-# - name: swoop-caboose
-#   condition: swoop-caboose.enabled
-#   version: "0.1.0"
-#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+- name: swoop-db-migration
+  condition: swoop-db-migration.enabled
+  version: "0.1.0"
+  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+- name: swoop-api
+  condition: swoop-api.enabled
+  version: "0.1.0"
+  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+- name: swoop-caboose
+  condition: swoop-caboose.enabled
+  version: "0.1.0"
+  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
 # - name: swoop-conductor
 #   condition: swoop-caboose.enabled
 #   version: "0.1.0"
