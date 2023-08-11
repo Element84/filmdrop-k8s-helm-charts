@@ -37,14 +37,6 @@ For waiting for the SWOOP DB initialization to complete run:
 kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
 ```
 
-To apply migration on SWOOP DB run:
-`helm install swoop-db-migration e84/swoop-db-migration`
-
-For waiting for the SWOOP DB migration to complete run:
-```
-kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-migration
-```
-
 To install SWOOP components:
 `helm install swoop-bundle e84/swoop-bundle`
 

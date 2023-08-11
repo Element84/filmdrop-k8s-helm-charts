@@ -4,6 +4,7 @@
 
 nameOverride: ""
 fullnameOverride: ""
+enabled: true
 
 postgres:
   service:
@@ -50,7 +51,6 @@ minio:
       name: swoop-caboose-minio-secret
       key: secret_access_key
 
-enabled: true
 image:
   repository: quay.io/element84/swoop-go
   tag: latest
@@ -72,6 +72,7 @@ argoWorkflows:
 replicaCount: 1
 
 argo-workflows:
+  enabled: true
   images:
     # -- Common tag for Argo Workflows images. Defaults to `.Chart.AppVersion`.
     tag: ""
