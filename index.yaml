@@ -41,6 +41,18 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/postgres-0.1.0/postgres-0.1.0.tgz
     version: 0.1.0
+  stac-fastapi:
+  - apiVersion: v2
+    appVersion: 2.4.5
+    created: "2023-08-11T16:44:53.879505496Z"
+    description: A Helm Chart for STAC-FastAPI (https://github.com/stac-utils/stac-fastapi)
+    digest: c23a5fc4264a34e1707ea779c876344b68b47e84712bcc6f1107427163b4cf77
+    keywords:
+    - stac-fastapi
+    name: stac-fastapi
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/stac-fastapi-0.0.1/stac-fastapi-0.0.1.tgz
+    version: 0.0.1
   swoop-api:
   - apiVersion: v1
     appVersion: 0.1.0
@@ -101,4 +113,4 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-db-migration-0.1.0/swoop-db-migration-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-10T02:52:21.075604944Z"
+generated: "2023-08-11T16:44:54.809026125Z"
