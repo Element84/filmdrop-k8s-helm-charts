@@ -20,7 +20,7 @@ dependencies:
   condition: swoop-caboose.enabled
   version: "0.1.0"
   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
-- name: swoop-conductor
-  condition: swoop-caboose.enabled
+# - name: swoop-conductor
+#   condition: swoop-caboose.enabled
 #   version: "0.1.0"
 #   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
