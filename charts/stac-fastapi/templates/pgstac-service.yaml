@@ -1,3 +1,4 @@
+{{- if .Values.pgStac.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,10 +8,11 @@ metadata:
   name: {{ .Values.pgStac.service.name }}
 spec:
   ports:
-    - name: "5439"
+    - name: "{{ .Values.pgStac.service.port }}"
       port: {{ .Values.pgStac.service.port }}
       targetPort: {{ .Values.pgStac.service.targetPort }}
   selector:
     {{- include "pgstac.labels" . | nindent 6 }}
 status:
   loadBalancer: {}
+{{- end }}

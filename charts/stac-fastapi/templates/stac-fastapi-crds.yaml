@@ -1,0 +1,70 @@
+{{- if .Values.pgStac.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.stacFastApi.service.serviceAccount }}
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.stacFastApi.service.serviceAccount }}-migration-reader
+rules:
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - statefulsets
+  - services
+  - replicationcontrollers
+  - replicasets
+  - podtemplates
+  - podsecuritypolicies
+  - pods
+  - pods/log
+  - pods/exec
+  - podpreset
+  - poddisruptionbudget
+  - persistentvolumes
+  - persistentvolumeclaims
+  - jobs
+  - endpoints
+  - deployments
+  - deployments/scale
+  - daemonsets
+  - cronjobs
+  - configmaps
+  - namespaces
+  - events
+  - secrets
+  verbs:
+  - create
+  - get
+  - watch
+  - delete
+  - list
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.stacFastApi.service.serviceAccount }}-migration-reader
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.stacFastApi.service.serviceAccount }}
+roleRef:
+  kind: Role
+  name: {{ .Values.stacFastApi.service.serviceAccount }}-migration-reader
+  apiGroup: rbac.authorization.k8s.io
+apiVersion: rbac.authorization.k8s.io/v1
+{{- end }}

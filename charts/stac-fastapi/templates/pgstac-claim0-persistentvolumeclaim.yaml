@@ -1,0 +1,17 @@
+{{- if and .Values.pgStac.enabled .Values.pgStac.storage.retainPersistentVolume -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "pgstac.labels" . | nindent 6 }}
+  name: pgstac-claim0
+spec:
+  storageClassName: {{ .Values.pgStac.storage.storageClassName }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.pgStac.storage.size }}
+status: {}
+{{- end }}
