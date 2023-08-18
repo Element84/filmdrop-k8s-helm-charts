@@ -9,7 +9,6 @@ local-path-provisioner:
   enabled: true
   storageClass:
     provisionerName: filmdrop.io/local-pgstac-path-provisioner
-    name: local-path-class-pgstac
 
 pgStac:
   enabled: true
