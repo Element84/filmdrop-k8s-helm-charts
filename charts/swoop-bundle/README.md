@@ -43,14 +43,14 @@ To install SWOOP components:
 Once the chart has been deployed, you should see at least 3 deployments: postgres, minio and swoop-api.
 <br></br>
 <p align="center">
-  <img src="../.../../images/swoop-api-deployment-services.png" alt="SWOOP Deployment" width="1776">
+  <img src="../../images/swoop-api-deployment-services.png" alt="SWOOP Deployment" width="1776">
 </p>
 <br></br>
 
 In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`, port-forward `minio` onto localhost ports `9000` & `9001` and port-forward `swoop-api` onto localhost port `8000`.
 <br></br>
 <p align="center">
-  <img src="../.../../images/swoop-api-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
+  <img src="../../images/swoop-api-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
 </p>
 <br></br>
 
@@ -122,7 +122,7 @@ $ mc cp --recursive tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2
 
 ### View your data on MinIO by opening your browser on [http://localhost:9001/](http://localhost:9001/) and logging into MinIO
 <p align="center">
-  <img src="../.../../images/swoop-minio-data.png" alt="SWOOP MinIO" width="1776">
+  <img src="../../images/swoop-minio-data.png" alt="SWOOP MinIO" width="1776">
 </p>
 <br></br>
 
