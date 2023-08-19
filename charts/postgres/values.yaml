@@ -9,7 +9,7 @@ local-path-provisioner:
   enabled: true
   storageClass:
     provisionerName: filmdrop.io/local-path-provisioner
-    name: local-path-class
+    name: local-path-class-postgres
 
 image:
   repository: quay.io/element84/swoop-db
