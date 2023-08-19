@@ -5,6 +5,12 @@
 nameOverride: ""
 fullnameOverride: ""
 
+local-path-provisioner:
+  enabled: true
+  storageClass:
+    provisionerName: filmdrop.io/local-minio-path-provisioner
+    name: local-path-class-minio
+
 image:
   repository: quay.io/minio/minio
   tag: latest
@@ -29,6 +35,12 @@ service:
   accessKeyId: bWluaW8=
   secretAccessKey: cGFzc3dvcmQ=
   endpoint: http://minio.default:9000
+storage:
+  size: 256M
+  volumeBindingMode: WaitForFirstConsumer
+  provisioner: filmdrop.io/local-minio-path-provisioner
+  retainPersistentVolume: true
+  storageClassName: minio-retain
 deployment:
   name: minio
 replicaCount: 1

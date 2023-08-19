@@ -1,0 +1,11 @@
+{{- if .Values.storage.retainPersistentVolume -}}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    {{- include "minio.labels" . | nindent 6 }}
+  name: minio-retain
+provisioner: {{ .Values.storage.provisioner }}
+reclaimPolicy: Retain
+volumeBindingMode: {{ .Values.storage.volumeBindingMode }}
+{{- end }}

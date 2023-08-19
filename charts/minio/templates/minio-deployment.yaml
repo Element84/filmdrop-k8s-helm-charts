@@ -43,5 +43,13 @@ spec:
             - containerPort: {{ .Values.container.port }}
             - containerPort: {{ .Values.container.servicePort }}
           resources: {}
+          volumeMounts:
+            - mountPath: /minio
+              name: minio-claim0
+          workingDir: /minio
       restartPolicy: Always
+      volumes:
+        - name: minio-claim0
+          persistentVolumeClaim:
+            claimName: minio-claim0
 status: {}
