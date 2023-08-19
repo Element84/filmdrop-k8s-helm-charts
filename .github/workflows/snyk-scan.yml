@@ -21,8 +21,13 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Render Helm Templates
+        id: helm_template_rendering
+        run: |
+          helm template charts/swoop-api --output-dir ./output
+
       - name: Snyk IaC report vulnerabilities
-        uses: snyk/actions/iac@0.4.0
+        uses: snyk/actions/iac@master
         continue-on-error: true # To make sure that SARIF upload gets called
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
