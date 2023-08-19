@@ -36,7 +36,7 @@ service:
   sslMode: disable
   schemaVersionTable: swoop.schema_version
 storage:
-  size: 1Gi
+  size: 256M
   volumeBindingMode: WaitForFirstConsumer
   provisioner: filmdrop.io/local-path-provisioner
   retainPersistentVolume: true
