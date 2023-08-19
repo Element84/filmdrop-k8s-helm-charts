@@ -41,6 +41,7 @@ jobs:
       - name: Install MinIO Helm Chart
         id: minio_install
         run: |
+          helm dep up charts/minio
           helm install minio ./charts/minio/
           kubectl wait --for=condition=ready --timeout=30m pod -l app=minio
 

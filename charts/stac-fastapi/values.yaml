@@ -10,6 +10,8 @@ local-path-provisioner:
   storageClass:
     provisionerName: filmdrop.io/local-pgstac-path-provisioner
     name: local-path-class-pgstac
+  configmap:
+    name: local-path-config-pgstac
 
 pgStac:
   enabled: true
@@ -36,7 +38,7 @@ pgStac:
   dbName: postgis
   dbHost: pgstac.default
   storage:
-    size: 254M
+    size: 256M
     volumeBindingMode: WaitForFirstConsumer
     provisioner: filmdrop.io/local-pgstac-path-provisioner
     retainPersistentVolume: true

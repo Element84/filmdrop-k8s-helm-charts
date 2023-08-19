@@ -8,8 +8,10 @@ fullnameOverride: ""
 local-path-provisioner:
   enabled: true
   storageClass:
-    provisionerName: filmdrop.io/local-path-provisioner
+    provisionerName: filmdrop.io/local-postgres-path-provisioner
     name: local-path-class-postgres
+  configmap:
+    name: local-path-config-postgres
 
 image:
   repository: quay.io/element84/swoop-db
@@ -38,7 +40,7 @@ service:
 storage:
   size: 256M
   volumeBindingMode: WaitForFirstConsumer
-  provisioner: filmdrop.io/local-path-provisioner
+  provisioner: filmdrop.io/local-postgres-path-provisioner
   retainPersistentVolume: true
   storageClassName: postgres-retain
 deployment:

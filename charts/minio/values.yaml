@@ -10,6 +10,8 @@ local-path-provisioner:
   storageClass:
     provisionerName: filmdrop.io/local-minio-path-provisioner
     name: local-path-class-minio
+  configmap:
+    name: local-path-config-minio
 
 image:
   repository: quay.io/minio/minio
