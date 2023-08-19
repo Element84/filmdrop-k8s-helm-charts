@@ -1,11 +1,10 @@
 name: stac-fastapi
 description: A Helm Chart for STAC-FastAPI (https://github.com/stac-utils/stac-fastapi)
-version: 0.0.1
+version: 0.1.0
 apiVersion: v2
-appVersion: "2.4.5"
+appVersion: "0.1.0"
 keywords:
   - stac-fastapi
-sources:
 home:
 dependencies:
 - name: local-path-provisioner
