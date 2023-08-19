@@ -43,6 +43,22 @@ entries:
     version: 0.1.0
   stac-fastapi:
   - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-08-19T02:36:45.037295968Z"
+    dependencies:
+    - condition: local-path-provisioner.enabled
+      name: local-path-provisioner
+      repository: https://element84.github.io/filmdrop-k8s-helm-charts/
+      version: 0.0.25
+    description: A Helm Chart for STAC-FastAPI (https://github.com/stac-utils/stac-fastapi)
+    digest: c5a367b221a2c31abab668c6c10a35550fff16babc497c601bb564a9e7fb8ea4
+    keywords:
+    - stac-fastapi
+    name: stac-fastapi
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/stac-fastapi-0.1.0/stac-fastapi-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     appVersion: 2.4.5
     created: "2023-08-11T16:44:53.879505496Z"
     description: A Helm Chart for STAC-FastAPI (https://github.com/stac-utils/stac-fastapi)
@@ -113,4 +129,4 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-db-migration-0.1.0/swoop-db-migration-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-11T16:44:54.809026125Z"
+generated: "2023-08-19T02:36:45.725342423Z"
