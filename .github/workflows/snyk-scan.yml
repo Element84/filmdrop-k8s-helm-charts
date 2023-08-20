@@ -24,7 +24,9 @@ jobs:
       - name: Install Helm Dependencies
         id: helm_dependencies
         run: |
-           helm dep up $dir
+          for dir in $(ls -d charts/*/); do
+              helm dep up $dir
+          done
 
       - name: Render Helm Templates
         id: helm_template_rendering
