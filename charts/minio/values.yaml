@@ -43,7 +43,7 @@ storage:
   volumeBindingMode: WaitForFirstConsumer
   provisioner: filmdrop.io/local-minio-path-provisioner
   retainPersistentVolume: false
-  storageClassName: minio-retain
+  storageClassName: ""
 deployment:
   name: minio
 replicaCount: 1

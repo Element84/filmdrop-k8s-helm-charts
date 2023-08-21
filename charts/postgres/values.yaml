@@ -43,7 +43,7 @@ storage:
   volumeBindingMode: WaitForFirstConsumer
   provisioner: filmdrop.io/local-postgres-path-provisioner
   retainPersistentVolume: false
-  storageClassName: postgres-retain
+  storageClassName: ""
 deployment:
   name: postgres
 replicaCount: 1

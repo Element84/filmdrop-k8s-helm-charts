@@ -1,4 +1,4 @@
-{{- if and .Values.pgStac.enabled .Values.pgStac.storage.retainPersistentVolume -}}
+{{- if and .Values.pgStac.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
