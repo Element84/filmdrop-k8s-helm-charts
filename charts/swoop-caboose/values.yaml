@@ -153,7 +153,7 @@ argo-workflows:
 
     rbac:
       # -- Adds Role and RoleBinding for the controller.
-      create: false
+      create: true
       # -- Allows controller to get, list, and watch certain k8s secrets
       secretWhitelist: []
       # -- Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty.
