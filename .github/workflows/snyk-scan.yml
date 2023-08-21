@@ -32,7 +32,7 @@ jobs:
         id: helm_template_rendering
         run: |
           for dir in $(ls -d charts/*/); do
-              helm template $dir --output-dir ./output
+              helm template $dir -f $dir/values.yaml --output-dir ./output
           done
 
       - name: Snyk IaC report vulnerabilities
