@@ -115,7 +115,7 @@ argo-workflows:
   # Helm release) by apply Roles and RoleBindings instead of the Cluster
   # equivalents, and start workflow-controller with the --namespaced flag. Use it
   # in clusters with strict access policy.
-  singleNamespace: false
+  singleNamespace: true
 
   workflow:
     # -- Deprecated; use controller.workflowNamespaces instead.
@@ -466,7 +466,7 @@ argo-workflows:
 
   server:
     # -- Deploy the Argo Server
-    enabled: true
+    enabled: false
     # -- Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /.
     ## only updates base url of resources on client side,
     ## it's expected that a proxy server rewrites the request URL and gets rid of this prefix

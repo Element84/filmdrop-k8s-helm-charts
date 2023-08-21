@@ -21,10 +21,19 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Install Helm Dependencies
+        id: helm_dependencies
+        run: |
+          for dir in $(ls -d charts/*/); do
+              helm dep up $dir
+          done
+
       - name: Render Helm Templates
         id: helm_template_rendering
         run: |
-          helm template charts/swoop-api --output-dir ./output
+          for dir in $(ls -d charts/*/); do
+              helm template $dir -f $dir/values.yaml --output-dir ./output
+          done
 
       - name: Snyk IaC report vulnerabilities
         uses: snyk/actions/iac@master
@@ -32,6 +41,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
+          file: ./output
           args: --sarif-file-output=snyk.sarif
 
         # Push the Snyk Code results into GitHub Code Scanning tab

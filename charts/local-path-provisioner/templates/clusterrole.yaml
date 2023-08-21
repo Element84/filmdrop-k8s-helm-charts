@@ -1,8 +1,15 @@
 {{- if .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.singleNamespace }}
+kind: Role
+{{- else }}
 kind: ClusterRole
+{{- end }}
 metadata:
   name: {{ include "local-path-provisioner.fullname" . }}
+  {{- if .Values.singleNamespace }}
+  namespace: {{ .Release.Namespace | quote }}
+  {{- end }}
   labels:
 {{ include "local-path-provisioner.labels" . | indent 4 }}
 rules:
@@ -11,7 +18,7 @@ rules:
   verbs: ["get", "list", "watch"]
 - apiGroups: [""]
   resources: ["endpoints", "persistentvolumes", "pods"]
-  verbs: ["*"]
+  verbs: ["create", "delete", "deletecollection", "get", "list", "patch", "update", "watch"]
 - apiGroups: [""]
   resources: ["events"]
   verbs: ["create", "patch"]

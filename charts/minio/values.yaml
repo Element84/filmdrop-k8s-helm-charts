@@ -7,6 +7,7 @@ fullnameOverride: ""
 
 local-path-provisioner:
   enabled: true
+  singleNamespace: true
   storageClass:
     provisionerName: filmdrop.io/local-minio-path-provisioner
     name: local-path-class-minio
