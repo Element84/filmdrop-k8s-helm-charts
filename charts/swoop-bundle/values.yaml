@@ -209,7 +209,7 @@ swoop-caboose:
 
       rbac:
         # -- Adds Role and RoleBinding for the controller.
-        create: true
+        create: false
         # -- Allows controller to get, list, and watch certain k8s secrets
         secretWhitelist: []
         # -- Allows controller to get, list and watch all k8s secrets. Can only be used if secretWhitelist is empty.
@@ -522,7 +522,7 @@ swoop-caboose:
 
     server:
       # -- Deploy the Argo Server
-      enabled: true
+      enabled: false
       # -- Value for base href in index.html. Used if the server is running behind reverse proxy under subpath different from /.
       ## only updates base url of resources on client side,
       ## it's expected that a proxy server rewrites the request URL and gets rid of this prefix
