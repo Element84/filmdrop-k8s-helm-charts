@@ -4,7 +4,6 @@
 nameOverride: ""
 fullnameOverride: ""
 
-
 global:
   postgres:
     service:
