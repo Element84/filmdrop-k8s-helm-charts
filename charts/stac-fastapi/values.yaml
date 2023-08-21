@@ -43,7 +43,7 @@ pgStac:
     volumeBindingMode: WaitForFirstConsumer
     provisioner: filmdrop.io/local-pgstac-path-provisioner
     retainPersistentVolume: false
-    storageClassName: pgstac-retain
+    storageClassName: ""
   replicaCount: 1
 
 stacFastApi:
