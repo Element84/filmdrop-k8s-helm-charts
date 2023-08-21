@@ -6,8 +6,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 local-path-provisioner:
-  enabled: true
-  singleNamespace: true
+  enabled: false
+  singleNamespace: false
   storageClass:
     provisionerName: filmdrop.io/local-minio-path-provisioner
     name: local-path-class-minio
@@ -42,7 +42,7 @@ storage:
   size: 256M
   volumeBindingMode: WaitForFirstConsumer
   provisioner: filmdrop.io/local-minio-path-provisioner
-  retainPersistentVolume: true
+  retainPersistentVolume: false
   storageClassName: minio-retain
 deployment:
   name: minio

@@ -14,7 +14,11 @@ metadata:
 {{ include "local-path-provisioner.labels" . | indent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
+  {{- if .Values.singleNamespace }}
   kind: Role
+  {{- else }}
+  kind: ClusterRole
+  {{- end }}
   name: {{ template "local-path-provisioner.fullname" . }}
 subjects:
   - kind: ServiceAccount

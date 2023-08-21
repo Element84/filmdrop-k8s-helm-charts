@@ -6,8 +6,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 local-path-provisioner:
-  enabled: true
-  singleNamespace: true
+  enabled: false
+  singleNamespace: false
   storageClass:
     provisionerName: filmdrop.io/local-pgstac-path-provisioner
     name: local-path-class-pgstac
@@ -42,7 +42,7 @@ pgStac:
     size: 256M
     volumeBindingMode: WaitForFirstConsumer
     provisioner: filmdrop.io/local-pgstac-path-provisioner
-    retainPersistentVolume: true
+    retainPersistentVolume: false
     storageClassName: pgstac-retain
   replicaCount: 1
 
