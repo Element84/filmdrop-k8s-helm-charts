@@ -6,8 +6,8 @@ appVersion: "0.1.0"
 keywords:
   - stac-fastapi
 home:
-dependencies:
-- name: local-path-provisioner
-  condition: local-path-provisioner.enabled
-  version: "0.0.25"
-  repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
+# dependencies:
+# - name: local-path-provisioner
+#   condition: local-path-provisioner.enabled
+#   version: "0.0.25"
+#   repository: "https://element84.github.io/filmdrop-k8s-helm-charts/"
