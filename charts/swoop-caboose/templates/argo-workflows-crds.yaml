@@ -24,7 +24,7 @@
 {{- end -}}
 {{- if or $argoWorkflowsEnabled $crdsInstall }}
 apiVersion: rbac.authorization.k8s.io/v1
-Kind: Role
+kind: Role
 metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
@@ -59,7 +59,7 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-Kind: Role
+kind: Role
 metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
@@ -92,7 +92,7 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-Kind: Role
+kind: Role
 metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
@@ -120,9 +120,9 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-Kind: Role
+kind: Role
 metadata:
-  name: argo-workflows-role
+  name: argo-role
   namespace: {{ .Release.Namespace | quote }}
 rules:
 - apiGroups:
@@ -230,7 +230,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: argo-binding
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -238,21 +238,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ $migrationServiceAccount }}
-  namespace: {{ .Release.Namespace }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-Kind: RoleBinding
-metadata:
-  name: argo-workflows-binding
   namespace: {{ .Release.Namespace | quote }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  Kind: Role
-  name: argo-workflows-role
-subjects:
-- kind: ServiceAccount
-  name: {{ $migrationServiceAccount }}
-  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -261,7 +247,7 @@ metadata:
   labels:
     {{- include "swoop-caboose.labels" . | nindent 6 }}
   name: "object-counts"
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   hard:
     count/workflows.argoproj.io: "{{ $objectCounts }}"
