@@ -187,6 +187,8 @@ spec:
               value: {{ $s3Endpoint }}
             - name: SWOOP_CONFIG_FILE
               value: {{ $swoopConfigFile }}
+            - name: SWOOP_NAMESPACE
+              value: {{ .Release.Namespace | quote }}
           image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           name: {{ .Values.deployment.name }}
           command: ["swoop", "caboose", "argo"]
