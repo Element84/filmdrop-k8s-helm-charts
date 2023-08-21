@@ -171,7 +171,7 @@ swoop-caboose:
     # Helm release) by apply Roles and RoleBindings instead of the Cluster
     # equivalents, and start workflow-controller with the --namespaced flag. Use it
     # in clusters with strict access policy.
-    singleNamespace: false
+    singleNamespace: true
 
     workflow:
       # -- Deprecated; use controller.workflowNamespaces instead.
