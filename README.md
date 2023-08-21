@@ -39,17 +39,7 @@ SWOOP Bundle will install the followin the following components into a kubernete
 * [argo-workflows](https://github.com/argoproj/argo-workflows/)
 * [swoop-caboose](https://github.com/Element84/swoop-go)
 * [swoop-conductor](https://github.com/Element84/swoop-go)
-This helm chart is inteded to group all SWOOP components compatible with the same database schema version and it's related migration operations. More information is available [here](./charts/swoop-bundle/README.md).
-<br></br>
 
-
-### SWOOP Bundle
-
-SWOOP Bundle will install the followin the following components into a kubernetes cluster:
-* [swoop-api](https://github.com/Element84/swoop)
-* [argo-workflows](https://github.com/argoproj/argo-workflows/)
-* [swoop-caboose](https://github.com/Element84/swoop-go)
-* [swoop-conductor](https://github.com/Element84/swoop-go)
 This helm chart is inteded to group all SWOOP components compatible with the same database schema version and it's related migration operations. More information is available [here](./charts/swoop-bundle/README.md).
 <br></br>
 
