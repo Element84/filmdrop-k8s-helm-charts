@@ -10,6 +10,8 @@ spec:
 {{- $secretAccessKeySecretKey := .Values.s3.secretAccessKeySecret.key -}}
 {{- $regionSecretName := .Values.s3.regionSecret.name -}}
 {{- $regionSecretKey := .Values.s3.regionSecret.key -}}
+{{- $tokenSecretName := .Values.s3.tokenSecret.name -}}
+{{- $tokenSecretKey := .Values.s3.tokenSecret.key -}}
 # End of global variable mappings
   serviceAccountName: argo
   templates:
@@ -34,11 +36,21 @@ spec:
             secretKeyRef:
               name: {{ $secretAccessKeySecretName }}
               key: {{ $secretAccessKeySecretKey }}
+        {{- if .Values.s3.region }}
         - name: AWS_DEFAULT_REGION
           valueFrom:
             secretKeyRef:
               name: {{ $regionSecretName }}
               key: {{ $regionSecretKey }}
+        {{- end }}
+        {{- if .Values.s3.sessionToken }}
+        - name: AWS_SESSION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ $tokenSecretName }}
+              key: {{ $tokenSecretKey }}
+        {{- end }}
+
         # should pin to a specific version or label here
         image: quay.io/element84/copy-assets-stac-task:latest
         imagePullPolicy: IfNotPresent

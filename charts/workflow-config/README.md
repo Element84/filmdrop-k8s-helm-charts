@@ -26,7 +26,7 @@ Install the below helm charts **in order**:
 
 The `swoop-caboose` helm chart will also install Argo Workflows as a dependency.
 
-Then, modify the `values.yaml` file with the `AWS Access Key ID`, `AWS Secret Access Key`, and `AWS Region` under the keys `s3.accessKeyId`, `s3.secretAccessKey`, `s3.region`, respectively. These values contain dummy data and should be modified to include your AWS IAM user credentials. Make sure you are using base-64 encoding for these values.
+Then, modify the `values.yaml` file with the `AWS Access Key ID`, `AWS Secret Access Key`, and `AWS Region` and/or `AWS Session Token` under the keys `s3.accessKeyId`, `s3.secretAccessKey`, `s3.region`, `s3.sessionToken`, respectively. These values contain dummy data and should be modified to include your AWS credentials. Make sure you are using base-64 encoding for these values.
 
 Then, do:
 
