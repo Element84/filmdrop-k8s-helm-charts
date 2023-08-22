@@ -20,7 +20,7 @@ mc cp ./payload_workflow.json swoopminio/payloadtest/
 
 Do not create any further resources such as secrets or submit any workflows.
 
-Then, modify the `values.yaml` file with the `AWS Access Key ID`, `AWS Secret Access Key`, and `AWS Region` under the keys `s3.accessKeyId`, `s3.secretAccessKey`, `s3.region`, respectively. Make sure you are using base-64 encoding for these values. Also, make sure that the correct values are provided for `minio.host`, `minio.port`, and `minio.bucket` as well. If you're running this example from a minio created by the MinIO helm chart, you should be able to use `minio.default` for the host and `9000` for the port.
+Then, modify the `values.yaml` file with the `AWS Access Key ID`, `AWS Secret Access Key`, and `AWS Region` under the keys `s3.accessKeyId`, `s3.secretAccessKey`, `s3.region`, respectively. These values contain dummy data and should be modified to include your AWS IAM user credentials. Make sure you are using base-64 encoding for these values. Also, make sure that the correct values are provided for `minio.host`, `minio.port`, and `minio.bucket` as well. If you're running this example from a minio created by the MinIO helm chart, you should be able to use `minio.default` for the host and `9000` for the port.
 
 Then, do:
 
