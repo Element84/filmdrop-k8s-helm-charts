@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  # name is required; we should never have an execution with this name
+  name: mirror-workflow
+  labels:
+    workflow-name: mirror-workflow
+spec:
+  entrypoint: copy-assets
+  serviceAccountName: argo # set this so the proper permissions are assigned
+  templates:
+    - name: copy-assets
+      dag:
+        tasks:
+          - name: copy-assets
+            templateRef:
+              name: copy-assets-template
+              template: copy-task
+            arguments:
+              artifacts:
+                - name: input
+                  path: /mnt/input.json
+                  s3:
+                    bucket: my-bucket
+                    key: "execution/{{`{{workflow.name}}`}}/input.json"
+      outputs:
+        artifacts:
+          - name: output
+            from: "{{`{{tasks.copy-assets.outputs.artifacts.output}}`}}"
+            s3:
+              bucket: my-bucket
+              key: "execution/{{`{{workflow.name}}`}}/output.json"
+

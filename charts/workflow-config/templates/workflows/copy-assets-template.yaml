@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: copy-assets-template
+spec:
+# Start of variable mappings
+{{- $accessKeyIdSecretName := .Values.s3.accessKeyIdSecret.name -}}
+{{- $accessKeyIdSecretKey := .Values.s3.accessKeyIdSecret.key -}}
+{{- $secretAccessKeySecretName := .Values.s3.secretAccessKeySecret.name -}}
+{{- $secretAccessKeySecretKey := .Values.s3.secretAccessKeySecret.key -}}
+{{- $regionSecretName := .Values.s3.regionSecret.name -}}
+{{- $regionSecretKey := .Values.s3.regionSecret.key -}}
+# End of global variable mappings
+  serviceAccountName: argo
+  templates:
+    - name: copy-task
+      inputs:
+        artifacts:
+          - name: input
+            path: /mnt/input.json
+      outputs:
+        artifacts:
+          - name: output
+            path: /mnt/output.json
+      container:
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name:  {{ $accessKeyIdSecretName }}
+              key: {{ $accessKeyIdSecretKey }}
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ $secretAccessKeySecretName }}
+              key: {{ $secretAccessKeySecretKey }}
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: {{ $regionSecretName }}
+              key: {{ $regionSecretKey }}
+        # should pin to a specific version or label here
+        image: quay.io/element84/copy-assets-stac-task:latest
+        imagePullPolicy: IfNotPresent
+        command:
+          - python3
+          - ./task.py
+          - run
+        args:
+          - /mnt/input.json
+          - /mnt/output.json

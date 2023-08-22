@@ -15,8 +15,3 @@ s3:
   regionSecret:
     name: copy-stac-asset-s3-secret
     key: region
-
-minio:
-  host: minio.default
-  port: 9000
-  bucket: payloadtest
