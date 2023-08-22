@@ -24,11 +24,12 @@
 {{- end -}}
 {{- if or $argoWorkflowsEnabled $crdsInstall }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: argo-aggregate-to-admin
+  namespace: {{ .Release.Namespace | quote }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -58,11 +59,12 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
   name: argo-aggregate-to-edit
+  namespace: {{ .Release.Namespace | quote }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -90,11 +92,12 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
   name: argo-aggregate-to-view
+  namespace: {{ .Release.Namespace | quote }}
 rules:
 - apiGroups:
   - argoproj.io
@@ -117,9 +120,10 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
-  name: argo-cluster-role
+  name: argo-role
+  namespace: {{ .Release.Namespace | quote }}
 rules:
 - apiGroups:
   - ""
@@ -223,76 +227,10 @@ rules:
   - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: argo-server-cluster-role
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - watch
-  - list
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - pods/exec
-  - pods/log
-  verbs:
-  - get
-  - list
-  - watch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - watch
-  - create
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - serviceaccounts
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - argoproj.io
-  resources:
-  - eventsources
-  - sensors
-  - workflows
-  - workfloweventbindings
-  - workflowtemplates
-  - cronworkflows
-  - clusterworkflowtemplates
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - delete
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: argo-binding
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -300,20 +238,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ $migrationServiceAccount }}
-  namespace: {{ .Release.Namespace }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: argo-binding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: argo-cluster-role
-subjects:
-- kind: ServiceAccount
-  name: {{ $migrationServiceAccount }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -322,7 +247,7 @@ metadata:
   labels:
     {{- include "swoop-caboose.labels" . | nindent 6 }}
   name: "object-counts"
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   hard:
     count/workflows.argoproj.io: "{{ $objectCounts }}"
@@ -331,6 +256,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ $migrationServiceAccount }}-migration-reader
+  namespace: {{ .Release.Namespace | quote }}
 rules:
   - apiGroups: ["batch","extensions"]
     resources: ["jobs"]
@@ -340,6 +266,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ $migrationServiceAccount }}-migration-reader
+  namespace: {{ .Release.Namespace | quote }}
 subjects:
 - kind: ServiceAccount
   name: {{ $migrationServiceAccount }}

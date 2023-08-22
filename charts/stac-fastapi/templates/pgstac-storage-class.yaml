@@ -1,0 +1,11 @@
+{{- if and .Values.pgStac.enabled .Values.pgStac.storage.retainPersistentVolume -}}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    {{- include "pgstac.labels" . | nindent 6 }}
+  name: pgstac-retain
+provisioner: {{ .Values.pgStac.storage.provisioner }}
+reclaimPolicy: Retain
+volumeBindingMode: {{ .Values.pgStac.storage.volumeBindingMode }}
+{{- end }}

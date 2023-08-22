@@ -6,10 +6,13 @@ nameOverride: ""
 fullnameOverride: ""
 
 local-path-provisioner:
-  enabled: true
+  enabled: false
+  singleNamespace: false
   storageClass:
-    provisionerName: filmdrop.io/local-path-provisioner
-    name: local-path-class
+    provisionerName: filmdrop.io/local-postgres-path-provisioner
+    name: local-path-class-postgres
+  configmap:
+    name: local-path-config-postgres
 
 image:
   repository: quay.io/element84/swoop-db
@@ -36,11 +39,11 @@ service:
   sslMode: disable
   schemaVersionTable: swoop.schema_version
 storage:
-  size: 1Gi
+  size: 256M
   volumeBindingMode: WaitForFirstConsumer
-  provisioner: filmdrop.io/local-path-provisioner
-  retainPersistentVolume: true
-  storageClassName: postgres-retain
+  provisioner: filmdrop.io/local-postgres-path-provisioner
+  retainPersistentVolume: false
+  storageClassName: ""
 deployment:
   name: postgres
 replicaCount: 1

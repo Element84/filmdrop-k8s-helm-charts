@@ -1,3 +1,4 @@
+{{- if .Values.pgStac.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,39 +25,42 @@ spec:
             - "500"
           env:
             - name: PGDATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: pg_dbname
+              value: {{.Values.pgStac.dbName}}
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: pg_password
+                  name: {{ .Values.pgStac.passwordSecret.name }}
+                  key: {{ .Values.pgStac.passwordSecret.key }}
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: pg_username
+                  name: {{ .Values.pgStac.userNameSecret.name }}
+                  key: {{ .Values.pgStac.userNameSecret.key }}
             - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_dbname
+              value: {{.Values.pgStac.dbName}}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_password
+                  name: {{ .Values.pgStac.passwordSecret.name }}
+                  key: {{ .Values.pgStac.passwordSecret.key }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_username
+                  name: {{ .Values.pgStac.userNameSecret.name }}
+                  key: {{ .Values.pgStac.userNameSecret.key }}
           image: "{{ .Values.pgStac.image.repository }}:{{ .Values.pgStac.image.tag }}"
           name: {{ .Values.pgStac.deployment.name }}
           ports:
             - containerPort: {{ .Values.pgStac.container.port }}
           resources: {}
+          volumeMounts:
+            - mountPath: /pgstac
+              name: pgstac-claim0
+          workingDir: /pgstac
       restartPolicy: Always
+      volumes:
+        - name: pgstac-claim0
+          persistentVolumeClaim:
+            claimName: pgstac-claim0
 status: {}
+{{- end }}

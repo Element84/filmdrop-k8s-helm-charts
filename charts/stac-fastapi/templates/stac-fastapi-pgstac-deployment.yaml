@@ -17,6 +17,16 @@ spec:
       labels:
         app: stac-fastapi-pgstac
     spec:
+    {{ if .Values.pgStac.enabled }}
+      serviceAccountName: {{ .Values.stacFastApi.service.serviceAccount }}
+      initContainers:
+        - name: wait-for-pgstac
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "-lapp={{.Values.pgStac.service.name}}"
+    {{ end }}
       containers:
         - env:
             - name: APP_HOST
@@ -32,32 +42,31 @@ spec:
             - name: GDAL_HTTP_MERGE_CONSECUTIVE_RANGES
               value: "YES"
             - name: POSTGRES_DBNAME
-              valueFrom:
-                secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_dbname
+              value: {{.Values.pgStac.dbName}}
             - name: POSTGRES_HOST_READER
-              valueFrom:
-                secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_hostrw
+              {{ if .Values.pgStac.enabled }}
+              value: "{{.Values.pgStac.service.name}}.{{.Release.Namespace}}"
+              {{ else }}
+              value: {{.Values.pgStac.dbHost}}
+              {{ end}}
             - name: POSTGRES_HOST_WRITER
-              valueFrom:
-                secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_hostrw
+              {{ if .Values.pgStac.enabled }}
+              value: "{{.Values.pgStac.service.name}}.{{.Release.Namespace}}"
+              {{ else }}
+              value: {{.Values.pgStac.dbHost}}
+              {{ end}}
             - name: POSTGRES_PASS
               valueFrom:
                 secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_password
+                  name: {{ .Values.pgStac.passwordSecret.name }}
+                  key: {{ .Values.pgStac.passwordSecret.key }}
             - name: POSTGRES_PORT
-              value: "5439"
+              value: "{{ .Values.pgStac.service.port }}"
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: stac-fastapi-secret
-                  key: img_username
+                  name: {{ .Values.pgStac.userNameSecret.name }}
+                  key: {{ .Values.pgStac.userNameSecret.key }}
             - name: USE_API_HYDRATE
               value: "FALSE"
             - name: VSI_CACHE
