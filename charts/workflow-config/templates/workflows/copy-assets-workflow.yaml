@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: copy-assets
+spec:
+  entrypoint: copy-assets
+  serviceAccountName: argo # set this so the proper permissions are assigned
+  arguments:
+    parameters:
+    - name: input
+      value: http://{{ .Values.minio.host }}:{{ .Values.minio.port }}/{{ .Values.minio.bucket }}/payload_workflow.json
+
+  templates:
+  - name: copy-assets
+    inputs:
+      parameters:
+      - name: input       # parameter declaration
+    container:
+      env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: copy-stac-asset-s3-secret
+            key: access_key_id
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: copy-stac-asset-s3-secret
+            key: secret_access_key
+      - name: AWS_DEFAULT_REGION
+        valueFrom:
+          secretKeyRef:
+            name: copy-stac-asset-s3-secret
+            key: region
+      image: quay.io/element84/copy-assets-stac-task:latest
+      imagePullPolicy: IfNotPresent
+      command: ["python3", "./task.py", "run"]
+      args: [ {{ `"{{inputs.parameters.input}}"` }} ]

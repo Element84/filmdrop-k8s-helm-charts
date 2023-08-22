@@ -1,0 +1,11 @@
+s3:
+  createSecret: true
+  accessKeyId: QUtJQTNYSzdGUERZU05SV1BZVlQ=
+  secretAccessKey: eEJGazFwRXdjK1Qyd3JoRFhJaWlhc3V6OGdVZldYSWtJQ1FOM3F6YQ==
+  region: dXMtd2VzdC0y
+minio:
+  host: minio.default
+  port: 9000
+  bucket: payloadtest
+template:
+  label: copy-assets
