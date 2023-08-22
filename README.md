@@ -62,3 +62,9 @@ The swoop-db-init helm chart will initialize [swoop-db](https://github.com/Eleme
 
 The swoop-db-migration helm chart will migrate forward or backwards a schema version of the [swoop-db](https://github.com/Element84/swoop-db) in support of the SWOOP Components. More information is available [here](./charts/swoop-db-migration/README.md).
 <br></br>
+
+### SWOOP Workflow Configuration
+
+The workflow-config helm chart will deploy the [SWOOP workflow configuration file](https://github.com/Element84/swoop-go/blob/main/fixtures/swoop-config.yml) and Argo Workflow template files (such as the mirror/copy-assets workflow) onto a K8s cluster. More information is available [here](./charts/workflow-config/README.md).
+<br></br>
+
