@@ -1,3 +1,6 @@
+nameOverride: ""
+fullnameOverride: ""
+
 s3:
   createSecret: true
   accessKeyId: YWNjZXNza2V5aWQ=
