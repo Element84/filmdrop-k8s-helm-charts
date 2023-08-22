@@ -1,0 +1,22 @@
+nameOverride: ""
+fullnameOverride: ""
+
+s3:
+  createSecret: true
+  accessKeyId: YWNjZXNza2V5aWQ=
+  secretAccessKey: c2VjcmV0YWNjZXNza2V5
+  region: cmVnaW9u
+  accessKeyIdSecret:
+    name: copy-stac-asset-s3-secret
+    key: access_key_id
+  secretAccessKeySecret:
+    name: copy-stac-asset-s3-secret
+    key: secret_access_key
+  regionSecret:
+    name: copy-stac-asset-s3-secret
+    key: region
+
+minio:
+  host: minio.default
+  port: 9000
+  bucket: payloadtest

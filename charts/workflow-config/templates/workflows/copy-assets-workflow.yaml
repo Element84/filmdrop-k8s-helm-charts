@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: copy-assets
+spec:
+# Start of variable mappings
+{{- $accessKeyIdSecretName := .Values.s3.accessKeyIdSecret.name -}}
+{{- $accessKeyIdSecretKey := .Values.s3.accessKeyIdSecret.key -}}
+{{- $secretAccessKeySecretName := .Values.s3.secretAccessKeySecret.name -}}
+{{- $secretAccessKeySecretKey := .Values.s3.secretAccessKeySecret.key -}}
+{{- $regionSecretName := .Values.s3.regionSecret.name -}}
+{{- $regionSecretKey := .Values.s3.regionSecret.key -}}
+# End of global variable mappings
+  entrypoint: copy-assets
+  serviceAccountName: argo # set this so the proper permissions are assigned
+  arguments:
+    parameters:
+    - name: input
+      value: http://{{ .Values.minio.host }}:{{ .Values.minio.port }}/{{ .Values.minio.bucket }}/payload_workflow.json
+
+  templates:
+  - name: copy-assets
+    inputs:
+      parameters:
+      - name: input       # parameter declaration
+    container:
+      env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name:  {{ $accessKeyIdSecretName }}
+            key: {{ $accessKeyIdSecretKey }}
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: {{ $secretAccessKeySecretName }}
+            key: {{ $secretAccessKeySecretKey }}
+      - name: AWS_DEFAULT_REGION
+        valueFrom:
+          secretKeyRef:
+            name: {{ $regionSecretName }}
+            key: {{ $regionSecretKey }}
+      image: quay.io/element84/copy-assets-stac-task:latest
+      imagePullPolicy: IfNotPresent
+      command: ["python3", "./task.py", "run"]
+      args: [ {{ `"{{inputs.parameters.input}}"` }} ]
