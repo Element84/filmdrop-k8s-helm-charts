@@ -1,8 +1,8 @@
 s3:
   createSecret: true
-  accessKeyId: QUtJQTNYSzdGUERZU05SV1BZVlQ=
-  secretAccessKey: eEJGazFwRXdjK1Qyd3JoRFhJaWlhc3V6OGdVZldYSWtJQ1FOM3F6YQ==
-  region: dXMtd2VzdC0y
+  accessKeyId: YWNjZXNza2V5aWQ=
+  secretAccessKey: c2VjcmV0YWNjZXNza2V5
+  region: cmVnaW9u
 minio:
   host: minio.default
   port: 9000
