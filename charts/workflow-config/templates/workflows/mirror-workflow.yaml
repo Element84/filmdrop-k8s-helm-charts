@@ -6,6 +6,9 @@ metadata:
   labels:
     workflow-name: mirror-workflow
 spec:
+# Start of variable mappings
+{{- $bucketName := .Values.s3.bucket -}}
+# End of global variable mappings
   entrypoint: copy-assets
   serviceAccountName: argo # set this so the proper permissions are assigned
   templates:
@@ -21,13 +24,13 @@ spec:
                 - name: input
                   path: /mnt/input.json
                   s3:
-                    bucket: my-bucket
-                    key: "execution/{{`{{workflow.name}}`}}/input.json"
+                    bucket: {{ $bucketName }}
+                    key: "executions/{{`{{workflow.name}}`}}/input.json"
       outputs:
         artifacts:
           - name: output
             from: "{{`{{tasks.copy-assets.outputs.artifacts.output}}`}}"
             s3:
-              bucket: my-bucket
-              key: "execution/{{`{{workflow.name}}`}}/output.json"
+              bucket: {{ $bucketName }}
+              key: "executions/{{`{{workflow.name}}`}}/output.json"
 
