@@ -19,4 +19,4 @@ s3:
   sessionTokenSecret:
     name: copy-stac-asset-s3-secret
     key: session_token
-  bucket: YnVja2V0
+  artifactBucketName: swoop
