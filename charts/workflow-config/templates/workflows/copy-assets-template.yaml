@@ -10,8 +10,8 @@ spec:
 {{- $secretAccessKeySecretKey := .Values.s3.secretAccessKeySecret.key -}}
 {{- $regionSecretName := .Values.s3.regionSecret.name -}}
 {{- $regionSecretKey := .Values.s3.regionSecret.key -}}
-{{- $tokenSecretName := .Values.s3.tokenSecret.name -}}
-{{- $tokenSecretKey := .Values.s3.tokenSecret.key -}}
+{{- $sessionTokenSecretName := .Values.s3.sessionTokenSecret.name -}}
+{{- $sessionTokenSecretKey := .Values.s3.sessionTokenSecret.key -}}
 # End of global variable mappings
   serviceAccountName: argo
   templates:
@@ -47,8 +47,8 @@ spec:
         - name: AWS_SESSION_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ $tokenSecretName }}
-              key: {{ $tokenSecretKey }}
+              name: {{ $sessionTokenSecretName }}
+              key: {{ $sessionTokenSecretKey }}
         {{- end }}
 
         # should pin to a specific version or label here
