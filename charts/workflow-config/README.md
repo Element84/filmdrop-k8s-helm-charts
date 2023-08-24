@@ -1,10 +1,10 @@
 # Deployment
 
-This chart deploys the SWOOP configuration file and workflow templates onto a K8s cluster. It will only deploy these resources, and will not run any workflows.
+This chart deploys the SWOOP configuration file and workflow/task templates onto a K8s cluster. It will only _deploy_ these resources, and will not _run_ any workflows.
 
 The SWOOP configuration file contains the high-level configuration parameters and values used by SWOOP components such as workflows, callbacks, conductors, and handlers, to run workflows on the cluster. The configuration file is located at `./swoop-config.yaml`.
 
-The workflow templates contain more detailed configurations used by each individual workflow to run, and describe their tasks, input and output artifacts, any additional workflow templates referenced by the main workflow (if any), and secrets being used. The workflow templates are contained within the `./workflows/` directory.
+The workflow templates contain more detailed configurations used by each individual workflow to run, and describe their tasks, input and output artifacts, any additional workflow templates referenced by the main workflow (if any), and secrets being used. Workflow templates are contained within the `./workflows/` directory and task templates (which are also of `kind: WorkflowTemplate`) are contained in the `./tasks/` directory.
 
 The workflow-config helm chart uses Argo Workflows since the WorkflowTemplate resources are Argo-specific configurations.
 
@@ -41,3 +41,10 @@ Once the chart has been deployed, you can do:
 `kubectl get configmap`
 
 to see that the workflow templates and SWOOP configmap were deployed.
+
+## Adding/modifying workflow configurations
+
+To add/update workflow configurations, either:
+
+- modify the `swoop-config.yaml` file in the root directory with the new configuration parameters for the appropriate SWOOP component - handlers, conductors, callbacks, and/or workflows.
+- modify the template for the appropriate workflow in the `./workflows` directory or the task used by that workflow in the `./tasks` directory.
