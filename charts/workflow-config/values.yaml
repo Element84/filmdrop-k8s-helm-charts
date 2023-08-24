@@ -20,3 +20,4 @@ s3:
     name: copy-stac-asset-s3-secret
     key: session_token
   artifactBucketName: swoop
+serviceAccountName: argo

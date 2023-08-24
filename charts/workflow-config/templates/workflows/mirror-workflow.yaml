@@ -8,9 +8,10 @@ metadata:
 spec:
 # Start of variable mappings
 {{- $artifactBucketName := .Values.s3.artifactBucketName -}}
+{{- $serviceAccountName := .Values.serviceAccountName -}}
 # End of global variable mappings
   entrypoint: copy-assets
-  serviceAccountName: argo # set this so the proper permissions are assigned
+  serviceAccountName: {{ $serviceAccountName }} # set this so the proper permissions are assigned
   templates:
     - name: copy-assets
       dag:
