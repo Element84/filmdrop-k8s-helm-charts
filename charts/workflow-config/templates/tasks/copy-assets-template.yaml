@@ -12,8 +12,9 @@ spec:
 {{- $regionSecretKey := .Values.s3.regionSecret.key -}}
 {{- $sessionTokenSecretName := .Values.s3.sessionTokenSecret.name -}}
 {{- $sessionTokenSecretKey := .Values.s3.sessionTokenSecret.key -}}
+{{- $serviceAccountName := .Values.serviceAccountName -}}
 # End of global variable mappings
-  serviceAccountName: argo
+  serviceAccountName: {{ $serviceAccountName }}
   templates:
     - name: copy-task
       inputs:
