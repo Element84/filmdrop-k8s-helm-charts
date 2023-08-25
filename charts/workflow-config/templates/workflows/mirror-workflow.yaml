@@ -7,7 +7,7 @@ metadata:
     workflow-name: mirror-workflow
 spec:
 # Start of variable mappings
-{{- $artifactBucketName := .Values.s3.artifactBucketName -}}
+{{- $artifactBucketName := .Values.minio.artifactBucketName -}}
 {{- $serviceAccountName := .Values.serviceAccountName -}}
 # End of global variable mappings
   entrypoint: copy-assets

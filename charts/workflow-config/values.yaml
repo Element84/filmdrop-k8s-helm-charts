@@ -6,7 +6,7 @@ s3:
   accessKeyId: YWNjZXNza2V5aWQ=
   secretAccessKey: c2VjcmV0YWNjZXNza2V5
   region: cmVnaW9u
-  sessionToken: dG9rZW4=
+  sessionToken:
   accessKeyIdSecret:
     name: copy-stac-asset-s3-secret
     key: access_key_id
@@ -19,5 +19,15 @@ s3:
   sessionTokenSecret:
     name: copy-stac-asset-s3-secret
     key: session_token
+minio:
+  host: minio.default
+  port: 9000
+  accessKeySecret:
+    name: minio-secret
+    key: access_key_id
+  secretKeySecret:
+    name: minio-secret
+    key: secret_access_key
   artifactBucketName: swoop
+
 serviceAccountName: argo

@@ -58,7 +58,8 @@ spec:
         command:
           - python3
           - ./task.py
-          - run
         args:
+          - run
           - /mnt/input.json
+          - --output
           - /mnt/output.json
