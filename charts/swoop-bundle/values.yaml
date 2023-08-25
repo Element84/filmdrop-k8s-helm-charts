@@ -915,23 +915,23 @@ swoop-caboose:
       # # If you want to use this config map by default, name it "artifact-repositories".
       # # Otherwise, you can provide a reference to a
       # # different config map in `artifactRepositoryRef.configMap`.
-      artifact-repositories:
-        # -- v3.0 and after - if you want to use a specific key, put that key into this annotation.
-        annotations:
-          workflows.argoproj.io/default-artifact-repository: swoop-artifact-repository
-        # 1st data of configmap. See above artifactRepository or customArtifactRepository.
-        swoop-artifact-repository:
-          archiveLogs: false
-          s3:
-            bucket: swoop
-            endpoint: minio.default:9000
-            insecure: true
-            accessKeySecret:
-              name: minio-secret
-              key: access_key_id
-            secretKeySecret:
-              name: minio-secret
-              key: secret_access_key
+      # artifact-repositories:
+      #   # -- v3.0 and after - if you want to use a specific key, put that key into this annotation.
+      #   annotations:
+      #     workflows.argoproj.io/default-artifact-repository: default-v1-s3-artifact-repository
+      #   # 1st data of configmap. See above artifactRepository or customArtifactRepository.
+      #   default-v1-s3-artifact-repository:
+      #     archiveLogs: false
+      #     s3:
+      #       bucket: my-bucket
+      #       endpoint: minio:9000
+      #       insecure: true
+      #       accessKeySecret:
+      #         name: my-minio-cred
+      #         key: accesskey
+      #       secretKeySecret:
+      #         name: my-minio-cred
+      #         key: secretkey
       #    # 2nd data
       #    oss-artifact-repository:
       #      archiveLogs: false
