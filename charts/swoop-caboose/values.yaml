@@ -854,7 +854,7 @@ argo-workflows:
   # -- The section of [artifact repository ref](https://argoproj.github.io/argo-workflows/artifact-repository-ref/).
   # Each map key is the name of configmap
   # @default -- `{}` (See [values.yaml])
-  artifactRepositoryRef:
+  artifactRepositoryRef: {}
     # # -- 1st ConfigMap
     # # If you want to use this config map by default, name it "artifact-repositories".
     # # Otherwise, you can provide a reference to a
