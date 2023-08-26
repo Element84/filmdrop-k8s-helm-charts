@@ -28,6 +28,22 @@ Install the below helm charts **in order**:
 
 Note: the `swoop-caboose` helm chart will also install Argo Workflows as a dependency.
 
+To simple install the workflow-config helm chart without running any workflow, simply do:
+
+`helm install workflow-config e84/workflow-config`
+
+This will deploy the Swoop configuration file as a configmap and the templates for the mirror workflow as Argo WorkflowTemplate resources onto the cluster.
+
+Once the chart has been deployed, you can do:
+
+`kubectl get workflowtemplate` and
+
+`kubectl get configmap`
+
+to see that the workflow templates and SWOOP configmap were deployed.
+
+To install the helm chart _and_ run the sample mirror workflow, follow the steps in the next section.
+
 ## Running the mirror workflow
 
 Create a bucket in S3 that will be used to hold your output assets from the workflow. Create an IAM user that has read/write permissions to this bucket and generate a set of AWS credentials (Access Key ID and Secret Access Key) for this user. These AWS credentials should have permissions to write to an S3 bucket where the output assets from the workflow will be uploaded.
@@ -38,11 +54,10 @@ Modify the `process/upload_options/path_template`property of the input payload t
 
 `"path_template": "s3://mirrorworkflowoutput/data/${collection}/${id}/"`
 
-Upload the `input.json` file to a MinIo bucket:
-
+This is a sample UUID used for this example. Enter this in the command line.
 `UUID='a5db5e5e-4d5d-45c5-b9db-fb6f4aa93b0a'`
 
-Replace the <PATH_TO_INPUT.JSON> with the path to your `input.json` file.
+Upload the `input.json` file to a MinIo bucket. Replace the <PATH_TO_INPUT.JSON> with the path to your `input.json` file.
 
 ```
 export MINIO_ACCESS_KEY=`helm get values minio -a -o json | jq -r .service.accessKeyId | base64 --decode`
@@ -61,16 +76,6 @@ Then, modify the `values.yaml` file for the `workflow-config` helm chart:
 Then, do:
 
 `helm install workflow-config e84/workflow-config`
-
-This will deploy the Swoop configuration file as a configmap and the templates for the mirror workflow as Argo WorkflowTemplate resources onto the cluster.
-
-Once the chart has been deployed, you can do:
-
-`kubectl get workflowtemplate` and
-
-`kubectl get configmap`
-
-to see that the workflow templates and SWOOP configmap were deployed.
 
 To submit the mirror workflow, run:
 
