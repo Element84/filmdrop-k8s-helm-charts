@@ -10,12 +10,12 @@ metadata:
 data:
   minio: |
     s3:
-      bucket: {{ .Values.minio.artifactBucketName }}
-      endpoint: {{ .Values.minio.host }}:{{ .Values.minio.port }}
+      bucket: {{ .Values.minio.service.bucketName }}
+      endpoint: {{ .Values.minio.service.endpoint }}
       insecure: true
       accessKeySecret:
-        name: {{ .Values.minio.accessKeySecret.name }}
-        key: {{ .Values.minio.accessKeySecret.key }}
+        name: {{ .Values.minio.service.accessKeyIdSecret.name }}
+        key: {{ .Values.minio.service.accessKeyIdSecret.key }}
       secretKeySecret:
-        name: {{ .Values.minio.secretKeySecret.name }}
-        key: {{ .Values.minio.secretKeySecret.key }}
+        name: {{ .Values.minio.service.secretAccessKeySecret.name }}
+        key: {{ .Values.minio.service.secretAccessKeySecret.key }}

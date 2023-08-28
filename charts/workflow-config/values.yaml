@@ -19,16 +19,17 @@ s3:
   sessionTokenSecret:
     name: copy-stac-asset-s3-secret
     key: session_token
+
 minio:
-  host: minio.default
-  port: 9000
-  accessKeySecret:
-    name: minio-secret
-    key: access_key_id
-  secretKeySecret:
-    name: minio-secret
-    key: secret_access_key
-  artifactBucketName: swoop
+  service:
+    endpoint: minio.default:9000
+    accessKeyIdSecret:
+      name: minio-secret
+      key: access_key_id
+    secretAccessKeySecret:
+      name: minio-secret
+      key: secret_access_key
+    bucketName: swoop
 
 serviceAccountName: argo
 mirrorWorkflowServiceAccountName: argo
