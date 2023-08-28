@@ -12,7 +12,7 @@ spec:
 {{- $regionSecretKey := .Values.s3.regionSecret.key -}}
 {{- $sessionTokenSecretName := .Values.s3.sessionTokenSecret.name -}}
 {{- $sessionTokenSecretKey := .Values.s3.sessionTokenSecret.key -}}
-{{- $serviceAccountName := .Values.serviceAccountName -}}
+{{- $serviceAccountName := .Values.copyAssetsTemplateTaskServiceAccountName -}}
 # End of global variable mappings
   serviceAccountName: {{ $serviceAccountName }}
   templates:

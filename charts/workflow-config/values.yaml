@@ -31,3 +31,5 @@ minio:
   artifactBucketName: swoop
 
 serviceAccountName: argo
+mirrorWorkflowServiceAccountName: argo
+copyAssetsTemplateTaskServiceAccountName: argo
