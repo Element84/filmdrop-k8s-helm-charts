@@ -202,8 +202,6 @@ spec:
               value: {{ .Release.Namespace | quote }}
             - name: SWOOP_CONDUCTOR_INSTANCE
               value: {{ $swoopConductorInstance }}
-            - name: KUBECONFIG
-              value: {{ $swoopConductorInstance }}
           image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           name: {{ .Values.deployment.name }}
           command: ["swoop", "conductor", "run"]
