@@ -5,3 +5,5 @@ apiVersion: v2
 appVersion: "0.1.0"
 keywords:
   - workflow-config
+sources:
+home:
