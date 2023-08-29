@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  # name is required; we should never have an execution with this name
+  name: mirror-workflow
+  labels:
+    workflow-name: mirror-workflow
+spec:
+# Start of variable mappings
+{{- $serviceAccountName := .Values.mirrorWorkflowServiceAccountName -}}
+# End of global variable mappings
+  entrypoint: copy-assets
+  serviceAccountName: {{ $serviceAccountName }} # set this so the proper permissions are assigned
+  templates:
+    - name: copy-assets
+      dag:
+        tasks:
+          - name: copy-assets
+            templateRef:
+              name: copy-assets-template
+              template: copy-task
+            arguments:
+              artifacts:
+                - name: input
+                  path: /mnt/input.json
+                  s3:
+                    key: "executions/{{`{{workflow.name}}`}}/input.json"
+
