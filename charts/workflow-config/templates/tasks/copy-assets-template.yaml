@@ -25,6 +25,10 @@ spec:
         artifacts:
           - name: output
             path: /mnt/output.json
+            archive:
+              none: {}
+            s3:
+              key: "executions/{{`{{workflow.name}}`}}/output.json"
       container:
         env:
         - name: AWS_ACCESS_KEY_ID

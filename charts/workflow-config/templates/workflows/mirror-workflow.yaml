@@ -7,7 +7,6 @@ metadata:
     workflow-name: mirror-workflow
 spec:
 # Start of variable mappings
-{{- $artifactBucketName := .Values.minio.service.bucketName -}}
 {{- $serviceAccountName := .Values.mirrorWorkflowServiceAccountName -}}
 # End of global variable mappings
   entrypoint: copy-assets
@@ -25,12 +24,5 @@ spec:
                 - name: input
                   path: /mnt/input.json
                   s3:
-                    bucket: {{ $artifactBucketName }}
                     key: "executions/{{`{{workflow.name}}`}}/input.json"
-      outputs:
-        artifacts:
-          - name: output
-            from: "{{`{{tasks.copy-assets.outputs.artifacts.output}}`}}"
-            s3:
-              bucket: {{ $artifactBucketName }}
-              key: "executions/{{`{{workflow.name}}`}}/output.json"
+
