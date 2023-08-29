@@ -1,0 +1,14 @@
+name: swoop-conductor
+description: A Helm Chart for SWOOP Conductor (https://github.com/Element84/swoop-go)
+version: 0.1.0
+apiVersion: v2
+appVersion: "0.1.0"
+keywords:
+  - swoop-conductor
+sources:
+home:
+dependencies:
+- name: argo-workflows
+  condition: argo-workflows.enabled
+  version: "0.32.1"
+  repository: "https://argoproj.github.io/argo-helm"

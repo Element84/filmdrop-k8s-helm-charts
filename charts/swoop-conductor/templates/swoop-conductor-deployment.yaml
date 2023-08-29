@@ -1,0 +1,219 @@
+{{- $swoopConductorEnabled := .Values.enabled -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "conductor")  }}
+      {{- if (hasKey .Values.global.swoop.conductor "enabled")  }}
+        {{- $swoopConductorEnabled := .Values.global.swoop.conductor.enabled -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $swoopConductorEnabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+     {{- include "swoop-conductor.labels" . | nindent 6 }}
+  name: swoop-conductor
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "swoop-conductor.labels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: swoop-conductor
+    spec:
+# Start of variable mappings
+{{- $migrationEnabled := .Values.postgres.migration.enabled -}}
+{{- $migrationPullPolicy := .Values.postgres.migration.imagePullPolicy -}}
+{{- $migrationServiceAccount := .Values.service.serviceAccount -}}
+{{- $migrationjobName := .Values.postgres.migration.jobName  -}}
+{{- $migrationVersion := .Values.postgres.migration.version -}}
+{{- $dbName := .Values.postgres.service.dbName -}}
+{{- $dbHost := .Values.postgres.service.dbHost -}}
+{{- $dbPort := .Values.postgres.service.port -}}
+{{- $dbPasswordSecretName := .Values.postgres.service.conductorRolePasswordSecret.name -}}
+{{- $dbPasswordSecretKey := .Values.postgres.service.conductorRolePasswordSecret.key -}}
+{{- $dbUsernameSecretName := .Values.postgres.service.conductorRoleUsernameSecret.name -}}
+{{- $dbUsernameSecretKey := .Values.postgres.service.conductorRoleUsernameSecret.key -}}
+{{- $dbSSLMode := .Values.postgres.service.sslMode -}}
+{{- $dbAuthMethod := .Values.postgres.service.authMethod -}}
+{{- $s3BucketName := .Values.minio.service.bucketName -}}
+{{- $s3Endpoint := .Values.minio.service.endpoint -}}
+{{- $s3AccessKeyIdSecretName := .Values.minio.service.accessKeyIdSecret.name -}}
+{{- $s3AccessKeyIdSecretKey := .Values.minio.service.accessKeyIdSecret.key -}}
+{{- $s3SecretAccessKeySecretName := .Values.minio.service.secretAccessKeySecret.name -}}
+{{- $s3SecretAccessKeySecretKey := .Values.minio.service.secretAccessKeySecret.key -}}
+{{- $swoopConfigFile := .Values.service.configFile -}}
+{{- $swoopConductorInstance := .Values.service.instanceName -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "postgres")  }}
+    {{- if (hasKey .Values.global.postgres "migration")  }}
+      {{- if (hasKey .Values.global.postgres.migration "enabled")  }}
+        {{- $migrationEnabled = .Values.global.postgres.migration.enabled -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "imagePullPolicy")  }}
+        {{- $migrationPullPolicy = .Values.global.postgres.migration.imagePullPolicy -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "jobName")  }}
+        {{- $migrationjobName = .Values.global.postgres.migration.jobName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.migration "version")  }}
+        {{- $migrationVersion = .Values.global.postgres.migration.version -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if (hasKey .Values.global.postgres "service")  }}
+      {{- if (hasKey .Values.global.postgres.service "dbName")  }}
+        {{- $dbName = .Values.global.postgres.service.dbName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "dbHost")  }}
+        {{- $dbHost = .Values.global.postgres.service.dbHost -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "port")  }}
+        {{- $dbPort = .Values.global.postgres.service.port -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "conductorRolePasswordSecret")  }}
+        {{- if (hasKey .Values.global.postgres.service.conductorRolePasswordSecret "name")  }}
+          {{- $dbPasswordSecretName = .Values.global.postgres.service.conductorRolePasswordSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.postgres.service.conductorRolePasswordSecret "key")  }}
+          {{- $dbPasswordSecretKey = .Values.global.postgres.service.conductorRolePasswordSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "conductorRoleUsernameSecret")  }}
+        {{- if (hasKey .Values.global.postgres.service.conductorRoleUsernameSecret "name")  }}
+          {{- $dbUsernameSecretName = .Values.global.postgres.service.conductorRoleUsernameSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.postgres.service.conductorRoleUsernameSecret "key")  }}
+          {{- $dbUsernameSecretKey = .Values.global.postgres.service.conductorRoleUsernameSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "sslMode")  }}
+        {{- $dbSSLMode = .Values.global.postgres.service.sslMode -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.postgres.service "authMethod")  }}
+        {{- $dbAuthMethod = .Values.global.postgres.service.authMethod -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if (hasKey .Values.global "minio")  }}
+    {{- if (hasKey .Values.global.minio "service")  }}
+      {{- if (hasKey .Values.global.minio.service "bucketName")  }}
+        {{- $s3BucketName = .Values.global.minio.service.bucketName -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.minio.service "endpoint")  }}
+        {{- $s3Endpoint = .Values.global.minio.service.endpoint -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.minio.service "accessKeyIdSecret")  }}
+        {{- if (hasKey .Values.global.minio.service.accessKeyIdSecret "name")  }}
+          {{- $s3AccessKeyIdSecretName = .Values.global.minio.service.accessKeyIdSecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.minio.service.accessKeyIdSecret "key")  }}
+          {{- $s3AccessKeyIdSecretKey = .Values.global.minio.service.accessKeyIdSecret.key -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.minio.service "secretAccessKeySecret")  }}
+        {{- if (hasKey .Values.global.minio.service.secretAccessKeySecret "name")  }}
+          {{- $s3SecretAccessKeySecretName = .Values.global.minio.service.secretAccessKeySecret.name -}}
+        {{- end -}}
+        {{- if (hasKey .Values.global.minio.service.secretAccessKeySecret "key")  }}
+          {{- $s3SecretAccessKeySecretKey = .Values.global.minio.service.secretAccessKeySecret.key -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "conductor")  }}
+      {{- if (hasKey .Values.global.swoop.conductor "configFile")  }}
+        {{- $swoopConfigFile := .Values.global.swoop.conductor.configFile -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.swoop.conductor "serviceAccount")  }}
+        {{- $migrationServiceAccount = .Values.global.swoop.conductor.serviceAccount -}}
+      {{- end -}}
+      {{- if (hasKey .Values.global.swoop.conductor "instanceName")  }}
+        {{- $swoopConductorInstance = .Values.global.swoop.conductor.instanceName -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+# End of global variable mappings
+      serviceAccountName: {{ $migrationServiceAccount }}
+    {{ if $migrationEnabled }}
+      initContainers:
+        - name: wait-for-db-migration
+          image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: {{ $migrationPullPolicy }}
+          args:
+            - "job"
+            - "{{ $migrationjobName }}-{{ $migrationVersion }}"
+    {{ end }}
+      volumes:
+        - name: swoop-config
+          configMap:
+            name: {{ .Release.Name }}-configmap
+            items:
+            - key: swoop-config.yaml
+              path: swoop-config.yaml
+      containers:
+        - env:
+            - name: PGDATABASE
+              value: {{ $dbName }}
+            - name: PGHOST
+              value: {{ $dbHost }}
+            - name: PGPORT
+              value: "{{ $dbPort }}"
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $dbPasswordSecretName }}
+                  key: {{ $dbPasswordSecretKey }}
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $dbUsernameSecretName }}
+                  key: {{ $dbUsernameSecretKey }}
+            - name: PGSSLMODE
+              value: {{ $dbSSLMode }}
+            - name: PGAUTHMETHOD
+              value: {{ $dbAuthMethod }}
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $s3AccessKeyIdSecretName }}
+                  key: {{ $s3AccessKeyIdSecretKey }}
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $s3SecretAccessKeySecretName }}
+                  key: {{ $s3SecretAccessKeySecretKey }}
+            - name: SWOOP_S3_BUCKET
+              value: {{ $s3BucketName }}
+            - name: SWOOP_S3_ENDPOINT
+              value: {{ $s3Endpoint }}
+            - name: SWOOP_CONFIG_FILE
+              value: {{ $swoopConfigFile }}
+            - name: SWOOP_NAMESPACE
+              value: {{ .Release.Namespace | quote }}
+            - name: SWOOP_CONDUCTOR_INSTANCE
+              value: {{ $swoopConductorInstance }}
+            - name: KUBECONFIG
+              value: {{ $swoopConductorInstance }}
+          image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Values.deployment.name }}
+          command: ["swoop", "conductor", "run"]
+          ports:
+            - containerPort: {{ .Values.container.port }}
+          volumeMounts:
+            - name: swoop-config
+              mountPath: {{ $swoopConfigFile }}
+              subPath: swoop-config.yaml
+          resources: {}
+      restartPolicy: Always
+status: {}
+{{- end }}
