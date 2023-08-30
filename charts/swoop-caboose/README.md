@@ -267,9 +267,9 @@ You should be able to see your workflow pod succeed in the terminal:
 </p>
 <br></br>
 
-And you should be able to see your asset S3 bucket populated with a tumbnail image:
+And you should be able to see your asset S3 bucket populated with a thumbnail image:
 ```
-aws s3 ls s3://copy-assets-stac-task-bucket/data/naip/tx_m_2609719_se_14_060_20201217/
+aws s3 ls s3://<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>/data/naip/tx_m_2609719_se_14_060_20201217/
 
 2023-08-17 10:00:08       9776 thumbnail.jpg
 ```

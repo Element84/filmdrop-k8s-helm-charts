@@ -1,0 +1,29 @@
+{{- $swoopConductorEnabled := .Values.enabled -}}
+{{- if (hasKey .Values "global")  }}
+  {{- if (hasKey .Values.global "swoop")  }}
+    {{- if (hasKey .Values.global.swoop "conductor")  }}
+      {{- if (hasKey .Values.global.swoop.conductor "enabled")  }}
+        {{- $swoopConductorEnabled := .Values.global.swoop.conductor.enabled -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $swoopConductorEnabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    {{- include "swoop-conductor.labels" . | nindent 6 }}
+  name: {{ .Values.service.name }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: "{{ .Values.service.targetPort }}"
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+  selector:
+    {{- include "swoop-conductor.labels" . | nindent 6 }}
+status:
+  loadBalancer: {}
+{{- end }}

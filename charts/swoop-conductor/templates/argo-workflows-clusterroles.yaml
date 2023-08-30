@@ -4,19 +4,19 @@
 {{- $migrationServiceAccount := .Values.service.serviceAccount -}}
 {{- if (hasKey .Values "global")  }}
   {{- if (hasKey .Values.global "swoop")  }}
-    {{- if (hasKey .Values.global.swoop "caboose")  }}
-      {{- if (hasKey .Values.global.swoop.caboose "serviceAccount")  }}
-        {{- $migrationServiceAccount = .Values.global.swoop.caboose.serviceAccount -}}
+    {{- if (hasKey .Values.global.swoop "conductor")  }}
+      {{- if (hasKey .Values.global.swoop.conductor "serviceAccount")  }}
+        {{- $migrationServiceAccount = .Values.global.swoop.conductor.serviceAccount -}}
       {{- end -}}
-      {{- if (hasKey .Values.global.swoop.caboose "argo")  }}
-        {{- if (hasKey .Values.global.swoop.caboose.argo "enabled")  }}
-          {{- $argoWorkflowsEnabled := .Values.global.swoop.caboose.argo.enabled -}}
+      {{- if (hasKey .Values.global.swoop.conductor "argo")  }}
+        {{- if (hasKey .Values.global.swoop.conductor.argo "enabled")  }}
+          {{- $argoWorkflowsEnabled := .Values.global.swoop.conductor.argo.enabled -}}
         {{- end -}}
-        {{- if (hasKey .Values.global.swoop.caboose.argo "crdsInstall")  }}
-          {{- $crdsInstall := .Values.global.swoop.caboose.argo.crdsInstall -}}
+        {{- if (hasKey .Values.global.swoop.conductor.argo "crdsInstall")  }}
+          {{- $crdsInstall := .Values.global.swoop.conductor.argo.crdsInstall -}}
         {{- end -}}
-        {{- if (hasKey .Values.global.swoop.caboose.argo "objectCounts")  }}
-          {{- $objectCounts := .Values.global.swoop.caboose.argo.objectCounts -}}
+        {{- if (hasKey .Values.global.swoop.conductor.argo "objectCounts")  }}
+          {{- $objectCounts := .Values.global.swoop.conductor.argo.objectCounts -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
@@ -245,7 +245,7 @@ kind: ResourceQuota
 metadata:
   creationTimestamp: null
   labels:
-    {{- include "swoop-caboose.labels" . | nindent 6 }}
+    {{- include "swoop-conductor.labels" . | nindent 6 }}
   name: "object-counts"
   namespace: {{ .Release.Namespace | quote }}
 spec:
