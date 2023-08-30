@@ -6,6 +6,8 @@ s3:
   accessKeyId: YWNjZXNza2V5aWQ=
   secretAccessKey: c2VjcmV0YWNjZXNza2V5
   region: cmVnaW9u
+  data_bucket: YnVja2V0
+  api_url: YXBpdXJs
   sessionToken:
   accessKeyIdSecret:
     name: copy-stac-asset-s3-secret
@@ -19,6 +21,12 @@ s3:
   sessionTokenSecret:
     name: copy-stac-asset-s3-secret
     key: session_token
+  dataBucketSecret:
+    name: copy-stac-asset-s3-secret
+    key: data_bucket
+  apiUrlSecret:
+    name: copy-stac-asset-s3-secret
+    key: api_url
 
 minio:
   service:
@@ -34,3 +42,4 @@ minio:
 serviceAccountName: argo
 mirrorWorkflowServiceAccountName: argo
 copyAssetsTemplateTaskServiceAccountName: argo
+publishTemplateTaskServiceAccountName: argo
