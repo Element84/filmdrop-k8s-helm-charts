@@ -105,6 +105,23 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-caboose-0.1.0/swoop-caboose-0.1.0.tgz
     version: 0.1.0
+  swoop-conductor:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-08-30T21:19:05.692974529Z"
+    dependencies:
+    - condition: argo-workflows.enabled
+      name: argo-workflows
+      repository: https://argoproj.github.io/argo-helm
+      version: 0.32.1
+    description: A Helm Chart for SWOOP Conductor (https://github.com/Element84/swoop-go)
+    digest: 8bc5ec260a05b8000f4839d3cde5cab4a49aab939a77b1e2a6d21577aa5c1bb5
+    keywords:
+    - swoop-conductor
+    name: swoop-conductor
+    urls:
+    - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/swoop-conductor-0.1.0/swoop-conductor-0.1.0.tgz
+    version: 0.1.0
   swoop-db-init:
   - apiVersion: v1
     appVersion: 0.1.0
@@ -141,4 +158,4 @@ entries:
     urls:
     - https://github.com/Element84/filmdrop-k8s-helm-charts/releases/download/workflow-config-0.1.0/workflow-config-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-22T14:39:19.162988277Z"
+generated: "2023-08-30T21:19:05.841986822Z"
