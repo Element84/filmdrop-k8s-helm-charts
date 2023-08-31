@@ -14,8 +14,6 @@ spec:
 {{- $sessionTokenSecretKey := .Values.s3.sessionTokenSecret.key -}}
 {{- $dataBucketSecretName := .Values.s3.dataBucketSecret.name -}}
 {{- $dataBucketSecretKey := .Values.s3.dataBucketSecret.key -}}
-{{- $apiUrlSecretName := .Values.s3.apiUrlSecret.name -}}
-{{- $apiUrlSecretKey := .Values.s3.apiUrlSecret.key -}}
 {{- $serviceAccountName := .Values.publishTemplateTaskServiceAccountName -}}
 # End of global variable mappings
   serviceAccountName: {{ $serviceAccountName }}
@@ -56,11 +54,6 @@ spec:
             secretKeyRef:
               name: {{ $dataBucketSecretName }}
               key: {{ $dataBucketSecretKey }}
-        - name: SWOOP_API_URL
-          valueFrom:
-            secretKeyRef:
-              name: {{ $apiUrlSecretName }}
-              key: {{ $apiUrlSecretKey }}
 
         # should pin to a specific version or label here
         image: quay.io/element84/publish-stac-task:latest
