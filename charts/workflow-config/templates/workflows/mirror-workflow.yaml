@@ -9,10 +9,10 @@ spec:
 # Start of variable mappings
 {{- $serviceAccountName := .Values.mirrorWorkflowServiceAccountName -}}
 # End of global variable mappings
-  entrypoint: copy-assets
+  entrypoint: workflow
   serviceAccountName: {{ $serviceAccountName }} # set this so the proper permissions are assigned
   templates:
-    - name: copy-assets
+    - name: workflow
       dag:
         tasks:
           - name: copy-assets
@@ -25,4 +25,16 @@ spec:
                   path: /mnt/input.json
                   s3:
                     key: "executions/{{`{{workflow.name}}`}}/input.json"
-
+          - name: publish
+            dependencies: [copy-assets]
+            templateRef:
+              name: publish-template
+              template: publish
+            arguments:
+              artifacts:
+              - name: input
+                from: "{{`{{tasks.copy-assets.outputs.artifacts.output}}`}}"
+      outputs:
+        artifacts:
+          - name: output
+            from: {{`"{{tasks.publish.outputs.artifacts.output}}"`}}
