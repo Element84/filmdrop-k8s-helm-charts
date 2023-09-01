@@ -23,6 +23,14 @@ spec:
         artifacts:
           - name: input
             path: /mnt/input.json
+      outputs:
+        artifacts:
+          - name: output
+            path: /mnt/output.json
+            archive:
+              none: {}
+            s3:
+              key: "executions/{{`{{workflow.name}}`}}/output.json"
       container:
         env:
         - name: AWS_ACCESS_KEY_ID
@@ -58,9 +66,8 @@ spec:
         # should pin to a specific version or label here
         image: quay.io/element84/publish-stac-task:latest
         imagePullPolicy: IfNotPresent
-        command:
-          - python3
-          - ./task.py
         args:
           - run
           - /mnt/input.json
+          - --output
+          - /mnt/output.json

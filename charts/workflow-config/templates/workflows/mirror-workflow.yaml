@@ -34,4 +34,7 @@ spec:
               artifacts:
               - name: input
                 from: "{{`{{tasks.copy-assets.outputs.artifacts.output}}`}}"
-
+      outputs:
+        artifacts:
+          - name: output
+            from: {{`"{{tasks.publish.outputs.artifacts.output}}"`}}
