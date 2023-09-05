@@ -12,8 +12,8 @@ spec:
 {{- $regionSecretKey := .Values.s3.regionSecret.key -}}
 {{- $sessionTokenSecretName := .Values.s3.sessionTokenSecret.name -}}
 {{- $sessionTokenSecretKey := .Values.s3.sessionTokenSecret.key -}}
-{{- $dataBucketSecretName := .Values.s3.dataBucketSecret.name -}}
-{{- $dataBucketSecretKey := .Values.s3.dataBucketSecret.key -}}
+{{- $dataBucket := .Values.s3.dataBucket -}}
+{{- $iamAccess := .Values.s3.iamAccess -}}
 {{- $serviceAccountName := .Values.publishTemplateTaskServiceAccountName -}}
 # End of global variable mappings
   serviceAccountName: {{ $serviceAccountName }}
@@ -33,6 +33,7 @@ spec:
               key: "executions/{{`{{workflow.name}}`}}/output.json"
       container:
         env:
+        {{- if not $iamAccess }}
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
@@ -57,11 +58,9 @@ spec:
               name: {{ $sessionTokenSecretName }}
               key: {{ $sessionTokenSecretKey }}
         {{- end }}
+        {{- end }}
         - name: SWOOP_DATA_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: {{ $dataBucketSecretName }}
-              key: {{ $dataBucketSecretKey }}
+          value: {{ $dataBucket }}
 
         # should pin to a specific version or label here
         image: quay.io/element84/publish-stac-task:latest
