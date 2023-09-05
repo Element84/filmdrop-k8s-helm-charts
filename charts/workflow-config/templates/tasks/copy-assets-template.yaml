@@ -12,6 +12,7 @@ spec:
 {{- $regionSecretKey := .Values.s3.regionSecret.key -}}
 {{- $sessionTokenSecretName := .Values.s3.sessionTokenSecret.name -}}
 {{- $sessionTokenSecretKey := .Values.s3.sessionTokenSecret.key -}}
+{{- $iamAccess := .Values.s3.iamAccess -}}
 {{- $serviceAccountName := .Values.copyAssetsTemplateTaskServiceAccountName -}}
 # End of global variable mappings
   serviceAccountName: {{ $serviceAccountName }}
@@ -30,6 +31,7 @@ spec:
             s3:
               key: "executions/{{`{{workflow.name}}`}}/output.json"
       container:
+        {{- if not $iamAccess }}
         env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
@@ -55,7 +57,7 @@ spec:
               name: {{ $sessionTokenSecretName }}
               key: {{ $sessionTokenSecretKey }}
         {{- end }}
-
+        {{- end }}
         # should pin to a specific version or label here
         image: quay.io/element84/copy-assets-stac-task:latest
         imagePullPolicy: IfNotPresent
