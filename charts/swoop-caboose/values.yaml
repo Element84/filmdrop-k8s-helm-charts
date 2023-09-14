@@ -63,6 +63,7 @@ service:
   configFile: "/opt/swoop-go/fixtures/swoop-config.yml"
   name: swoop-caboose
   serviceAccount: argo
+  stacApiEndpoint: http://stac-fastapi-pgstac.default:8080
 deployment:
   name: swoop-caboose
 argoWorkflows:

@@ -194,6 +194,10 @@ spec:
           command: ["swoop", "caboose", "argo"]
           ports:
             - containerPort: {{ .Values.container.port }}
+          volumeMounts:
+            - name: swoop-config
+              mountPath: {{ $swoopConfigFile }}
+              subPath: swoop-config.yaml
           resources: {}
       restartPolicy: Always
 status: {}
