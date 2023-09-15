@@ -149,6 +149,13 @@ spec:
             - "job"
             - "{{ $migrationjobName }}-{{ $migrationVersion }}"
     {{ end }}
+      volumes:
+        - name: swoop-config
+          configMap:
+            name: {{ .Release.Name }}-configmap
+            items:
+            - key: swoop-config.yaml
+              path: swoop-config.yaml
       containers:
         - env:
             - name: PGDATABASE
@@ -194,6 +201,10 @@ spec:
           command: ["swoop", "caboose", "argo"]
           ports:
             - containerPort: {{ .Values.container.port }}
+          volumeMounts:
+            - name: swoop-config
+              mountPath: {{ $swoopConfigFile }}
+              subPath: swoop-config.yaml
           resources: {}
       restartPolicy: Always
 status: {}

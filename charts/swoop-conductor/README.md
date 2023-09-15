@@ -18,6 +18,7 @@ The [SWOOP Conductor](https://github.com/Element84/swoop-go) will need an object
 * swoop-api
 * swoop-conductor
 * workflow-config
+* stac-fastapi
 
 You can either choose to install the MinIO and Postgres Helm Chart available on the FilmDrop Helm Chart Repository or you will need to have an existing MinIO/S3 backend with a Postgres installed and reachable to your SWOOP Caboose.
 
@@ -69,13 +70,246 @@ For waiting for the SWOOP API pods to be ready and initialize them prior install
 kubectl wait --for=condition=ready --timeout=30m pod -l app=swoop-api
 ```
 
-To install SWOOP API run:
+To install SWOOP Conductor run:
 `helm install swoop-conductor e84/swoop-conductor`
 
 For waiting for the SWOOP Conductor pods to be ready:
 ```
 kubectl wait --for=condition=ready --timeout=30m pod -l app=swoop-conductor
 ```
+
+
+To install STAC-FastAPI run:
+`helm install stac e84/stac-fastapi`
+
+For waiting for the STAC-FastAPI pods to be ready:
+```
+kubectl wait --for=condition=ready --timeout=30m pod -l app=stac-fastapi-pgstac
+```
+
+<br></br>
+
+### Populating stac-fastapi
+
+After port forwarding stac-fastapi
+```
+kubectl port-forward service/stac-fastapi-pgstac 8080:8080
+```
+
+#### Adding a collection
+
+For full documentation for stac-fastapi, please visit the [Stac-FastAPI Official Documentation](https://stac-utils.github.io/stac-fastapi/).
+
+The information below is intended to provide an example of how to use the stac-fastapi collections endpoint to add a sample collection `naip`. In your particular, use case, you will need to replace the body payload json with the information of your collection.
+
+To create sample `naip` via curl:
+```
+curl -0 -v -X POST http://localhost:8080/collections \
+-H 'Content-Type: application/json; charset=utf-8' \
+--data-binary @- << EOF
+{
+    "id": "naip",
+    "type": "Collection",
+    "links": [
+        {
+            "rel": "items",
+            "type": "application/geo+json",
+            "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items"
+        },
+        {
+            "rel": "parent",
+            "type": "application/json",
+            "href": "https://planetarycomputer.microsoft.com/api/stac/v1/"
+        },
+        {
+            "rel": "root",
+            "type": "application/json",
+            "href": "https://planetarycomputer.microsoft.com/api/stac/v1/"
+        },
+        {
+            "rel": "self",
+            "type": "application/json",
+            "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"
+        },
+        {
+            "rel": "license",
+            "href": "https://www.fsa.usda.gov/help/policies-and-links/",
+            "title": "Public Domain"
+        },
+        {
+            "rel": "describedby",
+            "href": "https://planetarycomputer.microsoft.com/dataset/naip",
+            "title": "Human readable dataset overview and reference",
+            "type": "text/html"
+        }
+    ],
+    "title": "NAIP: National Agriculture Imagery Program",
+    "assets": {
+        "thumbnail": {
+            "href": "https://ai4edatasetspublicassets.blob.core.windows.net/assets/pc_thumbnails/naip.png",
+            "type": "image/png",
+            "roles": [
+                "thumbnail"
+            ],
+            "title": "NAIP thumbnail"
+        },
+        "geoparquet-items": {
+            "href": "abfs://items/naip.parquet",
+            "type": "application/x-parquet",
+            "roles": [
+                "stac-items"
+            ],
+            "title": "GeoParquet STAC items",
+            "description": "Snapshot of the collection's STAC items exported to GeoParquet format.",
+            "msft:partition_info": {
+                "is_partitioned": true,
+                "partition_frequency": "AS"
+            },
+            "table:storage_options": {
+                "account_name": "pcstacitems"
+            }
+        }
+    },
+    "extent": {
+        "spatial": {
+            "bbox": [
+                [
+                    -124.784,
+                    24.744,
+                    -66.951,
+                    49.346
+                ]
+            ]
+        },
+        "temporal": {
+            "interval": [
+                [
+                    "2010-01-01T00:00:00Z",
+                    "2021-12-31T00:00:00Z"
+                ]
+            ]
+        }
+    },
+    "license": "proprietary",
+    "keywords": [
+        "NAIP",
+        "Aerial",
+        "Imagery",
+        "USDA",
+        "AFPO",
+        "Agriculture",
+        "United States"
+    ],
+    "providers": [
+        {
+            "url": "https://www.fsa.usda.gov/programs-and-services/aerial-photography/imagery-programs/naip-imagery/",
+            "name": "USDA Farm Service Agency",
+            "roles": [
+                "producer",
+                "licensor"
+            ]
+        },
+        {
+            "url": "https://www.esri.com/",
+            "name": "Esri",
+            "roles": [
+                "processor"
+            ]
+        },
+        {
+            "url": "https://planetarycomputer.microsoft.com",
+            "name": "Microsoft",
+            "roles": [
+                "host",
+                "processor"
+            ]
+        }
+    ],
+    "summaries": {
+        "gsd": [
+            0.6,
+            1
+        ],
+        "eo:bands": [
+            {
+                "name": "Red",
+                "common_name": "red",
+                "description": "visible red"
+            },
+            {
+                "name": "Green",
+                "common_name": "green",
+                "description": "visible green"
+            },
+            {
+                "name": "Blue",
+                "common_name": "blue",
+                "description": "visible blue"
+            },
+            {
+                "name": "NIR",
+                "common_name": "nir",
+                "description": "near-infrared"
+            }
+        ]
+    },
+    "description": "The [National Agriculture Imagery Program](https://www.fsa.usda.gov/programs-and-services/aerial-photography/imagery-programs/naip-imagery/) (NAIP) provides U.S.-wide, high-resolution aerial imagery, with four spectral bands (R, G, B, IR).  NAIP is administered by the [Aerial Field Photography Office](https://www.fsa.usda.gov/programs-and-services/aerial-photography/) (AFPO) within the [US Department of Agriculture](https://www.usda.gov/) (USDA).  Data are captured at least once every three years for each state.  This dataset represents NAIP data from 2010-present, in [cloud-optimized GeoTIFF](https://www.cogeo.org/) format.\n",
+    "item_assets": {
+        "image": {
+            "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+            "roles": [
+                "data"
+            ],
+            "title": "RGBIR COG tile",
+            "eo:bands": [
+                {
+                    "name": "Red",
+                    "common_name": "red"
+                },
+                {
+                    "name": "Green",
+                    "common_name": "green"
+                },
+                {
+                    "name": "Blue",
+                    "common_name": "blue"
+                },
+                {
+                    "name": "NIR",
+                    "common_name": "nir",
+                    "description": "near-infrared"
+                }
+            ]
+        },
+        "metadata": {
+            "type": "text/plain",
+            "roles": [
+                "metadata"
+            ],
+            "title": "FGDC Metdata"
+        },
+        "thumbnail": {
+            "type": "image/jpeg",
+            "roles": [
+                "thumbnail"
+            ],
+            "title": "Thumbnail"
+        }
+    },
+    "msft:region": "westeurope",
+    "stac_version": "1.0.0",
+    "msft:container": "naip",
+    "stac_extensions": [
+        "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/table/v1.2.0/schema.json"
+    ],
+    "msft:storage_account": "naipeuwest",
+    "msft:short_description": "NAIP provides US-wide, high-resolution aerial imagery.  This dataset includes NAIP images from 2010 to the present."
+}
+EOF
+```
+
+
 <br></br>
 
 ## Installing and configuring `workflow-config` helm chart

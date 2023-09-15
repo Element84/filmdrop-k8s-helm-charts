@@ -77,6 +77,9 @@ global:
         name: swoop-bundle-minio-secret
         key: secret_access_key
 
+  stac:
+    endpoint: http://stac-fastapi-pgstac.default:8080
+
   swoop:
     api:
       enabled: true
@@ -93,6 +96,7 @@ global:
       objectCounts: 5
     conductor:
       enabled: true
+      configFile: "/opt/swoop-go/fixtures/swoop-config.yml"
     bundle:
       serviceAccount: swoop-bundle
 

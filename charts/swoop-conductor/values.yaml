@@ -63,7 +63,9 @@ service:
   configFile: "/opt/swoop-go/fixtures/swoop-config.yml"
   name: swoop-conductor
   serviceAccount: argo
-  instanceName: instance-a
+  instanceName: main
+  stacApiEndpoint: http://stac-fastapi-pgstac.default:8080
+
 deployment:
   name: swoop-conductor
 argoWorkflows:
