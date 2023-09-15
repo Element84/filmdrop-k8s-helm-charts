@@ -149,6 +149,13 @@ spec:
             - "job"
             - "{{ $migrationjobName }}-{{ $migrationVersion }}"
     {{ end }}
+      volumes:
+        - name: swoop-config
+          configMap:
+            name: {{ .Release.Name }}-configmap
+            items:
+            - key: swoop-config.yaml
+              path: swoop-config.yaml
       containers:
         - env:
             - name: PGDATABASE

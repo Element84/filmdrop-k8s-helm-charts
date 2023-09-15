@@ -220,12 +220,22 @@ For waiting for the SWOOP DB initialization to complete run:
 kubectl wait --for=condition=complete --timeout=30m job -l app=swoop-db-init
 ```
 
-To initialize STAC-FastAPI run:
+
+
+To install STAC-FastAPI run:
 `helm install stac e84/stac-fastapi`
+
+For waiting for the STAC-FastAPI pods to be ready:
+```
+kubectl wait --for=condition=ready --timeout=30m pod -l app=stac-fastapi-pgstac
+```
+
 
 
 To install SWOOP components:
 `helm install swoop-bundle e84/swoop-bundle`
+
+<br></br>
 
 
 ### Populating stac-fastapi
