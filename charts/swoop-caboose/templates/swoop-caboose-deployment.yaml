@@ -152,7 +152,7 @@ spec:
       volumes:
         - name: swoop-config
           configMap:
-            name: {{ .Release.Name }}-configmap
+            name: {{ .Release.Name }}-caboose-configmap
             items:
             - key: swoop-config.yaml
               path: swoop-config.yaml
