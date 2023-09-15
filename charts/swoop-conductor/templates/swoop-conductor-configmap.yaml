@@ -34,7 +34,7 @@ data:
         request:
           url: {{ $stacApiEndpoint }}/collections/{{`{{ .parameters.feature.collection }}`}}/items
           method: POST
-          body: "{{`{{- .parameters.feature -}}`}}"
+          body: {{`{{.parameters.feature}}`}}
           headers:
             Content-Type: "application/json"
           followRedirects: true
