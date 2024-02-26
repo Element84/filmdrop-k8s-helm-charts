@@ -8,4 +8,10 @@ metadata:
 provisioner: {{ .Values.storage.provisioner }}
 reclaimPolicy: Retain
 volumeBindingMode: {{ .Values.storage.volumeBindingMode }}
+{{- if (hasKey .Values.storage "parameters")  }}
+{{- if (hasKey .Values.storage.parameters "type")  }}
+parameters:
+  type: {{ .Values.storage.parameters.type }}
+{{- end -}}
+{{- end -}}
 {{- end }}
