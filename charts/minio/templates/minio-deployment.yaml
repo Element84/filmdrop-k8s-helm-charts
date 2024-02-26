@@ -17,12 +17,12 @@ spec:
       labels:
         app: minio
     spec:
-  {{- if (hasKey .Values.storage "nodeSelector") -}}
-    {{- if (hasKey .Values.storage.nodeSelector "app") -}}
+  {{ if (hasKey .Values.storage "nodeSelector") }}
+    {{ if (hasKey .Values.storage.nodeSelector "app") }}
       nodeSelector:
         app: {{ .Values.storage.nodeSelector.app }}
-    {{- end }}
-  {{- end }}
+    {{ end }}
+  {{ end }}
       containers:
         - command:
             - bash
