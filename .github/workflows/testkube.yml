@@ -94,16 +94,14 @@ jobs:
           mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/executions/2595f2da-81a6-423c-84db-935e6791046e/
 
+      - uses: kubeshop/setup-testkube@v1
       - name: Installing Testkube
         run: |
-          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
-          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
-          sudo apt-get update
-          sudo apt-get install -y testkube
           kubectl testkube install --no-confirm
           kubectl wait --for=condition=ready --timeout=30m pod -n testkube -l app.kubernetes.io/instance=testkube
           kubectl port-forward -n testkube svc/testkube-api-server 8088:8088 &
           testkube config api-uri http://127.0.0.1:8088/v1
+
 
       - name: Create Testkube Tests
         continue-on-error: true
