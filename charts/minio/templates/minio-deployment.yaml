@@ -52,10 +52,10 @@ spec:
         - name: minio-claim0
           persistentVolumeClaim:
             claimName: minio-claim0
-{{- if (hasKey .Values.storage "nodeSelector")  }}
-{{- if (hasKey .Values.storage.nodeSelector "app")  }}
+      {{- if (hasKey .Values.storage "nodeSelector")  }}
+      {{- if (hasKey .Values.storage.nodeSelector "app")  }}
       nodeSelector:
         app: {{ .Values.storage.nodeSelector.app }}
-{{- end -}}
-{{- end -}}
+      {{- end -}}
+      {{- end -}}
 status: {}
