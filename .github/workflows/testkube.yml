@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: kubeshop/setup-testkube@v1
 
       - name: Create k3d Cluster
         uses: nolar/setup-k3d-k3s@v1
@@ -95,6 +94,7 @@ jobs:
           mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/executions/2595f2da-81a6-423c-84db-935e6791046e/
 
+      - uses: kubeshop/setup-testkube@v1
       - name: Installing Testkube
         run: |
           kubectl testkube install --no-confirm
